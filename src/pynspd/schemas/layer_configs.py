@@ -72,5 +72,6 @@ class CardField(CamelModel):
             "text": "str",
             "number": "float",
             "date": "date",
+            "href": "str",
         }
         return alias_dict[v]

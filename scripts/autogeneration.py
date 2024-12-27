@@ -41,7 +41,7 @@ from pynspd.schemas.base_feature import NspdFeature, NspdProperties, OptionPrope
 
 
 {% for category_id, fields in layers_fields.items() %}
-class Options{{ category_id }}(OptionProperties):
+class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...{% endif %}
     {%- for field in fields %}
     {{ field.key_value }}: Annotated[
         Optional[{{field.key_type}}],
@@ -84,23 +84,6 @@ async def get_layer_tree() -> LayersTree:
     return tree
 
 
-def filter_layers(tree: LayersTree) -> list[LayerNode]:
-    # layer = list(filter(lambda x: x.title == 'Земельные участки из ЕГРН', tree.layers))[0]
-    layers = [
-        i
-        for i in tree.layers
-        if i.title
-        in (
-            "Земельные участки из ЕГРН",
-            "Здания",
-            "Кадастровые кварталы",
-            "Кадастровые районы",
-            "Кадастровые округа",
-        )
-    ]
-    return layers
-
-
 async def get_layers_fields(layers: list[LayerNode]) -> dict[int, list[CardField]]:
     layers_fields = {}
     for layer in layers:
@@ -112,7 +95,18 @@ async def get_layers_fields(layers: list[LayerNode]) -> dict[int, list[CardField
             )
         ).raise_for_status()
         card = Card.model_validate(r.json())
-        layers_fields[layer.category_id] = card.card
+        fields = []
+        for field in card.card:
+            if field.key_value == "-":
+                continue
+            if field.key_value == "":
+                continue
+            if not field.key_value.isascii():
+                continue
+            if " " in field.key_value:
+                continue
+            fields.append(field)
+        layers_fields[layer.category_id] = fields
     return layers_fields
 
 
@@ -126,7 +120,7 @@ def lint_and_format():
 
 async def main():
     tree = await get_layer_tree()
-    layers = filter_layers(tree)
+    layers = tree.layers
     layers_fields = await get_layers_fields(layers)
     generate_files(layers, layers_fields)
     lint_and_format()

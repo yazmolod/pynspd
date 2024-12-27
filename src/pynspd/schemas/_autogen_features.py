@@ -3,7 +3,9 @@ from datetime import date
 from typing import Annotated, Optional, Union
 
 from geojson_pydantic import (
+    LineString,
     MultiPolygon,
+    Point,
     Polygon,
 )
 from pydantic import Field
@@ -30,6 +32,93 @@ class Options38030(OptionProperties):
     ]
     cnt_land_geom: Annotated[
         Optional[float], Field(default=None, description="c границами")
+    ]
+    cnt_land_not_geom: Annotated[
+        Optional[float], Field(default=None, description="без границ")
+    ]
+    cnt_oks: Annotated[
+        Optional[float],
+        Field(
+            default=None, description="Количество объектов капитального строительства"
+        ),
+    ]
+    cnt_oks_geom: Annotated[
+        Optional[float], Field(default=None, description="с границами")
+    ]
+    cnt_oks_not_geom: Annotated[
+        Optional[float], Field(default=None, description="без границ")
+    ]
+    cnt_enk: Annotated[
+        Optional[float],
+        Field(default=None, description="Количество единых недвижимых комплексов"),
+    ]
+    cnt_pik: Annotated[
+        Optional[float],
+        Field(
+            default=None,
+            description="Количество предприятий как имущественных комплексов",
+        ),
+    ]
+
+
+class Options36947(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничение")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении или изменении границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36382(OptionProperties):
+    obj_kind_value: Annotated[Optional[str], Field(default=None, description="Тип")]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    cad_num: Annotated[Optional[str], Field(default=None, description="Учетный номер")]
+    cad_num_ko: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый округ")
+    ]
+    cnt_kk: Annotated[
+        Optional[float],
+        Field(default=None, description="Количество кадастровых кварталов"),
+    ]
+    cnt_land: Annotated[
+        Optional[float],
+        Field(default=None, description="Количество земельных участков"),
+    ]
+    cnt_land_geom: Annotated[
+        Optional[float], Field(default=None, description="с границами")
     ]
     cnt_land_not_geom: Annotated[
         Optional[float], Field(default=None, description="без границ")
@@ -104,6 +193,178 @@ class Options36381(OptionProperties):
     ]
 
 
+class Options38998(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    num: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+
+
+class Options38999(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    num: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="документ")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options39000(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    num: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="документ")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36829(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    reg_code: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[str], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36830(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    num: Annotated[
+        Optional[float], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[str], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36832(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    reg_code: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[str], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options38996(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер")
+    ]
+    reg_code: Annotated[
+        Optional[str], Field(default=None, description="Идентификационный номер")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов о согласовании и об утверждении изменения границ",
+        ),
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[str], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
 class Options36368(OptionProperties):
     land_record_type: Annotated[
         Optional[str], Field(default=None, description="Вид объекта недвижимости")
@@ -145,6 +406,335 @@ class Options36368(OptionProperties):
         Optional[float],
         Field(default=None, description="Удельный показатель кадастровой стоимости"),
     ]
+
+
+class Options37153(OptionProperties):
+    nominal_number: Annotated[
+        Optional[str],
+        Field(
+            default=None, description="Условный номер образуемого земельного участка"
+        ),
+    ]
+    area: Annotated[
+        Optional[str],
+        Field(default=None, description="Площадь образуемого земельного участка"),
+    ]
+    land_use_text: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Вид разрешенного использования образуемого земельного участка",
+        ),
+    ]
+    nmb: Annotated[Optional[str], Field(default=None, description="номер")]
+    registration_date: Annotated[
+        Optional[date], Field(default=None, description="дата")
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[date], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options37158(OptionProperties):
+    nominal_number: Annotated[
+        Optional[str],
+        Field(
+            default=None, description="Условный номер образуемого земельного участка"
+        ),
+    ]
+    area: Annotated[
+        Optional[str],
+        Field(default=None, description="Площадь образуемого земельного участка"),
+    ]
+    land_use_text: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Вид разрешенного использования образуемого земельного участка",
+        ),
+    ]
+    brd_nmb: Annotated[Optional[str], Field(default=None, description="номер")]
+    registration_date: Annotated[
+        Optional[date], Field(default=None, description="дата")
+    ]
+    document_name: Annotated[Optional[str], Field(default=None, description="документ")]
+    document_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    document_date: Annotated[Optional[date], Field(default=None, description="дата")]
+    document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options38943(OptionProperties):
+    id: Annotated[Optional[str], Field(default=None, description="ID")]
+    doc_guid: Annotated[Optional[str], Field(default=None, description="GUID")]
+    doc_type: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Наименование вида документа об утверждении схемы расположения земельного участка",
+        ),
+    ]
+    doc_gov: Annotated[
+        Optional[str],
+        Field(default=None, description="наименование уполномоченного органа"),
+    ]
+    doc_date: Annotated[Optional[date], Field(default=None, description="дата")]
+    doc_number: Annotated[Optional[str], Field(default=None, description="номер")]
+    cond_numbe: Annotated[
+        Optional[str],
+        Field(
+            default=None, description="Условный номер образуемого земельного участка"
+        ),
+    ]
+    shape_area: Annotated[Optional[float], Field(default=None, description="Площадь")]
+    address: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Адрес или иное описание местоположения земельного участка",
+        ),
+    ]
+    kvartal_id: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка",
+        ),
+    ]
+    name_zone: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Территориальная зона, в границах которой образуется земельный участок",
+        ),
+    ]
+    category_code: Annotated[
+        Optional[str],
+        Field(default=None, description="Категория земель образуемого земельного"),
+    ]
+    utilization: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Вид разрешенного использования образуемого земельного участка",
+        ),
+    ]
+
+
+class Options38981(OptionProperties):
+    auc_thrf: Annotated[
+        Optional[str], Field(default=None, description="Ссылка на аукцион")
+    ]
+
+
+class Options38979(OptionProperties): ...
+
+
+class Options445347(OptionProperties):
+    kvartal_cn: Annotated[
+        Optional[str], Field(default=None, description="Номер квартала")
+    ]
+    reg_name: Annotated[Optional[str], Field(default=None, description="Регион")]
+    mun: Annotated[
+        Optional[str], Field(default=None, description="Муниципальное образование")
+    ]
+    np: Annotated[Optional[str], Field(default=None, description="Населенный пункт")]
+    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
+    category_text: Annotated[
+        Optional[str], Field(default=None, description="Название категорий")
+    ]
+    right: Annotated[Optional[str], Field(default=None, description="Собственности")]
+    util_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Предназначение")
+    ]
+    potential: Annotated[
+        Optional[str], Field(default=None, description="Тип построения")
+    ]
+    has_oks: Annotated[
+        Optional[str], Field(default=None, description="Наличие объектов")
+    ]
+    has_network: Annotated[
+        Optional[str], Field(default=None, description="Наличие сетей")
+    ]
+    develop_area: Annotated[
+        Optional[str], Field(default=None, description="Развитие области")
+    ]
+    privileges_peo: Annotated[
+        Optional[str], Field(default=None, description="Привилегии peo")
+    ]
+    privileges: Annotated[Optional[str], Field(default=None, description="Привилегии")]
+    uo_name: Annotated[
+        Optional[str], Field(default=None, description="Название района")
+    ]
+    uo_address: Annotated[
+        Optional[str], Field(default=None, description="Адрес района")
+    ]
+    uo_phone: Annotated[
+        Optional[str], Field(default=None, description="Номер телефона")
+    ]
+    uo_url: Annotated[Optional[str], Field(default=None, description="Сайт")]
+    uo_email: Annotated[Optional[str], Field(default=None, description="Имэйл")]
+    inves_portal: Annotated[
+        Optional[str], Field(default=None, description="Сайт портала")
+    ]
+    area: Annotated[Optional[str], Field(default=None, description="Область")]
+    cn: Annotated[Optional[str], Field(default=None, description="Кадастровый номер")]
+    dom_rf: Annotated[Optional[str], Field(default=None, description="dom_rf")]
+    develop_build: Annotated[
+        Optional[str], Field(default=None, description="develop_build")
+    ]
+    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
+    id: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
+    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
+    data_type_text: Annotated[
+        Optional[str], Field(default=None, description="Тип участка")
+    ]
+    potential_code: Annotated[
+        Optional[str], Field(default=None, description="potential_code")
+    ]
+    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
+    is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
+    okrug: Annotated[Optional[str], Field(default=None, description="Округ")]
+    okrug_cn: Annotated[Optional[str], Field(default=None, description="okrug_cn")]
+    rayon: Annotated[Optional[str], Field(default=None, description="Район")]
+    rayon_cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    kvartal: Annotated[Optional[str], Field(default=None, description="Квартал")]
+    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
+
+
+class Options445397(OptionProperties):
+    kvartal_cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер квартала")
+    ]
+    reg_name: Annotated[Optional[str], Field(default=None, description="Регион")]
+    mun: Annotated[
+        Optional[str], Field(default=None, description="Муниципальное образование")
+    ]
+    np: Annotated[Optional[str], Field(default=None, description="Населенный пункт")]
+    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
+    right: Annotated[Optional[str], Field(default=None, description="Собственности")]
+    category_text: Annotated[
+        Optional[str], Field(default=None, description="Название категорий")
+    ]
+    cad_cost: Annotated[Optional[str], Field(default=None, description="Цена")]
+    terzone_name_by_pzz: Annotated[
+        Optional[str], Field(default=None, description="Зоны")
+    ]
+    poi: Annotated[Optional[str], Field(default=None, description="Название объектов")]
+    id_oti: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
+    poi_cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер")
+    ]
+    data_type: Annotated[Optional[str], Field(default=None, description="Тип данных")]
+    tour_object_description: Annotated[
+        Optional[str], Field(default=None, description="Ссылка на сайт")
+    ]
+    has_network: Annotated[
+        Optional[str], Field(default=None, description="Наличие сети")
+    ]
+    power_supply: Annotated[
+        Optional[str], Field(default=None, description="Наличие электричества")
+    ]
+    water_supply: Annotated[
+        Optional[str], Field(default=None, description="Наличие водоснабжения")
+    ]
+    gas_supply: Annotated[
+        Optional[str], Field(default=None, description="Наличие газа")
+    ]
+    sewerage: Annotated[Optional[str], Field(default=None, description="Канализация")]
+    heat_supply: Annotated[
+        Optional[str], Field(default=None, description="Теплоснабжение")
+    ]
+    distance_to_near_tour_object: Annotated[
+        Optional[str], Field(default=None, description="Дистанция до объекта тура")
+    ]
+    distance_to_near_fed_road: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстояние до ближайшей федеральной дороги"),
+    ]
+    distance_to_near_hard_road: Annotated[
+        Optional[str],
+        Field(default=None, description="Дистанция до ближайшей асфальтовой дороги"),
+    ]
+    distance_to_near_district: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстоянеие до ближайшего района"),
+    ]
+    distance_to_near_locality: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстояние до ближайшего населенного пункта"),
+    ]
+    distance_to_near_public_catering: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстояние до ближайшего общепита"),
+    ]
+    distance_to_near_health_care: Annotated[
+        Optional[str], Field(default=None, description="Расстояние до больницы")
+    ]
+    distance_to_near_public_transport: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстояние до общественного транспорта"),
+    ]
+    distance_to_near_railway_station: Annotated[
+        Optional[str],
+        Field(default=None, description="Расстояние до железнодорожной станции"),
+    ]
+    distance_to_near_airport: Annotated[
+        Optional[str], Field(default=None, description="Расстояние до аэропорта")
+    ]
+    uo_name: Annotated[
+        Optional[str],
+        Field(default=None, description="Название уполномоченных образований"),
+    ]
+    uo_address: Annotated[
+        Optional[str], Field(default=None, description="Адресс уполномоченного органа")
+    ]
+    uo_phone: Annotated[
+        Optional[str], Field(default=None, description="Телефон уполномоченного органа")
+    ]
+    uo_email: Annotated[
+        Optional[str], Field(default=None, description="Имэйл уполномоченного органа")
+    ]
+    additional_info: Annotated[
+        Optional[str], Field(default=None, description="Доп. информация")
+    ]
+    area: Annotated[Optional[str], Field(default=None, description="Область")]
+    util_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Назначение построения")
+    ]
+    oti: Annotated[
+        Optional[str], Field(default=None, description="Объект туристского интереса")
+    ]
+    has_oks: Annotated[
+        Optional[str],
+        Field(default=None, description="Объекты капитального строительства"),
+    ]
+    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
+    id: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
+    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
+    data_type_text: Annotated[
+        Optional[str], Field(default=None, description="Тип территории")
+    ]
+    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
+    is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
+    okrug: Annotated[Optional[str], Field(default=None, description="Округ")]
+    okrug_cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер округа")
+    ]
+    rayon: Annotated[Optional[str], Field(default=None, description="Район")]
+    rayon_cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    kvartal: Annotated[Optional[str], Field(default=None, description="Квартал")]
+    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
 
 
 class Options36369(OptionProperties):
@@ -215,6 +805,723 @@ class Options36369(OptionProperties):
     ]
 
 
+class Options36383(OptionProperties):
+    object_type_value: Annotated[
+        Optional[str], Field(default=None, description="Вид объекта недвижимости")
+    ]
+    registration_date: Annotated[
+        Optional[date], Field(default=None, description="Дата присвоения")
+    ]
+    cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер")
+    ]
+    quarter_cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый квартал")
+    ]
+    address_readable_address: Annotated[
+        Optional[str], Field(default=None, description="Адрес")
+    ]
+    params_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    params_purpose: Annotated[
+        Optional[str], Field(default=None, description="Назначение")
+    ]
+    params_height: Annotated[Optional[float], Field(default=None, description="высота")]
+    params_depth: Annotated[Optional[float], Field(default=None, description="глубина")]
+    params_occurence_depth: Annotated[
+        Optional[float], Field(default=None, description="глубина залегания")
+    ]
+    params_extension: Annotated[
+        Optional[float], Field(default=None, description="протяженность")
+    ]
+    params_volume: Annotated[Optional[float], Field(default=None, description="объем")]
+    params_built_up_area: Annotated[
+        Optional[float], Field(default=None, description="Площадь застройки")
+    ]
+    params_area: Annotated[Optional[float], Field(default=None, description="Площадь")]
+    object_previously_posted: Annotated[
+        Optional[str], Field(default=None, description="Статус")
+    ]
+    ownership_type: Annotated[
+        Optional[str], Field(default=None, description="Форма собственности")
+    ]
+    cost_value: Annotated[
+        Optional[float], Field(default=None, description="Кадастровая стоимость")
+    ]
+    cost_index: Annotated[
+        Optional[float],
+        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+    ]
+    params_floors: Annotated[
+        Optional[str],
+        Field(default=None, description="Количество этажей (в том числе подземных)"),
+    ]
+    params_underground_floors: Annotated[
+        Optional[str], Field(default=None, description="Количество подземных этажей")
+    ]
+    params_year_built: Annotated[
+        Optional[str], Field(default=None, description="Завершение строительства")
+    ]
+    params_year_commisioning: Annotated[
+        Optional[str], Field(default=None, description="Ввод в эксплуатацию")
+    ]
+    cultural_heritage_object: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
+        ),
+    ]
+    united_cad_number: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый номер единого недвижимого комплекса, в состав которого входит сооружение",
+        ),
+    ]
+    facility_cad_number: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит",
+        ),
+    ]
+
+
+class Options36384(OptionProperties):
+    object_under_construction_record_record_type_value: Annotated[
+        Optional[str], Field(default=None, description="Вид объекта недвижимости")
+    ]
+    registration_date: Annotated[
+        Optional[date], Field(default=None, description="Дата присвоения")
+    ]
+    cad_num: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер")
+    ]
+    quarter_cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый квартал")
+    ]
+    readable_address: Annotated[Optional[str], Field(default=None, description="Адрес")]
+    object_under_construction_record_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    height: Annotated[Optional[float], Field(default=None, description="Высота")]
+    depth: Annotated[Optional[float], Field(default=None, description="Глубина")]
+    occurence_depth: Annotated[
+        Optional[float], Field(default=None, description="Глубина залегания")
+    ]
+    extension: Annotated[
+        Optional[float], Field(default=None, description="Протяжённость")
+    ]
+    volume: Annotated[Optional[float], Field(default=None, description="Объем")]
+    built_up_area: Annotated[
+        Optional[float], Field(default=None, description="Площадь застройки")
+    ]
+    common_data_status: Annotated[
+        Optional[str], Field(default=None, description="Статус")
+    ]
+    ownership_type: Annotated[
+        Optional[str], Field(default=None, description="Форма собственности")
+    ]
+    cost_value: Annotated[
+        Optional[float], Field(default=None, description="Кадастровая стоимость")
+    ]
+    cost_index: Annotated[
+        Optional[float],
+        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+    ]
+    degree_readiness: Annotated[
+        Optional[str],
+        Field(default=None, description="Степень готовности ОНС в процентах"),
+    ]
+    purpose: Annotated[
+        Optional[str],
+        Field(
+            default=None, description="Проектируемое значение основной характеристики"
+        ),
+    ]
+    facility_cad_number: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса",
+        ),
+    ]
+
+
+class Options39663(OptionProperties):
+    type: Annotated[
+        Optional[str], Field(default=None, description="Вид объекта недвижимости")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер")
+    ]
+    quarter_cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый квартал")
+    ]
+    readable_address: Annotated[Optional[str], Field(default=None, description="Адрес")]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    purpose: Annotated[Optional[str], Field(default=None, description="Назначение")]
+    common_data_status: Annotated[
+        Optional[str], Field(default=None, description="Статус")
+    ]
+    cost_value: Annotated[
+        Optional[float], Field(default=None, description="Кадастровая стоимость")
+    ]
+    facility_cad_number: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый номер предприятия как имущественного комплекса, если единый недвижимый комплекс (имущественное право на него) входит в состав предприятия как имущественного комплекса",
+        ),
+    ]
+
+
+class Options39664(OptionProperties):
+    type: Annotated[
+        Optional[str], Field(default=None, description="Вид объекта недвижимости")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    name: Annotated[
+        Optional[str],
+        Field(
+            default=None, description="Наименование ПИК при наличии такого наименования"
+        ),
+    ]
+    purpose: Annotated[Optional[str], Field(default=None, description="Назначение ПИК")]
+    cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый номер")
+    ]
+    quarter_cad_number: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый квартал")
+    ]
+    readable_address: Annotated[Optional[str], Field(default=None, description="Адрес")]
+    common_data_status: Annotated[
+        Optional[str], Field(default=None, description="Статус")
+    ]
+    cost_value: Annotated[
+        Optional[str], Field(default=None, description="Стоимость предприятия")
+    ]
+
+
+class Options36940(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    type_zone: Annotated[Optional[str], Field(default=None, description="Тип зоны")]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничение")
+    ]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) ЗОУИТ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="документ")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36946(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    type_zone: Annotated[Optional[str], Field(default=None, description="Тип зоны")]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничение")
+    ]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) территориальной зоны",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="документ")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+    permitted_uses_name: Annotated[
+        Optional[str], Field(default=None, description="Вид разрешенного использования")
+    ]
+
+
+class Options38942(OptionProperties):
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничения")
+    ]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об утверждении документации по планировке территории",
+        ),
+    ]
+    DOC_TYPE: Annotated[Optional[str], Field(default=None, description="документ")]
+    DOC_NUMBER: Annotated[Optional[str], Field(default=None, description="номер")]
+    DOC_DATE: Annotated[Optional[date], Field(default=None, description="дата")]
+    DOC_GOV: Annotated[
+        Optional[str],
+        Field(default=None, description="орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36948(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничение")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36942(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36945(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36992(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    content_restrict_encumbrances: Annotated[
+        Optional[str], Field(default=None, description="Ограничение")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении (изменении) границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options37148(OptionProperties):
+    type: Annotated[Optional[str], Field(default=None, description="Вид")]
+    date: Annotated[Optional[str], Field(default=None, description="Дата присвоения")]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cad_distr: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    encumb: Annotated[Optional[str], Field(default=None, description="Ограничение")]
+    doc: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов об установлении или изменении границ",
+        ),
+    ]
+
+
+class Options36941(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    description: Annotated[Optional[str], Field(default=None, description="Описание")]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты правовых актов об установлении или изменении границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36943(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении или изменении границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36944(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    reg_numb_border: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    name_by_doc: Annotated[
+        Optional[str], Field(default=None, description="Наименование")
+    ]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении или изменении границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options36991(OptionProperties):
+    type_boundary_value: Annotated[
+        Optional[str], Field(default=None, description="Вид")
+    ]
+    registration_date: Annotated[
+        Optional[str], Field(default=None, description="Дата присвоения")
+    ]
+    brd_nmb: Annotated[
+        Optional[str], Field(default=None, description="Реестровый номер границы")
+    ]
+    cadastral_district: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый район")
+    ]
+    loc: Annotated[Optional[str], Field(default=None, description="Наименование")]
+    document_name: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Реквизиты решения об установлении или изменении границ",
+        ),
+    ]
+    legal_act_document_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование документа")
+    ]
+    legal_act_document_number: Annotated[
+        Optional[str], Field(default=None, description="Номер")
+    ]
+    legal_act_document_date: Annotated[
+        Optional[str], Field(default=None, description="Дата")
+    ]
+    legal_act_document_issuer: Annotated[
+        Optional[str],
+        Field(default=None, description="Орган власти, организация выдавшие документ"),
+    ]
+
+
+class Options39228(OptionProperties):
+    terr_name: Annotated[
+        Optional[str], Field(default=None, description="Наименование территории")
+    ]
+
+
+class Options38944(OptionProperties):
+    schema1: Annotated[Optional[str], Field(default=None, description="Тип")]
+    name: Annotated[
+        Optional[str], Field(default=None, description="Наименование объекта")
+    ]
+    part_type: Annotated[Optional[str], Field(default=None, description="Тип части")]
+    building: Annotated[
+        Optional[str],
+        Field(default=None, description="Наличие объектов капитального строительства"),
+    ]
+
+
+class Options38967(OptionProperties):
+    process_ty: Annotated[Optional[str], Field(default=None, description="Тип")]
+    reg_num: Annotated[Optional[str], Field(default=None, description="Номер")]
+    cad_distr: Annotated[
+        Optional[float], Field(default=None, description="Кадастровый округ")
+    ]
+    district: Annotated[Optional[str], Field(default=None, description="Район")]
+    index_map: Annotated[Optional[str], Field(default=None, description="Индекс")]
+    process_ty_title: Annotated[
+        Optional[str],
+        Field(default=None, description="Вид и степень развития негативного процесса"),
+    ]
+    shape_area: Annotated[
+        Optional[str],
+        Field(default=None, description="Площадь проявления негативного процесса"),
+    ]
+    zone_proya: Annotated[
+        Optional[str], Field(default=None, description="Зона проявления")
+    ]
+    soil_type: Annotated[Optional[str], Field(default=None, description="Тип почвы")]
+    recommend: Annotated[
+        Optional[str],
+        Field(default=None, description="Рекомендации по использованию земель"),
+    ]
+
+
+class Options445547(OptionProperties):
+    name: Annotated[Optional[str], Field(default=None, description="Название")]
+    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
+    type: Annotated[
+        Optional[str], Field(default=None, description="Назначение объекта")
+    ]
+    vid_oopt: Annotated[
+        Optional[str], Field(default=None, description="Является ли ООПТ")
+    ]
+    unesko: Annotated[
+        Optional[str], Field(default=None, description="Является ли объектом ЮНЕСКО")
+    ]
+    status: Annotated[Optional[str], Field(default=None, description="Статус")]
+    potential: Annotated[
+        Optional[str],
+        Field(default=None, description="Уровни административного деления"),
+    ]
+    tourist: Annotated[Optional[str], Field(default=None, description="Туризм")]
+    paid_services: Annotated[
+        Optional[str], Field(default=None, description="Платные услуги")
+    ]
+    url: Annotated[Optional[str], Field(default=None, description="Адресс ресурса")]
+    vid_okn: Annotated[
+        Optional[str], Field(default=None, description="Вид достопримечательности")
+    ]
+    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
+    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
+    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
+    is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
+    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
+
+
 class Layer36945Feature(
     NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38030]]
 ):
@@ -228,6 +1535,40 @@ class Layer36945Feature(
             "layerName": "Кадастровый округ тест",
             "layerVisibleByDefault": False,
             "categoryId": 38030,
+        }
+    )
+
+
+class Layer36316Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36947]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территории объектов культурного наследия",
+            "layerTreeId": 62,
+            "layerId": 36316,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территории объекта культурного наследия (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36947,
+        }
+    )
+
+
+class Layer36070Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36382]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые районы ",
+            "layerTreeId": 5873,
+            "layerId": 36070,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые районы",
+            "layerVisibleByDefault": False,
+            "categoryId": 36382,
         }
     )
 
@@ -249,6 +1590,117 @@ class Layer36071Feature(
     )
 
 
+class Layer37313Feature(NspdFeature[LineString, NspdProperties[Options38998]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Государственная граница Российской Федерации",
+            "layerTreeId": 7,
+            "layerId": 37313,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Государственная граница Российской Федерации",
+            "layerVisibleByDefault": False,
+            "categoryId": 38998,
+        }
+    )
+
+
+class Layer37314Feature(NspdFeature[LineString, NspdProperties[Options38999]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Субъекты Российской Федерации (линии)",
+            "layerTreeId": 9,
+            "layerId": 37314,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Границы между субъектами Российской Федерации (линии)",
+            "layerVisibleByDefault": False,
+            "categoryId": 38999,
+        }
+    )
+
+
+class Layer37315Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options39000]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Субъекты Российской Федерации (полигоны)",
+            "layerTreeId": 10,
+            "layerId": 37315,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Границы между субъектами Российской Федерации (полигоны)",
+            "layerVisibleByDefault": False,
+            "categoryId": 39000,
+        }
+    )
+
+
+class Layer36278Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36829]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Муниципальные образования (полигональный)",
+            "layerTreeId": 12,
+            "layerId": 36278,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Муниципальные образования (полигональный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36829,
+        }
+    )
+
+
+class Layer36279Feature(NspdFeature[LineString, NspdProperties[Options36830]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Муниципальные образования (линейный)",
+            "layerTreeId": 13,
+            "layerId": 36279,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Муниципальные образования (линейный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36830,
+        }
+    )
+
+
+class Layer36281Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36832]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Населённые пункты (полигоны)",
+            "layerTreeId": 15,
+            "layerId": 36281,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Границы населенных пунктов",
+            "layerVisibleByDefault": False,
+            "categoryId": 36832,
+        }
+    )
+
+
+class Layer37316Feature(NspdFeature[LineString, NspdProperties[Options38996]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Населённые пункты (линии)",
+            "layerTreeId": 16,
+            "layerId": 37316,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Границы населенных пунктов (линии)",
+            "layerVisibleByDefault": False,
+            "categoryId": 38996,
+        }
+    )
+
+
 class Layer36048Feature(
     NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
 ):
@@ -266,6 +1718,123 @@ class Layer36048Feature(
     )
 
 
+class Layer36472Feature(NspdFeature[LineString, NspdProperties[Options37153]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по проекту межевания территории (линейный)",
+            "layerTreeId": 20,
+            "layerId": 36472,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Земельные участки, образуемые по проекту межевания территории (линейный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 37153,
+        }
+    )
+
+
+class Layer36473Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options37158]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
+            "layerTreeId": 21,
+            "layerId": 36473,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 37158,
+        }
+    )
+
+
+class Layer37294Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38943]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по схеме расположения земельного участка",
+            "layerTreeId": 22,
+            "layerId": 37294,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Схемы расположения земельных участков",
+            "layerVisibleByDefault": False,
+            "categoryId": 38943,
+        }
+    )
+
+
+class Layer37299Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38981]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, выставленные на аукцион ",
+            "layerTreeId": 23,
+            "layerId": 37299,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земельные участки, выставленные на аукцион",
+            "layerVisibleByDefault": False,
+            "categoryId": 38981,
+        }
+    )
+
+
+class Layer37298Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38979]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, свободные от прав третьих лиц",
+            "layerTreeId": 24,
+            "layerId": 37298,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земельные участки свободные от прав третьих лиц",
+            "layerVisibleByDefault": False,
+            "categoryId": 38979,
+        }
+    )
+
+
+class Layer849407Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options445347]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земля для стройки ПКК",
+            "layerTreeId": 6409,
+            "layerId": 849407,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земля для стройки",
+            "layerVisibleByDefault": False,
+            "categoryId": 445347,
+        }
+    )
+
+
+class Layer849453Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options445397]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земля для туризма ПКК",
+            "layerTreeId": 6410,
+            "layerId": 849453,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земля для туризма",
+            "layerVisibleByDefault": False,
+            "categoryId": 445397,
+        }
+    )
+
+
 class Layer36049Feature(
     NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36369]]
 ):
@@ -279,5 +1848,437 @@ class Layer36049Feature(
             "layerName": "Росреестр: Здания ЕГРН",
             "layerVisibleByDefault": False,
             "categoryId": 36369,
+        }
+    )
+
+
+class Layer36328Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36383]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Сооружения",
+            "layerTreeId": 30,
+            "layerId": 36328,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Сооружения ЕГРН",
+            "layerVisibleByDefault": False,
+            "categoryId": 36383,
+        }
+    )
+
+
+class Layer36329Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36384]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты незавершенного строительства",
+            "layerTreeId": 31,
+            "layerId": 36329,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Объекты незавершённого строительства ЕГРН",
+            "layerVisibleByDefault": False,
+            "categoryId": 36384,
+        }
+    )
+
+
+class Layer37433Feature(NspdFeature[Point, NspdProperties[Options39663]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Единые недвижимые комплексы",
+            "layerTreeId": 35,
+            "layerId": 37433,
+            "layerType": "wms",
+            "geometryType": "POINT",
+            "layerName": "Единые недвижимые комплексы",
+            "layerVisibleByDefault": False,
+            "categoryId": 39663,
+        }
+    )
+
+
+class Layer37434Feature(NspdFeature[Point, NspdProperties[Options39664]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Предприятие как имущественный комплекс",
+            "layerTreeId": 36,
+            "layerId": 37434,
+            "layerType": "wms",
+            "geometryType": "POINT",
+            "layerName": "Предприятие как имущественный комплекс",
+            "layerVisibleByDefault": False,
+            "categoryId": 39664,
+        }
+    )
+
+
+class Layer37577Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ объектов культурного наследия",
+            "layerTreeId": 39,
+            "layerId": 37577,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ объектов культурного наследия",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37578Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ объектов энергетики, связи, транспорта",
+            "layerTreeId": 40,
+            "layerId": 37578,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ объектов энергетики, связи, транспорта",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37580Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ природных территорий",
+            "layerTreeId": 41,
+            "layerId": 37580,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ природных территорий",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37579Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ охраняемых объектов и безопасности",
+            "layerTreeId": 42,
+            "layerId": 37579,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ охраняемых объектов и безопасности",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37581Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Иные ЗОУИТ",
+            "layerTreeId": 43,
+            "layerId": 37581,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Иные ЗОУИТ",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer36315Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36946]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территориальные зоны",
+            "layerTreeId": 45,
+            "layerId": 36315,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территориальные зоны (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36946,
+        }
+    )
+
+
+class Layer37293Feature(NspdFeature[LineString, NspdProperties[Options38942]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Красные линии ",
+            "layerTreeId": 46,
+            "layerId": 37293,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Красные линии",
+            "layerVisibleByDefault": False,
+            "categoryId": 38942,
+        }
+    )
+
+
+class Layer36317Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36948]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Особо охраняемые природные территории ",
+            "layerTreeId": 49,
+            "layerId": 36317,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Особо охраняемая природные территории (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36948,
+        }
+    )
+
+
+class Layer36311Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36942]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Охотничьи угодья ",
+            "layerTreeId": 50,
+            "layerId": 36311,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Охотничьи угодья (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36942,
+        }
+    )
+
+
+class Layer36314Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36945]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Лесничества",
+            "layerTreeId": 51,
+            "layerId": 36314,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Лесничества (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36945,
+        }
+    )
+
+
+class Layer36469Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36992]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Береговые линии (границы водных объектов) (полигональный)",
+            "layerTreeId": 55,
+            "layerId": 36469,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Сведения о береговых линиях (границах водных объектов). (полигональный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36992,
+        }
+    )
+
+
+class Layer36470Feature(NspdFeature[LineString, NspdProperties[Options37148]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Береговые линии (границы водных объектов)(линейный)",
+            "layerTreeId": 56,
+            "layerId": 36470,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Сведения о береговых линиях (границах водных объектов). (линейный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 37148,
+        }
+    )
+
+
+class Layer36303Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36941]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Особые экономические зоны",
+            "layerTreeId": 58,
+            "layerId": 36303,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Особые экономические зоны (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36941,
+        }
+    )
+
+
+class Layer36312Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36943]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территории опережающего развития",
+            "layerTreeId": 59,
+            "layerId": 36312,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территории опережающего развития (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36943,
+        }
+    )
+
+
+class Layer36313Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36944]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Зоны территориального развития в Российской Федерации",
+            "layerTreeId": 60,
+            "layerId": 36313,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Зоны территориального развития в Российской Федерации (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 36944,
+        }
+    )
+
+
+class Layer36471Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36991]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Игорные зоны",
+            "layerTreeId": 61,
+            "layerId": 36471,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Границы игорных зон",
+            "layerVisibleByDefault": False,
+            "categoryId": 36991,
+        }
+    )
+
+
+class Layer37430Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options39228]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территории выполнения комплексных кадастровых работ",
+            "layerTreeId": 66,
+            "layerId": 37430,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН.Территории выполнения комплексных кадастровых работ",
+            "layerVisibleByDefault": False,
+            "categoryId": 39228,
+        }
+    )
+
+
+class Layer37295Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38944]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
+            "layerTreeId": 64,
+            "layerId": 37295,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
+            "layerVisibleByDefault": False,
+            "categoryId": 38944,
+        }
+    )
+
+
+class Layer37296Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38967]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Негативные процессы",
+            "layerTreeId": 65,
+            "layerId": 37296,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Негативные процессы",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer849601Feature(NspdFeature[Point, NspdProperties[Options445547]]):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты туристского интереса",
+            "layerTreeId": 6487,
+            "layerId": 849601,
+            "layerType": "wms",
+            "geometryType": "POINT",
+            "layerName": "Объекты туристского интереса",
+            "layerVisibleByDefault": False,
+            "categoryId": 445547,
+        }
+    )
+
+
+class Layer37236Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровая стоимость объекта",
+            "layerTreeId": 69,
+            "layerId": 37236,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Земельные участки ЕГРН. Кадастровая стоимость Тепловая карта",
+            "layerVisibleByDefault": False,
+            "categoryId": 36368,
+        }
+    )
+
+
+class Layer37758Feature(
+    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
+):
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Удельный показатель кадастровой стоимости",
+            "layerTreeId": 70,
+            "layerId": 37758,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Земельные участки ЕГРН. Удельный Показатель Кадастровой Стоимости Тепловая карта",
+            "layerVisibleByDefault": False,
+            "categoryId": 36368,
         }
     )
