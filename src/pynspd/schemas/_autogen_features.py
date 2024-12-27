@@ -383,12 +383,13 @@ class Options36368(OptionProperties):
     ]
     readable_address: Annotated[Optional[str], Field(default=None, description="Адрес")]
     specified_area: Annotated[
-        Optional[str], Field(default=None, description="Площадь уточненная")
+        Optional[str], Field(default=None, description="Площадь уточненная (кв. м)")
     ]
     declared_area: Annotated[
-        Optional[str], Field(default=None, description="Площадь декларированная")
+        Optional[str],
+        Field(default=None, description="Площадь декларированная (кв. м)"),
     ]
-    area: Annotated[Optional[str], Field(default=None, description="Площадь")]
+    area: Annotated[Optional[str], Field(default=None, description="Площадь (кв. м)")]
     status: Annotated[Optional[str], Field(default=None, description="Статус")]
     land_record_category_type: Annotated[
         Optional[str], Field(default=None, description="Категория земель")
@@ -400,11 +401,14 @@ class Options36368(OptionProperties):
         Optional[str], Field(default=None, description="Форма собственности")
     ]
     cost_value: Annotated[
-        Optional[float], Field(default=None, description="Кадастровая стоимость")
+        Optional[float], Field(default=None, description="Кадастровая стоимость (руб.)")
     ]
     cost_index: Annotated[
         Optional[float],
-        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+        Field(
+            default=None,
+            description="Удельный показатель кадастровой стоимости (руб./кв. м)",
+        ),
     ]
 
 
@@ -417,7 +421,9 @@ class Options37153(OptionProperties):
     ]
     area: Annotated[
         Optional[str],
-        Field(default=None, description="Площадь образуемого земельного участка"),
+        Field(
+            default=None, description="Площадь образуемого земельного участка (кв. м)"
+        ),
     ]
     land_use_text: Annotated[
         Optional[str],
@@ -448,7 +454,9 @@ class Options37158(OptionProperties):
     ]
     area: Annotated[
         Optional[str],
-        Field(default=None, description="Площадь образуемого земельного участка"),
+        Field(
+            default=None, description="Площадь образуемого земельного участка (кв. м)"
+        ),
     ]
     land_use_text: Annotated[
         Optional[str],
@@ -492,7 +500,9 @@ class Options38943(OptionProperties):
             default=None, description="Условный номер образуемого земельного участка"
         ),
     ]
-    shape_area: Annotated[Optional[float], Field(default=None, description="Площадь")]
+    shape_area: Annotated[
+        Optional[float], Field(default=None, description="Площадь (кв. м)")
+    ]
     address: Annotated[
         Optional[str],
         Field(
@@ -756,18 +766,21 @@ class Options36369(OptionProperties):
     ]
     purpose: Annotated[Optional[str], Field(default=None, description="Назначение")]
     build_record_area: Annotated[
-        Optional[float], Field(default=None, description="Площадь общая")
+        Optional[float], Field(default=None, description="Площадь общая (кв. м)")
     ]
     status: Annotated[Optional[str], Field(default=None, description="Статус")]
     ownership_type: Annotated[
         Optional[str], Field(default=None, description="Форма собственности")
     ]
     cost_value: Annotated[
-        Optional[float], Field(default=None, description="Кадастровая стоимость")
+        Optional[float], Field(default=None, description="Кадастровая стоимость (руб.)")
     ]
     cost_index: Annotated[
         Optional[float],
-        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+        Field(
+            default=None,
+            description="Удельный показатель кадастровой стоимости (руб./ кв. м)",
+        ),
     ]
     floors: Annotated[
         Optional[str],
@@ -777,10 +790,10 @@ class Options36369(OptionProperties):
         Optional[str], Field(default=None, description="Количество подземных этажей")
     ]
     year_built: Annotated[
-        Optional[str], Field(default=None, description="Завершение строительства")
+        Optional[str], Field(default=None, description="Завершение строительства (г.)")
     ]
     year_commisioning: Annotated[
-        Optional[str], Field(default=None, description="Ввод в эксплуатацию")
+        Optional[str], Field(default=None, description="Ввод в эксплуатацию (г.)")
     ]
     cultural_heritage_object: Annotated[
         Optional[str],
@@ -827,19 +840,27 @@ class Options36383(OptionProperties):
     params_purpose: Annotated[
         Optional[str], Field(default=None, description="Назначение")
     ]
-    params_height: Annotated[Optional[float], Field(default=None, description="высота")]
-    params_depth: Annotated[Optional[float], Field(default=None, description="глубина")]
+    params_height: Annotated[
+        Optional[float], Field(default=None, description="высота (м.)")
+    ]
+    params_depth: Annotated[
+        Optional[float], Field(default=None, description="глубина (м.)")
+    ]
     params_occurence_depth: Annotated[
-        Optional[float], Field(default=None, description="глубина залегания")
+        Optional[float], Field(default=None, description="глубина залегания (м.)")
     ]
     params_extension: Annotated[
-        Optional[float], Field(default=None, description="протяженность")
+        Optional[float], Field(default=None, description="протяженность (м.)")
     ]
-    params_volume: Annotated[Optional[float], Field(default=None, description="объем")]
+    params_volume: Annotated[
+        Optional[float], Field(default=None, description="объем (куб. м)")
+    ]
     params_built_up_area: Annotated[
-        Optional[float], Field(default=None, description="Площадь застройки")
+        Optional[float], Field(default=None, description="Площадь застройки (кв. м)")
     ]
-    params_area: Annotated[Optional[float], Field(default=None, description="Площадь")]
+    params_area: Annotated[
+        Optional[float], Field(default=None, description="Площадь (кв. м)")
+    ]
     object_previously_posted: Annotated[
         Optional[str], Field(default=None, description="Статус")
     ]
@@ -847,11 +868,14 @@ class Options36383(OptionProperties):
         Optional[str], Field(default=None, description="Форма собственности")
     ]
     cost_value: Annotated[
-        Optional[float], Field(default=None, description="Кадастровая стоимость")
+        Optional[float], Field(default=None, description="Кадастровая стоимость (руб.)")
     ]
     cost_index: Annotated[
         Optional[float],
-        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+        Field(
+            default=None,
+            description="Удельный показатель кадастровой стоимости (руб./кв. м)",
+        ),
     ]
     params_floors: Annotated[
         Optional[str],
@@ -906,17 +930,19 @@ class Options36384(OptionProperties):
     object_under_construction_record_name: Annotated[
         Optional[str], Field(default=None, description="Наименование")
     ]
-    height: Annotated[Optional[float], Field(default=None, description="Высота")]
-    depth: Annotated[Optional[float], Field(default=None, description="Глубина")]
+    height: Annotated[Optional[float], Field(default=None, description="Высота (м.)")]
+    depth: Annotated[Optional[float], Field(default=None, description="Глубина (м.)")]
     occurence_depth: Annotated[
-        Optional[float], Field(default=None, description="Глубина залегания")
+        Optional[float], Field(default=None, description="Глубина залегания (м.)")
     ]
     extension: Annotated[
-        Optional[float], Field(default=None, description="Протяжённость")
+        Optional[float], Field(default=None, description="Протяжённость (м.)")
     ]
-    volume: Annotated[Optional[float], Field(default=None, description="Объем")]
+    volume: Annotated[
+        Optional[float], Field(default=None, description="Объем (куб. м)")
+    ]
     built_up_area: Annotated[
-        Optional[float], Field(default=None, description="Площадь застройки")
+        Optional[float], Field(default=None, description="Площадь застройки (кв. м)")
     ]
     common_data_status: Annotated[
         Optional[str], Field(default=None, description="Статус")
@@ -925,15 +951,18 @@ class Options36384(OptionProperties):
         Optional[str], Field(default=None, description="Форма собственности")
     ]
     cost_value: Annotated[
-        Optional[float], Field(default=None, description="Кадастровая стоимость")
+        Optional[float], Field(default=None, description="Кадастровая стоимость (руб.)")
     ]
     cost_index: Annotated[
         Optional[float],
-        Field(default=None, description="Удельный показатель кадастровой стоимости"),
+        Field(
+            default=None,
+            description="Удельный показатель кадастровой стоимости (руб./ кв. м)",
+        ),
     ]
     degree_readiness: Annotated[
         Optional[str],
-        Field(default=None, description="Степень готовности ОНС в процентах"),
+        Field(default=None, description="Степень готовности ОНС в процентах (%)"),
     ]
     purpose: Annotated[
         Optional[str],
@@ -970,7 +999,7 @@ class Options39663(OptionProperties):
         Optional[str], Field(default=None, description="Статус")
     ]
     cost_value: Annotated[
-        Optional[float], Field(default=None, description="Кадастровая стоимость")
+        Optional[float], Field(default=None, description="Кадастровая стоимость (руб.)")
     ]
     facility_cad_number: Annotated[
         Optional[str],
@@ -1006,7 +1035,7 @@ class Options39664(OptionProperties):
         Optional[str], Field(default=None, description="Статус")
     ]
     cost_value: Annotated[
-        Optional[str], Field(default=None, description="Стоимость предприятия")
+        Optional[str], Field(default=None, description="Стоимость предприятия (руб.)")
     ]
 
 
@@ -1474,11 +1503,17 @@ class Options38967(OptionProperties):
     index_map: Annotated[Optional[str], Field(default=None, description="Индекс")]
     process_ty_title: Annotated[
         Optional[str],
-        Field(default=None, description="Вид и степень развития негативного процесса"),
+        Field(
+            default=None,
+            description="Вид и степень развития негативного процесса (га.)",
+        ),
     ]
     shape_area: Annotated[
         Optional[str],
-        Field(default=None, description="Площадь проявления негативного процесса"),
+        Field(
+            default=None,
+            description="Площадь проявления негативного процесса (% к площади работ)",
+        ),
     ]
     zone_proya: Annotated[
         Optional[str], Field(default=None, description="Зона проявления")

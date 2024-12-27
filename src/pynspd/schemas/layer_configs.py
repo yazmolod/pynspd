@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 
 from pydantic import ConfigDict, field_serializer, field_validator
 
@@ -57,7 +57,8 @@ class CardField(CamelModel):
     padding: bool
     default_value: str
     show_empty: bool
-    array_json_params_show: Any
+    prefix: Optional[str] = None
+    postfix: Optional[str] = None
 
     @field_validator("key_value", mode="before")
     @classmethod

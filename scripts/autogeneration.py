@@ -45,7 +45,7 @@ class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...
     {%- for field in fields %}
     {{ field.key_value }}: Annotated[
         Optional[{{field.key_type}}],
-        Field(default=None, description="{{field.key_name}}")
+        Field(default=None, description="{{field.key_name}}{% if field.postfix != None %} ({{ field.postfix }}){% endif %}")
     ]
     {%- endfor %}
 {% endfor %}

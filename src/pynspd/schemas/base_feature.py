@@ -17,6 +17,7 @@ class NspdFeature(Feature[Geom, Props], Generic[Geom, Props]):
 
     @classmethod
     def by_title(cls: Type[Self], title: LayerTitle) -> Type[Self]:
+        """Получение модели слоя по имени"""
         for generic_subclass in cls.__subclasses__():
             for subclass in generic_subclass.__subclasses__():
                 meta = subclass.layer_meta
@@ -40,6 +41,15 @@ class NspdProperties(CamelModel, Generic[OptProps]):
 
 class OptionProperties(BaseModel):
     model_config = ConfigDict(extra="allow")
+
+    def model_dump_human_readable(self):
+        """Генерация словря с ключами, аналогичным карточке на сайте"""
+        data = self.model_dump()
+        alias = {k: v.description for k, v in self.model_fields.items()}
+        aliased_data = {
+            alias[k]: v for k, v in data.items() if k not in self.model_extra.keys()
+        }
+        return aliased_data
 
 
 class SystemInfoProperties(CamelModel):
