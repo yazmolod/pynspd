@@ -36,10 +36,8 @@ from pynspd.schemas.properties import Properties, OptionProperties
 {% for category_id, fields in layers_fields.items() %}
 class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...{% endif %}
     {%- for field in fields %}
-    {{ field.key_value }}: Annotated[
-        Optional[{{field.key_type}}],
-        Field(default=None, description="{{field.key_name}}{% if field.postfix != None %} ({{ field.postfix }}){% endif %}")
-    ]
+    {{ field.key_value }}: Optional[{{field.key_type}}] = None
+    \"\"\"{{field.key_name}}{% if field.postfix != None %} ({{ field.postfix }}){% endif %}\"\"\"
     {%- endfor %}
 {% endfor %}
 

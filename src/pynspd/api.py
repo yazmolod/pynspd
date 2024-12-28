@@ -1,4 +1,8 @@
-from typing import Any, Optional, Type, cast
+import asyncio
+import re
+from typing import Any, Generator, Optional, Type, Union, cast
+
+from shapely import MultiPolygon, Point, Polygon
 
 from pynspd.client import get_async_client
 from pynspd.schemas import Layer36048Feature, NspdFeature
@@ -13,7 +17,18 @@ class AsyncNspd:
     async def __aenter__(self):
         return self
 
-    async def __aexit__(self, *exc): ...
+    async def __aexit__(self, *exc):
+        await self.close()
+
+    async def close(self):
+        """Окончание сессии"""
+        await self._client.aclose()
+
+    @staticmethod
+    def iter_cn(input_str: str) -> Generator[str, None, None]:
+        """Извлечение кадастровых номеров из строки"""
+        for cn in re.findall(r"\d+:\d+:\d+:\d+", input_str):
+            yield cn
 
     async def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
         r = await self._client.get("/api/geoportal/v2/search/geoportal", params=params)
@@ -61,6 +76,30 @@ class AsyncNspd:
         )
 
     async def search_one(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
+        """Поиск одного объекта по определению слоя
+
+        Определение слоя можно
+        1) импортировать из `pynspd.schemas`, зная его id
+        ```
+        from pynspd.schemas import Layer36048Feature    # 36048 - id слоя, которое мы подсмотрели из запросов к wms на сайте
+        feature = await api.search_one("77:06:0004002:7207", Layer36048Feature)
+        feature.properties.options.cad_num    # IDE знает тип и подсказывает возможные свойства
+        ```
+
+        2) воспользоваться методом `NspdFeature.by_title`
+        ```
+        from pynspd.schemas import NspdFeature
+        feature = await api.search_one("77:06:0004002:7207", NspdFeature.by_title("Земельные участки из ЕГРН"))    # IDE знает весь перечень слоев и подсказывает ввод
+        feature.properties.options.cad_num    # свойство будет так же доступно, но IDE уже не знает о нем
+        ```
+
+        Args:
+            query (str): поисковой запрос
+            layer_def (Type[Feat]): Определение слоя
+
+        Returns:
+            Optional[Feat]: валидированная модель слоя, если найдено
+        """
         response = await self.search_by_layers(query, layer_def.layer_meta.layer_id)
         if response is None:
             return None
@@ -68,24 +107,21 @@ class AsyncNspd:
         feature = response.data.features[0]
         return layer_def.model_validate(feature.model_dump(by_alias=True))
 
-    # async def search_many(self, query: str, *layer_def: Type[T]) -> Optional[T]:
-    #     ...
-
-    async def find_zu(self, cn: str) -> Optional[Layer36048Feature]:
+    async def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
+        """Поиск ЗУ по кадастровому номеру"""
         layer_def = cast(
             Type[Layer36048Feature], NspdFeature.by_title("Земельные участки из ЕГРН")
         )
         return await self.search_one(cn, layer_def)
 
-    # async def find_oks(self, cn: str) -> Optional[OksFeature]:
-    #     return await self.search_one(cn, LayerIdMap['Здания'], OksFeature)
+    async def search_many_zu(self, cns_string: str) -> list[Layer36048Feature | None]:
+        """Поиск всех ЗУ, содержащихся в строке"""
+        cns = list(self.iter_cn(cns_string))
+        features = await asyncio.gather(*[self.search_zu(cn) for cn in cns])
+        return features
 
-    # async def find_zu_or_oks(self, cn: str):
-    #     return await self.search_request(cn, LayerIdMap['Земельные участки из ЕГРН'], LayerIdMap['Здания'])
+    async def search_in_contour(self, countour: Union[Polygon, MultiPolygon]):
+        raise NotImplementedError
 
-    # async def find_in_contour(self, countour):
-    #     "не больше 40, но в ошибке есть id"
-    #     ...
-
-    # async def find_at_point(self, pt):
-    #     ...
+    async def search_at_point(self, pt: Point):
+        raise NotImplementedError

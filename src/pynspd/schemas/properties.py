@@ -22,7 +22,7 @@ class Properties(CamelModel, Generic[OptProps]):
 
 
 class OptionProperties(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="allow", use_attribute_docstrings=True)
 
     no_coords: Annotated[bool, Field(alias="geocoderObject", default=False)]
 
