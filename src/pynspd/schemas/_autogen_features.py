@@ -2,16 +2,12 @@
 from datetime import date
 from typing import Annotated, Optional, Union
 
-from geojson_pydantic import (
-    LineString,
-    MultiPolygon,
-    Point,
-    Polygon,
-)
 from pydantic import Field
 
-from pynspd.schemas.base_feature import NspdFeature, NspdProperties, OptionProperties
+from pynspd.schemas.feature import _BaseFeature
+from pynspd.schemas.geometries import LineString, MultiPolygon, Point, Polygon
 from pynspd.schemas.layer_configs import LayerNode
+from pynspd.schemas.properties import OptionProperties, Properties
 
 
 class Options38030(OptionProperties):
@@ -548,177 +544,229 @@ class Options38979(OptionProperties): ...
 
 class Options445347(OptionProperties):
     kvartal_cn: Annotated[
-        Optional[str], Field(default=None, description="Номер квартала")
+        Optional[str], Field(default=None, description="Кадастровый квартал")
     ]
-    reg_name: Annotated[Optional[str], Field(default=None, description="Регион")]
+    reg_name: Annotated[
+        Optional[str], Field(default=None, description="Субъект Российской Федерации")
+    ]
     mun: Annotated[
         Optional[str], Field(default=None, description="Муниципальное образование")
     ]
-    np: Annotated[Optional[str], Field(default=None, description="Населенный пункт")]
-    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
+    address: Annotated[Optional[str], Field(default=None, description="Адрес")]
     category_text: Annotated[
-        Optional[str], Field(default=None, description="Название категорий")
+        Optional[str], Field(default=None, description="Категория земель")
     ]
-    right: Annotated[Optional[str], Field(default=None, description="Собственности")]
+    right: Annotated[
+        Optional[str], Field(default=None, description="Форма собственности")
+    ]
     util_by_doc: Annotated[
-        Optional[str], Field(default=None, description="Предназначение")
+        Optional[str], Field(default=None, description="Вид разрешенного использования")
     ]
     potential: Annotated[
-        Optional[str], Field(default=None, description="Тип построения")
+        Optional[str], Field(default=None, description="Потенциал использования")
     ]
     has_oks: Annotated[
-        Optional[str], Field(default=None, description="Наличие объектов")
+        Optional[str],
+        Field(default=None, description="Объекты капитального строительства"),
     ]
     has_network: Annotated[
-        Optional[str], Field(default=None, description="Наличие сетей")
-    ]
-    develop_area: Annotated[
-        Optional[str], Field(default=None, description="Развитие области")
+        Optional[str], Field(default=None, description="Инженерные сети")
     ]
     privileges_peo: Annotated[
-        Optional[str], Field(default=None, description="Привилегии peo")
+        Optional[str],
+        Field(
+            default=None,
+            description="Предназначена для предоставления льготным категориям граждан",
+        ),
     ]
-    privileges: Annotated[Optional[str], Field(default=None, description="Привилегии")]
+    privileges: Annotated[
+        Optional[str], Field(default=None, description="Льготная категория")
+    ]
     uo_name: Annotated[
-        Optional[str], Field(default=None, description="Название района")
+        Optional[str],
+        Field(default=None, description="Наименование уполномоченного органа"),
     ]
     uo_address: Annotated[
-        Optional[str], Field(default=None, description="Адрес района")
+        Optional[str], Field(default=None, description="Адрес уполномоченного органа")
     ]
     uo_phone: Annotated[
-        Optional[str], Field(default=None, description="Номер телефона")
+        Optional[str], Field(default=None, description="Телефон уполномоченного органа")
     ]
-    uo_url: Annotated[Optional[str], Field(default=None, description="Сайт")]
-    uo_email: Annotated[Optional[str], Field(default=None, description="Имэйл")]
+    uo_url: Annotated[
+        Optional[str], Field(default=None, description="Сайт в сети Интернет")
+    ]
+    uo_email: Annotated[Optional[str], Field(default=None, description="e-mail")]
     inves_portal: Annotated[
-        Optional[str], Field(default=None, description="Сайт портала")
+        Optional[str], Field(default=None, description="Инвестиционный портал региона")
     ]
-    area: Annotated[Optional[str], Field(default=None, description="Область")]
-    cn: Annotated[Optional[str], Field(default=None, description="Кадастровый номер")]
-    dom_rf: Annotated[Optional[str], Field(default=None, description="dom_rf")]
+    area: Annotated[Optional[str], Field(default=None, description="Площадь")]
+    cn: Annotated[
+        Optional[str], Field(default=None, description="Кадастровый или условный номер")
+    ]
+    dom_rf: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Агентом Российской Федерации в отношении земельного участка выступает АО «ДОМ. РФ»",
+        ),
+    ]
     develop_build: Annotated[
-        Optional[str], Field(default=None, description="develop_build")
+        Optional[str],
+        Field(
+            default=None,
+            description="Входит в территорию, в отношении которой возможно (планируется) комплексное развитие территории жилой застройки",
+        ),
     ]
-    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
-    id: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
-    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
-    data_type_text: Annotated[
-        Optional[str], Field(default=None, description="Тип участка")
-    ]
-    potential_code: Annotated[
-        Optional[str], Field(default=None, description="potential_code")
-    ]
-    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
-    is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
-    okrug: Annotated[Optional[str], Field(default=None, description="Округ")]
-    okrug_cn: Annotated[Optional[str], Field(default=None, description="okrug_cn")]
-    rayon: Annotated[Optional[str], Field(default=None, description="Район")]
-    rayon_cn: Annotated[
-        Optional[str], Field(default=None, description="Кадастровый район")
-    ]
-    kvartal: Annotated[Optional[str], Field(default=None, description="Квартал")]
-    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
 
 
 class Options445397(OptionProperties):
     kvartal_cn: Annotated[
-        Optional[str], Field(default=None, description="Кадастровый номер квартала")
+        Optional[str], Field(default=None, description="Кадастровый квартал")
     ]
-    reg_name: Annotated[Optional[str], Field(default=None, description="Регион")]
+    reg_name: Annotated[
+        Optional[str], Field(default=None, description="Субъект Российской Федерации")
+    ]
     mun: Annotated[
         Optional[str], Field(default=None, description="Муниципальное образование")
     ]
-    np: Annotated[Optional[str], Field(default=None, description="Населенный пункт")]
-    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
-    right: Annotated[Optional[str], Field(default=None, description="Собственности")]
+    address: Annotated[Optional[str], Field(default=None, description="Адрес")]
+    right: Annotated[
+        Optional[str], Field(default=None, description="Форма собственности")
+    ]
     category_text: Annotated[
-        Optional[str], Field(default=None, description="Название категорий")
+        Optional[str], Field(default=None, description="Категория земель")
     ]
-    cad_cost: Annotated[Optional[str], Field(default=None, description="Цена")]
+    cad_cost: Annotated[
+        Optional[str], Field(default=None, description="Кадастровая стоимость")
+    ]
     terzone_name_by_pzz: Annotated[
-        Optional[str], Field(default=None, description="Зоны")
+        Optional[str], Field(default=None, description="Территориальная зона")
     ]
-    poi: Annotated[Optional[str], Field(default=None, description="Название объектов")]
-    id_oti: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
+    poi: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Наименование ближайшего объекта туристского интереса",
+        ),
+    ]
+    id_oti: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Идентификационный номер объекта туристского интереса",
+        ),
+    ]
     poi_cn: Annotated[
-        Optional[str], Field(default=None, description="Кадастровый номер")
+        Optional[str],
+        Field(
+            default=None,
+            description="Кадастровый или реестровый номер объекта туристского интереса",
+        ),
     ]
     data_type: Annotated[Optional[str], Field(default=None, description="Тип данных")]
     tour_object_description: Annotated[
-        Optional[str], Field(default=None, description="Ссылка на сайт")
+        Optional[str],
+        Field(
+            default=None,
+            description="Информационной ресурс, содержащий информацию об объекте туристского интереса",
+        ),
     ]
     has_network: Annotated[
         Optional[str], Field(default=None, description="Наличие сети")
     ]
     power_supply: Annotated[
-        Optional[str], Field(default=None, description="Наличие электричества")
+        Optional[str], Field(default=None, description="Электроснабжение")
     ]
     water_supply: Annotated[
-        Optional[str], Field(default=None, description="Наличие водоснабжения")
+        Optional[str], Field(default=None, description="Водоснабжение")
     ]
     gas_supply: Annotated[
-        Optional[str], Field(default=None, description="Наличие газа")
+        Optional[str], Field(default=None, description="Газоснабжение")
     ]
     sewerage: Annotated[Optional[str], Field(default=None, description="Канализация")]
     heat_supply: Annotated[
         Optional[str], Field(default=None, description="Теплоснабжение")
     ]
     distance_to_near_tour_object: Annotated[
-        Optional[str], Field(default=None, description="Дистанция до объекта тура")
+        Optional[str],
+        Field(
+            default=None,
+            description="Расстояние до ближайшего объекта туристского интереса (км)",
+        ),
     ]
     distance_to_near_fed_road: Annotated[
         Optional[str],
-        Field(default=None, description="Расстояние до ближайшей федеральной дороги"),
+        Field(
+            default=None, description="Расстояние до ближайшей федеральной трассы (км)"
+        ),
     ]
     distance_to_near_hard_road: Annotated[
         Optional[str],
-        Field(default=None, description="Дистанция до ближайшей асфальтовой дороги"),
+        Field(
+            default=None,
+            description="Расстояние до ближайшей дороги с твердым покрытием (км)",
+        ),
     ]
     distance_to_near_district: Annotated[
         Optional[str],
-        Field(default=None, description="Расстоянеие до ближайшего района"),
+        Field(
+            default=None,
+            description="Расстояние до ближайшего центра муниципального района или городского округа (км)",
+        ),
     ]
     distance_to_near_locality: Annotated[
         Optional[str],
-        Field(default=None, description="Расстояние до ближайшего населенного пункта"),
+        Field(
+            default=None, description="Расстояние до ближайшего населенного пункта (км)"
+        ),
     ]
     distance_to_near_public_catering: Annotated[
         Optional[str],
-        Field(default=None, description="Расстояние до ближайшего общепита"),
+        Field(
+            default=None,
+            description="Расстояние до ближайшего объекта общественного питания (км)",
+        ),
     ]
     distance_to_near_health_care: Annotated[
-        Optional[str], Field(default=None, description="Расстояние до больницы")
+        Optional[str],
+        Field(
+            default=None,
+            description="Расстояние до ближайшего объекта здравоохранения (км)",
+        ),
     ]
     distance_to_near_public_transport: Annotated[
         Optional[str],
-        Field(default=None, description="Расстояние до общественного транспорта"),
+        Field(
+            default=None,
+            description="Расстояние до ближайшей остановки общественного транспорта (км)",
+        ),
     ]
     distance_to_near_railway_station: Annotated[
         Optional[str],
-        Field(default=None, description="Расстояние до железнодорожной станции"),
+        Field(
+            default=None,
+            description="Расстояние до ближайшей железнодорожной станции (км)",
+        ),
     ]
     distance_to_near_airport: Annotated[
-        Optional[str], Field(default=None, description="Расстояние до аэропорта")
+        Optional[str],
+        Field(default=None, description="Расстояние до ближайшего аэропорта (км)"),
     ]
     uo_name: Annotated[
         Optional[str],
-        Field(default=None, description="Название уполномоченных образований"),
+        Field(default=None, description="Наименование уполномоченного органа"),
     ]
     uo_address: Annotated[
         Optional[str], Field(default=None, description="Адресс уполномоченного органа")
     ]
-    uo_phone: Annotated[
-        Optional[str], Field(default=None, description="Телефон уполномоченного органа")
-    ]
-    uo_email: Annotated[
-        Optional[str], Field(default=None, description="Имэйл уполномоченного органа")
-    ]
+    uo_phone: Annotated[Optional[str], Field(default=None, description="Телефон")]
+    uo_email: Annotated[Optional[str], Field(default=None, description="e-mail")]
     additional_info: Annotated[
-        Optional[str], Field(default=None, description="Доп. информация")
+        Optional[str], Field(default=None, description="Инвестиционный портал региона")
     ]
-    area: Annotated[Optional[str], Field(default=None, description="Область")]
+    area: Annotated[Optional[str], Field(default=None, description="Площадь, м")]
     util_by_doc: Annotated[
-        Optional[str], Field(default=None, description="Назначение построения")
+        Optional[str], Field(default=None, description="Вид разрешенного использования")
     ]
     oti: Annotated[
         Optional[str], Field(default=None, description="Объект туристского интереса")
@@ -727,24 +775,6 @@ class Options445397(OptionProperties):
         Optional[str],
         Field(default=None, description="Объекты капитального строительства"),
     ]
-    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
-    id: Annotated[Optional[str], Field(default=None, description="Идентификатор")]
-    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
-    data_type_text: Annotated[
-        Optional[str], Field(default=None, description="Тип территории")
-    ]
-    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
-    is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
-    okrug: Annotated[Optional[str], Field(default=None, description="Округ")]
-    okrug_cn: Annotated[
-        Optional[str], Field(default=None, description="Кадастровый номер округа")
-    ]
-    rayon: Annotated[Optional[str], Field(default=None, description="Район")]
-    rayon_cn: Annotated[
-        Optional[str], Field(default=None, description="Кадастровый район")
-    ]
-    kvartal: Annotated[Optional[str], Field(default=None, description="Квартал")]
-    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
 
 
 class Options36369(OptionProperties):
@@ -1526,39 +1556,73 @@ class Options38967(OptionProperties):
 
 
 class Options445547(OptionProperties):
-    name: Annotated[Optional[str], Field(default=None, description="Название")]
-    address: Annotated[Optional[str], Field(default=None, description="Адресс")]
+    name: Annotated[
+        Optional[str],
+        Field(default=None, description="Наименование объекта туристского интереса"),
+    ]
+    cn: Annotated[
+        Optional[str],
+        Field(default=None, description="Кадастровый номер (при наличии)"),
+    ]
+    address: Annotated[
+        Optional[str],
+        Field(default=None, description="Адрес объекта туристского интереса"),
+    ]
     type: Annotated[
-        Optional[str], Field(default=None, description="Назначение объекта")
+        Optional[str],
+        Field(default=None, description="Тип объекта туристского интереса"),
     ]
     vid_oopt: Annotated[
-        Optional[str], Field(default=None, description="Является ли ООПТ")
+        Optional[str],
+        Field(default=None, description="Вид особо охраняемой природной территории"),
     ]
     unesko: Annotated[
-        Optional[str], Field(default=None, description="Является ли объектом ЮНЕСКО")
+        Optional[str],
+        Field(
+            default=None,
+            description="Наличие у объекта туристского интереса статуса ЮНЕСКО",
+        ),
     ]
-    status: Annotated[Optional[str], Field(default=None, description="Статус")]
+    status: Annotated[
+        Optional[str],
+        Field(default=None, description="Статус объекта туристского интереса"),
+    ]
     potential: Annotated[
         Optional[str],
-        Field(default=None, description="Уровни административного деления"),
+        Field(default=None, description="Потенциальный интерес к объекту"),
     ]
-    tourist: Annotated[Optional[str], Field(default=None, description="Туризм")]
+    tourist: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Среднее количество туристов, посетивших объект туристского интереса за два предыдущих года(тыс. чел.)",
+        ),
+    ]
     paid_services: Annotated[
-        Optional[str], Field(default=None, description="Платные услуги")
+        Optional[str],
+        Field(
+            default=None,
+            description="Средний объем платных услуг, оказанных объектом туристского интереса за два предыдущих года(млн. руб.)",
+        ),
     ]
-    url: Annotated[Optional[str], Field(default=None, description="Адресс ресурса")]
+    url: Annotated[
+        Optional[str],
+        Field(
+            default=None,
+            description="Ссылка на портал, содержащий информацию об объекте туристского интереса",
+        ),
+    ]
     vid_okn: Annotated[
-        Optional[str], Field(default=None, description="Вид достопримечательности")
+        Optional[str],
+        Field(
+            default=None, description="Вид объекта культурного-исторического наследия"
+        ),
     ]
-    file_name: Annotated[Optional[str], Field(default=None, description="Имя файла")]
-    anno_text: Annotated[Optional[str], Field(default=None, description="anno_text")]
-    reg: Annotated[Optional[str], Field(default=None, description="Реестр")]
     is_actual: Annotated[Optional[str], Field(default=None, description="Актуальность")]
-    geom: Annotated[Optional[str], Field(default=None, description="Тип геометрии")]
 
 
 class Layer36945Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38030]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38030]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1575,7 +1639,7 @@ class Layer36945Feature(
 
 
 class Layer36316Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36947]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36947]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1592,7 +1656,7 @@ class Layer36316Feature(
 
 
 class Layer36070Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36382]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36382]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1609,7 +1673,7 @@ class Layer36070Feature(
 
 
 class Layer36071Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36381]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36381]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1625,7 +1689,7 @@ class Layer36071Feature(
     )
 
 
-class Layer37313Feature(NspdFeature[LineString, NspdProperties[Options38998]]):
+class Layer37313Feature(_BaseFeature[LineString, Properties[Options38998]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Государственная граница Российской Федерации",
@@ -1640,7 +1704,7 @@ class Layer37313Feature(NspdFeature[LineString, NspdProperties[Options38998]]):
     )
 
 
-class Layer37314Feature(NspdFeature[LineString, NspdProperties[Options38999]]):
+class Layer37314Feature(_BaseFeature[LineString, Properties[Options38999]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Субъекты Российской Федерации (линии)",
@@ -1656,7 +1720,7 @@ class Layer37314Feature(NspdFeature[LineString, NspdProperties[Options38999]]):
 
 
 class Layer37315Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options39000]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39000]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1673,7 +1737,7 @@ class Layer37315Feature(
 
 
 class Layer36278Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36829]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36829]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1689,7 +1753,7 @@ class Layer36278Feature(
     )
 
 
-class Layer36279Feature(NspdFeature[LineString, NspdProperties[Options36830]]):
+class Layer36279Feature(_BaseFeature[LineString, Properties[Options36830]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Муниципальные образования (линейный)",
@@ -1705,7 +1769,7 @@ class Layer36279Feature(NspdFeature[LineString, NspdProperties[Options36830]]):
 
 
 class Layer36281Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36832]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36832]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1721,7 +1785,7 @@ class Layer36281Feature(
     )
 
 
-class Layer37316Feature(NspdFeature[LineString, NspdProperties[Options38996]]):
+class Layer37316Feature(_BaseFeature[LineString, Properties[Options38996]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Населённые пункты (линии)",
@@ -1737,7 +1801,7 @@ class Layer37316Feature(NspdFeature[LineString, NspdProperties[Options38996]]):
 
 
 class Layer36048Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1753,7 +1817,7 @@ class Layer36048Feature(
     )
 
 
-class Layer36472Feature(NspdFeature[LineString, NspdProperties[Options37153]]):
+class Layer36472Feature(_BaseFeature[LineString, Properties[Options37153]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, образуемые по проекту межевания территории (линейный)",
@@ -1769,7 +1833,7 @@ class Layer36472Feature(NspdFeature[LineString, NspdProperties[Options37153]]):
 
 
 class Layer36473Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options37158]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options37158]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1786,7 +1850,7 @@ class Layer36473Feature(
 
 
 class Layer37294Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38943]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38943]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1803,7 +1867,7 @@ class Layer37294Feature(
 
 
 class Layer37299Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38981]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38981]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1820,7 +1884,7 @@ class Layer37299Feature(
 
 
 class Layer37298Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38979]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38979]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1837,7 +1901,7 @@ class Layer37298Feature(
 
 
 class Layer849407Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options445347]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445347]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1854,7 +1918,7 @@ class Layer849407Feature(
 
 
 class Layer849453Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options445397]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445397]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1871,7 +1935,7 @@ class Layer849453Feature(
 
 
 class Layer36049Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36369]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36369]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1888,7 +1952,7 @@ class Layer36049Feature(
 
 
 class Layer36328Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36383]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36383]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1905,7 +1969,7 @@ class Layer36328Feature(
 
 
 class Layer36329Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36384]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36384]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1921,7 +1985,7 @@ class Layer36329Feature(
     )
 
 
-class Layer37433Feature(NspdFeature[Point, NspdProperties[Options39663]]):
+class Layer37433Feature(_BaseFeature[Point, Properties[Options39663]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Единые недвижимые комплексы",
@@ -1936,7 +2000,7 @@ class Layer37433Feature(NspdFeature[Point, NspdProperties[Options39663]]):
     )
 
 
-class Layer37434Feature(NspdFeature[Point, NspdProperties[Options39664]]):
+class Layer37434Feature(_BaseFeature[Point, Properties[Options39664]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Предприятие как имущественный комплекс",
@@ -1952,7 +2016,7 @@ class Layer37434Feature(NspdFeature[Point, NspdProperties[Options39664]]):
 
 
 class Layer37577Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1969,7 +2033,7 @@ class Layer37577Feature(
 
 
 class Layer37578Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -1986,7 +2050,7 @@ class Layer37578Feature(
 
 
 class Layer37580Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2003,7 +2067,7 @@ class Layer37580Feature(
 
 
 class Layer37579Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2020,7 +2084,7 @@ class Layer37579Feature(
 
 
 class Layer37581Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2037,7 +2101,7 @@ class Layer37581Feature(
 
 
 class Layer36315Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36946]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36946]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2053,7 +2117,7 @@ class Layer36315Feature(
     )
 
 
-class Layer37293Feature(NspdFeature[LineString, NspdProperties[Options38942]]):
+class Layer37293Feature(_BaseFeature[LineString, Properties[Options38942]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Красные линии ",
@@ -2069,7 +2133,7 @@ class Layer37293Feature(NspdFeature[LineString, NspdProperties[Options38942]]):
 
 
 class Layer36317Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36948]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36948]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2086,7 +2150,7 @@ class Layer36317Feature(
 
 
 class Layer36311Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36942]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36942]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2103,7 +2167,7 @@ class Layer36311Feature(
 
 
 class Layer36314Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36945]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36945]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2120,7 +2184,7 @@ class Layer36314Feature(
 
 
 class Layer36469Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36992]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36992]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2136,7 +2200,7 @@ class Layer36469Feature(
     )
 
 
-class Layer36470Feature(NspdFeature[LineString, NspdProperties[Options37148]]):
+class Layer36470Feature(_BaseFeature[LineString, Properties[Options37148]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Береговые линии (границы водных объектов)(линейный)",
@@ -2152,7 +2216,7 @@ class Layer36470Feature(NspdFeature[LineString, NspdProperties[Options37148]]):
 
 
 class Layer36303Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36941]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36941]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2169,7 +2233,7 @@ class Layer36303Feature(
 
 
 class Layer36312Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36943]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36943]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2186,7 +2250,7 @@ class Layer36312Feature(
 
 
 class Layer36313Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36944]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36944]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2203,7 +2267,7 @@ class Layer36313Feature(
 
 
 class Layer36471Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36991]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36991]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2220,7 +2284,7 @@ class Layer36471Feature(
 
 
 class Layer37430Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options39228]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39228]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2237,7 +2301,7 @@ class Layer37430Feature(
 
 
 class Layer37295Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38944]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38944]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2254,7 +2318,7 @@ class Layer37295Feature(
 
 
 class Layer37296Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options38967]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38967]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2270,7 +2334,7 @@ class Layer37296Feature(
     )
 
 
-class Layer849601Feature(NspdFeature[Point, NspdProperties[Options445547]]):
+class Layer849601Feature(_BaseFeature[Point, Properties[Options445547]]):
     layer_meta = LayerNode.model_validate(
         {
             "title": "Объекты туристского интереса",
@@ -2286,7 +2350,7 @@ class Layer849601Feature(NspdFeature[Point, NspdProperties[Options445547]]):
 
 
 class Layer37236Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
     layer_meta = LayerNode.model_validate(
         {
@@ -2303,7 +2367,7 @@ class Layer37236Feature(
 
 
 class Layer37758Feature(
-    NspdFeature[Union[MultiPolygon, Polygon], NspdProperties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
     layer_meta = LayerNode.model_validate(
         {

@@ -1,10 +1,9 @@
-from typing import Optional, Type, TypeVar, cast
+from typing import Any, Optional, Type, cast
 
 from pynspd.client import get_async_client
 from pynspd.schemas import Layer36048Feature, NspdFeature
+from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import SearchResponse
-
-T = TypeVar("T", bound=NspdFeature)
 
 
 class AsyncNspd:
@@ -16,7 +15,33 @@ class AsyncNspd:
 
     async def __aexit__(self, *exc): ...
 
-    async def search_request(
+    async def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
+        r = await self._client.get("/api/geoportal/v2/search/geoportal", params=params)
+        if r.status_code == 404:
+            return None
+        r.raise_for_status()
+        return SearchResponse.model_validate(r.json())
+
+    async def search_by_theme(
+        self, query: str, theme_id: int = 1
+    ) -> Optional[SearchResponse]:
+        """Глобальный поисковой запрос
+
+        Args:
+            query (str): поисковой запрос
+            theme_id (int): вид объекта (кадастровое деление, объект недвижимости и т.д.)
+
+        Returns:
+            Optional[SearchResponse]: положительный ответ от сервиса, либо None, если ничего не найдено
+        """
+        return await self._search(
+            params={
+                "query": query,
+                "thematicSearchId": theme_id,
+            }
+        )
+
+    async def search_by_layers(
         self, query: str, *layer_ids: int
     ) -> Optional[SearchResponse]:
         """Поисковой запрос по указанным слоям
@@ -28,32 +53,29 @@ class AsyncNspd:
         Returns:
             Optional[SearchResponse]: положительный ответ от сервиса, либо None, если ничего не найдено
         """
-        r = await self._client.get(
-            "/api/geoportal/v2/search/geoportal",
+        return await self._search(
             params={
                 "query": query,
                 "layersId": layer_ids,
-            },
+            }
         )
-        if r.status_code == 404:
-            return None
-        r.raise_for_status()
-        return SearchResponse.model_validate(r.json())
 
-    async def search_one(self, query: str, layer_def: Type[T]) -> Optional[T]:
-        response = await self.search_request(query, layer_def.layer_meta.layer_id)
+    async def search_one(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
+        response = await self.search_by_layers(query, layer_def.layer_meta.layer_id)
         if response is None:
             return None
         assert len(response.data.features) == 1
         feature = response.data.features[0]
-        return layer_def.model_validate(feature.model_dump())
+        return layer_def.model_validate(feature.model_dump(by_alias=True))
 
     # async def search_many(self, query: str, *layer_def: Type[T]) -> Optional[T]:
     #     ...
 
     async def find_zu(self, cn: str) -> Optional[Layer36048Feature]:
-        m = await self.search_one(cn, NspdFeature.by_title("Земельные участки из ЕГРН"))
-        return cast(Layer36048Feature, m) if m is not None else None
+        layer_def = cast(
+            Type[Layer36048Feature], NspdFeature.by_title("Земельные участки из ЕГРН")
+        )
+        return await self.search_one(cn, layer_def)
 
     # async def find_oks(self, cn: str) -> Optional[OksFeature]:
     #     return await self.search_one(cn, LayerIdMap['Здания'], OksFeature)

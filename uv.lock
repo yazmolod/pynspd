@@ -718,6 +718,7 @@ dependencies = [
     { name = "geojson-pydantic" },
     { name = "httpx" },
     { name = "pydantic" },
+    { name = "pyproj" },
     { name = "shapely" },
 ]
 
@@ -738,6 +739,7 @@ requires-dist = [
     { name = "geojson-pydantic", specifier = ">=1.2.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.10.4" },
+    { name = "pyproj", specifier = ">=3.7.0" },
     { name = "shapely", specifier = ">=2.0.6" },
 ]
 
