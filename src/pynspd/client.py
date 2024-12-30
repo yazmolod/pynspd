@@ -16,3 +16,14 @@ def get_async_client() -> httpx.AsyncClient:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
         },
     )
+
+
+def get_client() -> httpx.Client:
+    return httpx.Client(
+        base_url="https://nspd.gov.ru",
+        verify=SSL_CONTEXT,
+        timeout=5,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
+        },
+    )
