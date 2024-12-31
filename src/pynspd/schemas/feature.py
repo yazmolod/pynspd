@@ -1,4 +1,4 @@
-from typing import ClassVar, Generic, Self, Type, TypeVar
+from typing import ClassVar, Generic, Type, TypeVar
 
 from geojson_pydantic import Feature
 
@@ -19,7 +19,7 @@ class _BaseFeature(Feature[Geom, Props], Generic[Geom, Props]):
 
 class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
     @classmethod
-    def by_title(cls, title: LayerTitle) -> Type[Self]:
+    def by_title(cls, title: LayerTitle) -> Type["NspdFeature"]:
         """Получение модели слоя по имени"""
         root_class = cls.__base__.__base__
         for generic_subclass in root_class.__subclasses__():

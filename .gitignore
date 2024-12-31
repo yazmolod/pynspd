@@ -11,3 +11,4 @@ wheels/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.pytest_cache/
