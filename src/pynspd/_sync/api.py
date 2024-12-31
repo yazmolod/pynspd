@@ -5,7 +5,7 @@ from shapely import MultiPolygon, Point, Polygon
 
 from pynspd import asyncio_mock
 from pynspd.client import get_client
-from pynspd.schemas import Layer36048Feature, NspdFeature
+from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import SearchResponse
 
@@ -120,6 +120,17 @@ class Nspd:
         """Поиск всех ЗУ, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
         features = asyncio_mock.gather(*[self.search_zu(cn) for cn in cns])
+        return features
+
+    def search_oks(self, cn: str) -> Optional[Layer36049Feature]:
+        """Поиск ОКС по кадастровому номеру"""
+        layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
+        return self.search_by_model(cn, layer_def)
+
+    def search_many_oks(self, cns_string: str) -> list[Layer36049Feature | None]:
+        """Поиск всех ОКС, содержащихся в строке"""
+        cns = list(self.iter_cn(cns_string))
+        features = asyncio_mock.gather(*[self.search_oks(cn) for cn in cns])
         return features
 
     def search_in_contour(self, countour: Union[Polygon, MultiPolygon]):

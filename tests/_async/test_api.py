@@ -39,3 +39,21 @@ async def test_search_many_zu():
         )
         assert len(features) == 3
         assert all([i is not None for i in features])
+
+
+@pytest.mark.asyncio
+async def test_search_oks():
+    async with AsyncNspd() as api:
+        feat = await api.search_oks("77:03:0001001:3030")
+        assert feat.properties.options.build_record_type_value == "Здание"
+        assert isinstance(feat.geometry.to_shape(), Polygon)
+
+
+@pytest.mark.asyncio
+async def test_search_many_oks():
+    async with AsyncNspd() as api:
+        features = await api.search_many_oks(
+            "77:03:0001001:3030 77:03:0001001:1111 77:03:0001001:1112"
+        )
+        assert len(features) == 3
+        assert all([i is not None for i in features])

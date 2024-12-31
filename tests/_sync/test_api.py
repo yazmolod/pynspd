@@ -34,3 +34,19 @@ def test_search_many_zu():
         )
         assert len(features) == 3
         assert all([i is not None for i in features])
+
+
+def test_search_oks():
+    with Nspd() as api:
+        feat = api.search_oks("77:03:0001001:3030")
+        assert feat.properties.options.build_record_type_value == "Здание"
+        assert isinstance(feat.geometry.to_shape(), Polygon)
+
+
+def test_search_many_oks():
+    with Nspd() as api:
+        features = api.search_many_oks(
+            "77:03:0001001:3030 77:03:0001001:1111 77:03:0001001:1112"
+        )
+        assert len(features) == 3
+        assert all([i is not None for i in features])
