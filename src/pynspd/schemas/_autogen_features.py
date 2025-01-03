@@ -8,6 +8,31 @@ from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.properties import OptionProperties, Properties
 
 
+class Options36992(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
 class Options38030(OptionProperties):
     obj_kind_value: Optional[str] = None
     """Тип"""
@@ -35,224 +60,6 @@ class Options38030(OptionProperties):
     """Количество единых недвижимых комплексов"""
     cnt_pik: Optional[float] = None
     """Количество предприятий как имущественных комплексов"""
-
-
-class Options36947(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36382(OptionProperties):
-    obj_kind_value: Optional[str] = None
-    """Тип"""
-    name: Optional[str] = None
-    """Наименование"""
-    cad_num: Optional[str] = None
-    """Учетный номер"""
-    cad_num_ko: Optional[str] = None
-    """Кадастровый округ"""
-    cnt_kk: Optional[float] = None
-    """Количество кадастровых кварталов"""
-    cnt_land: Optional[float] = None
-    """Количество земельных участков"""
-    cnt_land_geom: Optional[float] = None
-    """с границами"""
-    cnt_land_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_oks: Optional[float] = None
-    """Количество объектов капитального строительства"""
-    cnt_oks_geom: Optional[float] = None
-    """с границами"""
-    cnt_oks_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_enk: Optional[float] = None
-    """Количество единых недвижимых комплексов"""
-    cnt_pik: Optional[float] = None
-    """Количество предприятий как имущественных комплексов"""
-
-
-class Options36381(OptionProperties):
-    obj_kind_value: Optional[str] = None
-    """Тип"""
-    name: Optional[str] = None
-    """Наименование"""
-    cad_num: Optional[str] = None
-    """Учетный номер"""
-    cad_num_ko: Optional[str] = None
-    """Кадастровый округ"""
-    cad_num_kr: Optional[str] = None
-    """Кадастровый район"""
-    cnt_land: Optional[float] = None
-    """Количество земельных участков"""
-    cnt_land_geom: Optional[float] = None
-    """с границами"""
-    cnt_land_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_oks: Optional[float] = None
-    """Количество объектов капитального строительства"""
-    cnt_oks_geom: Optional[float] = None
-    """с границами"""
-    cnt_oks_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_enk: Optional[float] = None
-    """Количество единых недвижимых комплексов"""
-    cnt_pik: Optional[float] = None
-    """Количество предприятий как имущественных комплексов"""
-
-
-class Options38998(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
-
-
-class Options38999(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options39000(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36829(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36830(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    num: Optional[float] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36832(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options38996(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
 
 
 class Options36368(OptionProperties):
@@ -288,46 +95,120 @@ class Options36368(OptionProperties):
     """Удельный показатель кадастровой стоимости (руб./кв. м)"""
 
 
-class Options37153(OptionProperties):
-    nominal_number: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    area: Optional[str] = None
-    """Площадь образуемого земельного участка (кв. м)"""
-    land_use_text: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-    nmb: Optional[str] = None
-    """номер"""
-    registration_date: Optional[date] = None
-    """дата"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[date] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
+class Options36369(OptionProperties):
+    build_record_type_value: Optional[str] = None
+    """Вид объекта недвижимости"""
+    build_record_registration_date: Optional[date] = None
+    """Дата присвоения"""
+    cad_num: Optional[str] = None
+    """Кадастровый номер"""
+    quarter_cad_number: Optional[str] = None
+    """Кадастровый квартал"""
+    readable_address: Optional[str] = None
+    """Адрес"""
+    building_name: Optional[str] = None
+    """Наименование"""
+    purpose: Optional[str] = None
+    """Назначение"""
+    build_record_area: Optional[float] = None
+    """Площадь общая (кв. м)"""
+    status: Optional[str] = None
+    """Статус"""
+    ownership_type: Optional[str] = None
+    """Форма собственности"""
+    cost_value: Optional[float] = None
+    """Кадастровая стоимость (руб.)"""
+    cost_index: Optional[float] = None
+    """Удельный показатель кадастровой стоимости (руб./ кв. м)"""
+    floors: Optional[str] = None
+    """Количество этажей (в том числе подземных)"""
+    underground_floors: Optional[str] = None
+    """Количество подземных этажей"""
+    year_built: Optional[str] = None
+    """Завершение строительства (г.)"""
+    year_commisioning: Optional[str] = None
+    """Ввод в эксплуатацию (г.)"""
+    cultural_heritage_object: Optional[str] = None
+    """Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации"""
+    united_cad_number: Optional[str] = None
+    """Кадастровый номер единого недвижимого комплекса, в состав которого входит здание"""
+    facility_cad_number: Optional[str] = None
+    """Кадастровый номер предприятия как имущественного комплекса, в состав которого входит здание (имущественное право на здание)"""
 
 
-class Options37158(OptionProperties):
-    nominal_number: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    area: Optional[str] = None
-    """Площадь образуемого земельного участка (кв. м)"""
-    land_use_text: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
+class Options37148(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    date: Optional[str] = None
+    """Дата присвоения"""
     brd_nmb: Optional[str] = None
-    """номер"""
-    registration_date: Optional[date] = None
-    """дата"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[date] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
+    """Реестровый номер границы"""
+    cad_distr: Optional[str] = None
+    """Кадастровый район"""
+    name: Optional[str] = None
+    """Наименование"""
+    encumb: Optional[str] = None
+    """Ограничение"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов об установлении или изменении границ"""
+
+
+class Options36381(OptionProperties):
+    obj_kind_value: Optional[str] = None
+    """Тип"""
+    name: Optional[str] = None
+    """Наименование"""
+    cad_num: Optional[str] = None
+    """Учетный номер"""
+    cad_num_ko: Optional[str] = None
+    """Кадастровый округ"""
+    cad_num_kr: Optional[str] = None
+    """Кадастровый район"""
+    cnt_land: Optional[float] = None
+    """Количество земельных участков"""
+    cnt_land_geom: Optional[float] = None
+    """с границами"""
+    cnt_land_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_oks: Optional[float] = None
+    """Количество объектов капитального строительства"""
+    cnt_oks_geom: Optional[float] = None
+    """с границами"""
+    cnt_oks_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_enk: Optional[float] = None
+    """Количество единых недвижимых комплексов"""
+    cnt_pik: Optional[float] = None
+    """Количество предприятий как имущественных комплексов"""
+
+
+class Options36382(OptionProperties):
+    obj_kind_value: Optional[str] = None
+    """Тип"""
+    name: Optional[str] = None
+    """Наименование"""
+    cad_num: Optional[str] = None
+    """Учетный номер"""
+    cad_num_ko: Optional[str] = None
+    """Кадастровый округ"""
+    cnt_kk: Optional[float] = None
+    """Количество кадастровых кварталов"""
+    cnt_land: Optional[float] = None
+    """Количество земельных участков"""
+    cnt_land_geom: Optional[float] = None
+    """с границами"""
+    cnt_land_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_oks: Optional[float] = None
+    """Количество объектов капитального строительства"""
+    cnt_oks_geom: Optional[float] = None
+    """с границами"""
+    cnt_oks_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_enk: Optional[float] = None
+    """Количество единых недвижимых комплексов"""
+    cnt_pik: Optional[float] = None
+    """Количество предприятий как имущественных комплексов"""
 
 
 class Options38943(OptionProperties):
@@ -359,12 +240,119 @@ class Options38943(OptionProperties):
     """Вид разрешенного использования образуемого земельного участка"""
 
 
-class Options38981(OptionProperties):
-    auc_thrf: Optional[str] = None
-    """Ссылка на аукцион"""
+class Options36383(OptionProperties):
+    object_type_value: Optional[str] = None
+    """Вид объекта недвижимости"""
+    registration_date: Optional[date] = None
+    """Дата присвоения"""
+    cad_number: Optional[str] = None
+    """Кадастровый номер"""
+    quarter_cad_number: Optional[str] = None
+    """Кадастровый квартал"""
+    address_readable_address: Optional[str] = None
+    """Адрес"""
+    params_name: Optional[str] = None
+    """Наименование"""
+    params_purpose: Optional[str] = None
+    """Назначение"""
+    params_height: Optional[float] = None
+    """высота (м.)"""
+    params_depth: Optional[float] = None
+    """глубина (м.)"""
+    params_occurence_depth: Optional[float] = None
+    """глубина залегания (м.)"""
+    params_extension: Optional[float] = None
+    """протяженность (м.)"""
+    params_volume: Optional[float] = None
+    """объем (куб. м)"""
+    params_built_up_area: Optional[float] = None
+    """Площадь застройки (кв. м)"""
+    params_area: Optional[float] = None
+    """Площадь (кв. м)"""
+    object_previously_posted: Optional[str] = None
+    """Статус"""
+    ownership_type: Optional[str] = None
+    """Форма собственности"""
+    cost_value: Optional[float] = None
+    """Кадастровая стоимость (руб.)"""
+    cost_index: Optional[float] = None
+    """Удельный показатель кадастровой стоимости (руб./кв. м)"""
+    params_floors: Optional[str] = None
+    """Количество этажей (в том числе подземных)"""
+    params_underground_floors: Optional[str] = None
+    """Количество подземных этажей"""
+    params_year_built: Optional[str] = None
+    """Завершение строительства"""
+    params_year_commisioning: Optional[str] = None
+    """Ввод в эксплуатацию"""
+    cultural_heritage_object: Optional[str] = None
+    """Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации"""
+    united_cad_number: Optional[str] = None
+    """Кадастровый номер единого недвижимого комплекса, в состав которого входит сооружение"""
+    facility_cad_number: Optional[str] = None
+    """Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит"""
 
 
-class Options38979(OptionProperties): ...
+class Options37153(OptionProperties):
+    nominal_number: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    area: Optional[str] = None
+    """Площадь образуемого земельного участка (кв. м)"""
+    land_use_text: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+    nmb: Optional[str] = None
+    """номер"""
+    registration_date: Optional[date] = None
+    """дата"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[date] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options36384(OptionProperties):
+    object_under_construction_record_record_type_value: Optional[str] = None
+    """Вид объекта недвижимости"""
+    registration_date: Optional[date] = None
+    """Дата присвоения"""
+    cad_num: Optional[str] = None
+    """Кадастровый номер"""
+    quarter_cad_number: Optional[str] = None
+    """Кадастровый квартал"""
+    readable_address: Optional[str] = None
+    """Адрес"""
+    object_under_construction_record_name: Optional[str] = None
+    """Наименование"""
+    height: Optional[float] = None
+    """Высота (м.)"""
+    depth: Optional[float] = None
+    """Глубина (м.)"""
+    occurence_depth: Optional[float] = None
+    """Глубина залегания (м.)"""
+    extension: Optional[float] = None
+    """Протяжённость (м.)"""
+    volume: Optional[float] = None
+    """Объем (куб. м)"""
+    built_up_area: Optional[float] = None
+    """Площадь застройки (кв. м)"""
+    common_data_status: Optional[str] = None
+    """Статус"""
+    ownership_type: Optional[str] = None
+    """Форма собственности"""
+    cost_value: Optional[float] = None
+    """Кадастровая стоимость (руб.)"""
+    cost_index: Optional[float] = None
+    """Удельный показатель кадастровой стоимости (руб./ кв. м)"""
+    degree_readiness: Optional[str] = None
+    """Степень готовности ОНС в процентах (%)"""
+    purpose: Optional[str] = None
+    """Проектируемое значение основной характеристики"""
+    facility_cad_number: Optional[str] = None
+    """Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса"""
 
 
 class Options445347(OptionProperties):
@@ -412,6 +400,308 @@ class Options445347(OptionProperties):
     """Агентом Российской Федерации в отношении земельного участка выступает АО «ДОМ. РФ»"""
     develop_build: Optional[str] = None
     """Входит в территорию, в отношении которой возможно (планируется) комплексное развитие территории жилой застройки"""
+
+
+class Options38942(OptionProperties):
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничения"""
+    doc: Optional[str] = None
+    """Реквизиты решения об утверждении документации по планировке территории"""
+    DOC_TYPE: Optional[str] = None
+    """документ"""
+    DOC_NUMBER: Optional[str] = None
+    """номер"""
+    DOC_DATE: Optional[date] = None
+    """дата"""
+    DOC_GOV: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options38944(OptionProperties):
+    schema1: Optional[str] = None
+    """Тип"""
+    name: Optional[str] = None
+    """Наименование объекта"""
+    part_type: Optional[str] = None
+    """Тип части"""
+    building: Optional[str] = None
+    """Наличие объектов капитального строительства"""
+
+
+class Options37158(OptionProperties):
+    nominal_number: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    area: Optional[str] = None
+    """Площадь образуемого земельного участка (кв. м)"""
+    land_use_text: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+    brd_nmb: Optional[str] = None
+    """номер"""
+    registration_date: Optional[date] = None
+    """дата"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[date] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options38967(OptionProperties):
+    process_ty: Optional[str] = None
+    """Тип"""
+    reg_num: Optional[str] = None
+    """Номер"""
+    cad_distr: Optional[float] = None
+    """Кадастровый округ"""
+    district: Optional[str] = None
+    """Район"""
+    index_map: Optional[str] = None
+    """Индекс"""
+    process_ty_title: Optional[str] = None
+    """Вид и степень развития негативного процесса (га.)"""
+    shape_area: Optional[str] = None
+    """Площадь проявления негативного процесса (% к площади работ)"""
+    zone_proya: Optional[str] = None
+    """Зона проявления"""
+    soil_type: Optional[str] = None
+    """Тип почвы"""
+    recommend: Optional[str] = None
+    """Рекомендации по использованию земель"""
+
+
+class Options39228(OptionProperties):
+    terr_name: Optional[str] = None
+    """Наименование территории"""
+
+
+class Options38979(OptionProperties): ...
+
+
+class Options38981(OptionProperties):
+    auc_thrf: Optional[str] = None
+    """Ссылка на аукцион"""
+
+
+class Options36940(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    type_zone: Optional[str] = None
+    """Тип зоны"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    doc: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) ЗОУИТ"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[str] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options36941(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    description: Optional[str] = None
+    """Описание"""
+    document_name: Optional[str] = None
+    """Реквизиты правовых актов об установлении или изменении границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36942(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36943(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении или изменении границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36944(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении или изменении границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36945(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36946(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    type_zone: Optional[str] = None
+    """Тип зоны"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    doc: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) территориальной зоны"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[str] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+    permitted_uses_name: Optional[str] = None
+    """Вид разрешенного использования"""
+
+
+class Options36947(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении или изменении границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options38996(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    reg_code: Optional[str] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
+    """Наименование"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[str] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
 
 
 class Options445397(OptionProperties):
@@ -493,139 +783,172 @@ class Options445397(OptionProperties):
     """Объекты капитального строительства"""
 
 
-class Options36369(OptionProperties):
-    build_record_type_value: Optional[str] = None
-    """Вид объекта недвижимости"""
-    build_record_registration_date: Optional[date] = None
-    """Дата присвоения"""
-    cad_num: Optional[str] = None
-    """Кадастровый номер"""
-    quarter_cad_number: Optional[str] = None
-    """Кадастровый квартал"""
-    readable_address: Optional[str] = None
-    """Адрес"""
-    building_name: Optional[str] = None
+class Options38998(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    num: Optional[str] = None
+    """Идентификационный номер"""
+
+
+class Options38999(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    num: Optional[str] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
     """Наименование"""
-    purpose: Optional[str] = None
-    """Назначение"""
-    build_record_area: Optional[float] = None
-    """Площадь общая (кв. м)"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[str] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options39000(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    num: Optional[str] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
+    """Наименование"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[str] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options36948(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[str] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
+
+
+class Options36829(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    reg_code: Optional[str] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
+    """Наименование"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[str] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options36830(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    num: Optional[float] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
+    """Наименование"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[str] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options36832(OptionProperties):
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+    reg_code: Optional[str] = None
+    """Идентификационный номер"""
+    name: Optional[str] = None
+    """Наименование"""
+    doc: Optional[str] = None
+    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[str] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options445547(OptionProperties):
+    name: Optional[str] = None
+    """Наименование объекта туристского интереса"""
+    cn: Optional[str] = None
+    """Кадастровый номер (при наличии)"""
+    address: Optional[str] = None
+    """Адрес объекта туристского интереса"""
+    type: Optional[str] = None
+    """Тип объекта туристского интереса"""
+    vid_oopt: Optional[str] = None
+    """Вид особо охраняемой природной территории"""
+    unesko: Optional[str] = None
+    """Наличие у объекта туристского интереса статуса ЮНЕСКО"""
     status: Optional[str] = None
-    """Статус"""
-    ownership_type: Optional[str] = None
-    """Форма собственности"""
-    cost_value: Optional[float] = None
-    """Кадастровая стоимость (руб.)"""
-    cost_index: Optional[float] = None
-    """Удельный показатель кадастровой стоимости (руб./ кв. м)"""
-    floors: Optional[str] = None
-    """Количество этажей (в том числе подземных)"""
-    underground_floors: Optional[str] = None
-    """Количество подземных этажей"""
-    year_built: Optional[str] = None
-    """Завершение строительства (г.)"""
-    year_commisioning: Optional[str] = None
-    """Ввод в эксплуатацию (г.)"""
-    cultural_heritage_object: Optional[str] = None
-    """Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации"""
-    united_cad_number: Optional[str] = None
-    """Кадастровый номер единого недвижимого комплекса, в состав которого входит здание"""
-    facility_cad_number: Optional[str] = None
-    """Кадастровый номер предприятия как имущественного комплекса, в состав которого входит здание (имущественное право на здание)"""
-
-
-class Options36383(OptionProperties):
-    object_type_value: Optional[str] = None
-    """Вид объекта недвижимости"""
-    registration_date: Optional[date] = None
-    """Дата присвоения"""
-    cad_number: Optional[str] = None
-    """Кадастровый номер"""
-    quarter_cad_number: Optional[str] = None
-    """Кадастровый квартал"""
-    address_readable_address: Optional[str] = None
-    """Адрес"""
-    params_name: Optional[str] = None
-    """Наименование"""
-    params_purpose: Optional[str] = None
-    """Назначение"""
-    params_height: Optional[float] = None
-    """высота (м.)"""
-    params_depth: Optional[float] = None
-    """глубина (м.)"""
-    params_occurence_depth: Optional[float] = None
-    """глубина залегания (м.)"""
-    params_extension: Optional[float] = None
-    """протяженность (м.)"""
-    params_volume: Optional[float] = None
-    """объем (куб. м)"""
-    params_built_up_area: Optional[float] = None
-    """Площадь застройки (кв. м)"""
-    params_area: Optional[float] = None
-    """Площадь (кв. м)"""
-    object_previously_posted: Optional[str] = None
-    """Статус"""
-    ownership_type: Optional[str] = None
-    """Форма собственности"""
-    cost_value: Optional[float] = None
-    """Кадастровая стоимость (руб.)"""
-    cost_index: Optional[float] = None
-    """Удельный показатель кадастровой стоимости (руб./кв. м)"""
-    params_floors: Optional[str] = None
-    """Количество этажей (в том числе подземных)"""
-    params_underground_floors: Optional[str] = None
-    """Количество подземных этажей"""
-    params_year_built: Optional[str] = None
-    """Завершение строительства"""
-    params_year_commisioning: Optional[str] = None
-    """Ввод в эксплуатацию"""
-    cultural_heritage_object: Optional[str] = None
-    """Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации"""
-    united_cad_number: Optional[str] = None
-    """Кадастровый номер единого недвижимого комплекса, в состав которого входит сооружение"""
-    facility_cad_number: Optional[str] = None
-    """Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит"""
-
-
-class Options36384(OptionProperties):
-    object_under_construction_record_record_type_value: Optional[str] = None
-    """Вид объекта недвижимости"""
-    registration_date: Optional[date] = None
-    """Дата присвоения"""
-    cad_num: Optional[str] = None
-    """Кадастровый номер"""
-    quarter_cad_number: Optional[str] = None
-    """Кадастровый квартал"""
-    readable_address: Optional[str] = None
-    """Адрес"""
-    object_under_construction_record_name: Optional[str] = None
-    """Наименование"""
-    height: Optional[float] = None
-    """Высота (м.)"""
-    depth: Optional[float] = None
-    """Глубина (м.)"""
-    occurence_depth: Optional[float] = None
-    """Глубина залегания (м.)"""
-    extension: Optional[float] = None
-    """Протяжённость (м.)"""
-    volume: Optional[float] = None
-    """Объем (куб. м)"""
-    built_up_area: Optional[float] = None
-    """Площадь застройки (кв. м)"""
-    common_data_status: Optional[str] = None
-    """Статус"""
-    ownership_type: Optional[str] = None
-    """Форма собственности"""
-    cost_value: Optional[float] = None
-    """Кадастровая стоимость (руб.)"""
-    cost_index: Optional[float] = None
-    """Удельный показатель кадастровой стоимости (руб./ кв. м)"""
-    degree_readiness: Optional[str] = None
-    """Степень готовности ОНС в процентах (%)"""
-    purpose: Optional[str] = None
-    """Проектируемое значение основной характеристики"""
-    facility_cad_number: Optional[str] = None
-    """Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса"""
+    """Статус объекта туристского интереса"""
+    potential: Optional[str] = None
+    """Потенциальный интерес к объекту"""
+    tourist: Optional[str] = None
+    """Среднее количество туристов, посетивших объект туристского интереса за два предыдущих года(тыс. чел.)"""
+    paid_services: Optional[str] = None
+    """Средний объем платных услуг, оказанных объектом туристского интереса за два предыдущих года(млн. руб.)"""
+    url: Optional[str] = None
+    """Ссылка на портал, содержащий информацию об объекте туристского интереса"""
+    vid_okn: Optional[str] = None
+    """Вид объекта культурного-исторического наследия"""
+    is_actual: Optional[str] = None
+    """Актуальность"""
 
 
 class Options39663(OptionProperties):
@@ -672,261 +995,6 @@ class Options39664(OptionProperties):
     """Стоимость предприятия (руб.)"""
 
 
-class Options36940(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    type_zone: Optional[str] = None
-    """Тип зоны"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) ЗОУИТ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36946(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    type_zone: Optional[str] = None
-    """Тип зоны"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) территориальной зоны"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-    permitted_uses_name: Optional[str] = None
-    """Вид разрешенного использования"""
-
-
-class Options38942(OptionProperties):
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничения"""
-    doc: Optional[str] = None
-    """Реквизиты решения об утверждении документации по планировке территории"""
-    DOC_TYPE: Optional[str] = None
-    """документ"""
-    DOC_NUMBER: Optional[str] = None
-    """номер"""
-    DOC_DATE: Optional[date] = None
-    """дата"""
-    DOC_GOV: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36948(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36942(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36945(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36992(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options37148(OptionProperties):
-    type: Optional[str] = None
-    """Вид"""
-    date: Optional[str] = None
-    """Дата присвоения"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер границы"""
-    cad_distr: Optional[str] = None
-    """Кадастровый район"""
-    name: Optional[str] = None
-    """Наименование"""
-    encumb: Optional[str] = None
-    """Ограничение"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов об установлении или изменении границ"""
-
-
-class Options36941(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    description: Optional[str] = None
-    """Описание"""
-    document_name: Optional[str] = None
-    """Реквизиты правовых актов об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36943(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36944(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
 class Options36991(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
@@ -950,77 +1018,11 @@ class Options36991(OptionProperties):
     """Орган власти, организация выдавшие документ"""
 
 
-class Options39228(OptionProperties):
-    terr_name: Optional[str] = None
-    """Наименование территории"""
-
-
-class Options38944(OptionProperties):
-    schema1: Optional[str] = None
-    """Тип"""
-    name: Optional[str] = None
-    """Наименование объекта"""
-    part_type: Optional[str] = None
-    """Тип части"""
-    building: Optional[str] = None
-    """Наличие объектов капитального строительства"""
-
-
-class Options38967(OptionProperties):
-    process_ty: Optional[str] = None
-    """Тип"""
-    reg_num: Optional[str] = None
-    """Номер"""
-    cad_distr: Optional[float] = None
-    """Кадастровый округ"""
-    district: Optional[str] = None
-    """Район"""
-    index_map: Optional[str] = None
-    """Индекс"""
-    process_ty_title: Optional[str] = None
-    """Вид и степень развития негативного процесса (га.)"""
-    shape_area: Optional[str] = None
-    """Площадь проявления негативного процесса (% к площади работ)"""
-    zone_proya: Optional[str] = None
-    """Зона проявления"""
-    soil_type: Optional[str] = None
-    """Тип почвы"""
-    recommend: Optional[str] = None
-    """Рекомендации по использованию земель"""
-
-
-class Options445547(OptionProperties):
-    name: Optional[str] = None
-    """Наименование объекта туристского интереса"""
-    cn: Optional[str] = None
-    """Кадастровый номер (при наличии)"""
-    address: Optional[str] = None
-    """Адрес объекта туристского интереса"""
-    type: Optional[str] = None
-    """Тип объекта туристского интереса"""
-    vid_oopt: Optional[str] = None
-    """Вид особо охраняемой природной территории"""
-    unesko: Optional[str] = None
-    """Наличие у объекта туристского интереса статуса ЮНЕСКО"""
-    status: Optional[str] = None
-    """Статус объекта туристского интереса"""
-    potential: Optional[str] = None
-    """Потенциальный интерес к объекту"""
-    tourist: Optional[str] = None
-    """Среднее количество туристов, посетивших объект туристского интереса за два предыдущих года(тыс. чел.)"""
-    paid_services: Optional[str] = None
-    """Средний объем платных услуг, оказанных объектом туристского интереса за два предыдущих года(млн. руб.)"""
-    url: Optional[str] = None
-    """Ссылка на портал, содержащий информацию об объекте туристского интереса"""
-    vid_okn: Optional[str] = None
-    """Вид объекта культурного-исторического наследия"""
-    is_actual: Optional[str] = None
-    """Актуальность"""
-
-
 class Layer36945Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38030]]
 ):
+    """Кадастровые округа"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Кадастровые округа",
@@ -1038,6 +1040,8 @@ class Layer36945Feature(
 class Layer36316Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36947]]
 ):
+    """Территории объектов культурного наследия"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территории объектов культурного наследия",
@@ -1055,6 +1059,8 @@ class Layer36316Feature(
 class Layer36070Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36382]]
 ):
+    """Кадастровые районы"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Кадастровые районы ",
@@ -1072,6 +1078,8 @@ class Layer36070Feature(
 class Layer36071Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36381]]
 ):
+    """Кадастровые кварталы"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Кадастровые кварталы",
@@ -1087,6 +1095,8 @@ class Layer36071Feature(
 
 
 class Layer37313Feature(_BaseFeature[LineString, Properties[Options38998]]):
+    """Государственная граница Российской Федерации"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Государственная граница Российской Федерации",
@@ -1102,6 +1112,8 @@ class Layer37313Feature(_BaseFeature[LineString, Properties[Options38998]]):
 
 
 class Layer37314Feature(_BaseFeature[LineString, Properties[Options38999]]):
+    """Субъекты Российской Федерации (линии)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Субъекты Российской Федерации (линии)",
@@ -1119,6 +1131,8 @@ class Layer37314Feature(_BaseFeature[LineString, Properties[Options38999]]):
 class Layer37315Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39000]]
 ):
+    """Субъекты Российской Федерации (полигоны)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Субъекты Российской Федерации (полигоны)",
@@ -1136,6 +1150,8 @@ class Layer37315Feature(
 class Layer36278Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36829]]
 ):
+    """Муниципальные образования (полигональный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Муниципальные образования (полигональный)",
@@ -1151,6 +1167,8 @@ class Layer36278Feature(
 
 
 class Layer36279Feature(_BaseFeature[LineString, Properties[Options36830]]):
+    """Муниципальные образования (линейный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Муниципальные образования (линейный)",
@@ -1168,6 +1186,8 @@ class Layer36279Feature(_BaseFeature[LineString, Properties[Options36830]]):
 class Layer36281Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36832]]
 ):
+    """Населённые пункты (полигоны)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Населённые пункты (полигоны)",
@@ -1183,6 +1203,8 @@ class Layer36281Feature(
 
 
 class Layer37316Feature(_BaseFeature[LineString, Properties[Options38996]]):
+    """Населённые пункты (линии)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Населённые пункты (линии)",
@@ -1200,6 +1222,8 @@ class Layer37316Feature(_BaseFeature[LineString, Properties[Options38996]]):
 class Layer36048Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
+    """Земельные участки из ЕГРН"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки из ЕГРН",
@@ -1215,6 +1239,8 @@ class Layer36048Feature(
 
 
 class Layer36472Feature(_BaseFeature[LineString, Properties[Options37153]]):
+    """Земельные участки, образуемые по проекту межевания территории (линейный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, образуемые по проекту межевания территории (линейный)",
@@ -1232,6 +1258,8 @@ class Layer36472Feature(_BaseFeature[LineString, Properties[Options37153]]):
 class Layer36473Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options37158]]
 ):
+    """Земельные участки, образуемые по проекту межевания территории (полигональный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
@@ -1249,6 +1277,8 @@ class Layer36473Feature(
 class Layer37294Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38943]]
 ):
+    """Земельные участки, образуемые по схеме расположения земельного участка"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, образуемые по схеме расположения земельного участка",
@@ -1266,6 +1296,8 @@ class Layer37294Feature(
 class Layer37299Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38981]]
 ):
+    """Земельные участки, выставленные на аукцион"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, выставленные на аукцион ",
@@ -1283,6 +1315,8 @@ class Layer37299Feature(
 class Layer37298Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38979]]
 ):
+    """Земельные участки, свободные от прав третьих лиц"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земельные участки, свободные от прав третьих лиц",
@@ -1300,6 +1334,8 @@ class Layer37298Feature(
 class Layer849407Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445347]]
 ):
+    """Земля для стройки ПКК"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земля для стройки ПКК",
@@ -1317,6 +1353,8 @@ class Layer849407Feature(
 class Layer849453Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445397]]
 ):
+    """Земля для туризма ПКК"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Земля для туризма ПКК",
@@ -1334,6 +1372,8 @@ class Layer849453Feature(
 class Layer36049Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36369]]
 ):
+    """Здания"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Здания",
@@ -1351,6 +1391,8 @@ class Layer36049Feature(
 class Layer36328Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36383]]
 ):
+    """Сооружения"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Сооружения",
@@ -1368,6 +1410,8 @@ class Layer36328Feature(
 class Layer36329Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36384]]
 ):
+    """Объекты незавершенного строительства"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Объекты незавершенного строительства",
@@ -1383,6 +1427,8 @@ class Layer36329Feature(
 
 
 class Layer37433Feature(_BaseFeature[Point, Properties[Options39663]]):
+    """Единые недвижимые комплексы"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Единые недвижимые комплексы",
@@ -1398,6 +1444,8 @@ class Layer37433Feature(_BaseFeature[Point, Properties[Options39663]]):
 
 
 class Layer37434Feature(_BaseFeature[Point, Properties[Options39664]]):
+    """Предприятие как имущественный комплекс"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Предприятие как имущественный комплекс",
@@ -1415,6 +1463,8 @@ class Layer37434Feature(_BaseFeature[Point, Properties[Options39664]]):
 class Layer37577Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
+    """ЗОУИТ объектов культурного наследия"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "ЗОУИТ объектов культурного наследия",
@@ -1432,6 +1482,8 @@ class Layer37577Feature(
 class Layer37578Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
+    """ЗОУИТ объектов энергетики, связи, транспорта"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "ЗОУИТ объектов энергетики, связи, транспорта",
@@ -1449,6 +1501,8 @@ class Layer37578Feature(
 class Layer37580Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
+    """ЗОУИТ природных территорий"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "ЗОУИТ природных территорий",
@@ -1466,6 +1520,8 @@ class Layer37580Feature(
 class Layer37579Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
+    """ЗОУИТ охраняемых объектов и безопасности"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "ЗОУИТ охраняемых объектов и безопасности",
@@ -1483,6 +1539,8 @@ class Layer37579Feature(
 class Layer37581Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
 ):
+    """Иные ЗОУИТ"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Иные ЗОУИТ",
@@ -1500,6 +1558,8 @@ class Layer37581Feature(
 class Layer36315Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36946]]
 ):
+    """Территориальные зоны"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территориальные зоны",
@@ -1515,6 +1575,8 @@ class Layer36315Feature(
 
 
 class Layer37293Feature(_BaseFeature[LineString, Properties[Options38942]]):
+    """Красные линии"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Красные линии ",
@@ -1532,6 +1594,8 @@ class Layer37293Feature(_BaseFeature[LineString, Properties[Options38942]]):
 class Layer36317Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36948]]
 ):
+    """Особо охраняемые природные территории"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Особо охраняемые природные территории ",
@@ -1549,6 +1613,8 @@ class Layer36317Feature(
 class Layer36311Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36942]]
 ):
+    """Охотничьи угодья"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Охотничьи угодья ",
@@ -1566,6 +1632,8 @@ class Layer36311Feature(
 class Layer36314Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36945]]
 ):
+    """Лесничества"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Лесничества",
@@ -1583,6 +1651,8 @@ class Layer36314Feature(
 class Layer36469Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36992]]
 ):
+    """Береговые линии (границы водных объектов) (полигональный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Береговые линии (границы водных объектов) (полигональный)",
@@ -1598,6 +1668,8 @@ class Layer36469Feature(
 
 
 class Layer36470Feature(_BaseFeature[LineString, Properties[Options37148]]):
+    """Береговые линии (границы водных объектов)(линейный)"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Береговые линии (границы водных объектов)(линейный)",
@@ -1615,6 +1687,8 @@ class Layer36470Feature(_BaseFeature[LineString, Properties[Options37148]]):
 class Layer36303Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36941]]
 ):
+    """Особые экономические зоны"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Особые экономические зоны",
@@ -1632,6 +1706,8 @@ class Layer36303Feature(
 class Layer36312Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36943]]
 ):
+    """Территории опережающего развития"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территории опережающего развития",
@@ -1649,6 +1725,8 @@ class Layer36312Feature(
 class Layer36313Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36944]]
 ):
+    """Зоны территориального развития в Российской Федерации"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Зоны территориального развития в Российской Федерации",
@@ -1666,6 +1744,8 @@ class Layer36313Feature(
 class Layer36471Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36991]]
 ):
+    """Игорные зоны"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Игорные зоны",
@@ -1683,6 +1763,8 @@ class Layer36471Feature(
 class Layer37430Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39228]]
 ):
+    """Территории выполнения комплексных кадастровых работ"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территории выполнения комплексных кадастровых работ",
@@ -1700,6 +1782,8 @@ class Layer37430Feature(
 class Layer37295Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38944]]
 ):
+    """Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
@@ -1717,6 +1801,8 @@ class Layer37295Feature(
 class Layer37296Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38967]]
 ):
+    """Негативные процессы"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Негативные процессы",
@@ -1732,6 +1818,8 @@ class Layer37296Feature(
 
 
 class Layer849601Feature(_BaseFeature[Point, Properties[Options445547]]):
+    """Объекты туристского интереса"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Объекты туристского интереса",
@@ -1749,6 +1837,8 @@ class Layer849601Feature(_BaseFeature[Point, Properties[Options445547]]):
 class Layer37236Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
+    """Кадастровая стоимость объекта"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Кадастровая стоимость объекта",
@@ -1766,6 +1856,8 @@ class Layer37236Feature(
 class Layer37758Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
 ):
+    """Удельный показатель кадастровой стоимости"""
+
     layer_meta = LayerNode.model_validate(
         {
             "title": "Удельный показатель кадастровой стоимости",

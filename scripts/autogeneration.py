@@ -51,6 +51,7 @@ class Layer{{ layer.layer_id }}Feature(_BaseFeature[
     {% endif -%}
     Properties[Options{{ layer.category_id }}]
 ]):
+    \"\"\"{{ layer.title }}\"\"\"
     layer_meta = LayerNode.model_validate({{ layer.model_dump(by_alias=True) }})
 {% endfor %}
 """
@@ -75,29 +76,30 @@ async def get_layer_tree() -> LayersTree:
     return tree
 
 
+async def get_category_card(category_id: int) -> tuple[int, list[CardField]]:
+    r = (
+        await CLIENT.get(f"/api/geoportal/v1/geom-card-display-settings/{category_id}")
+    ).raise_for_status()
+    card = Card.model_validate(r.json())
+    fields = []
+    for field in card.card:
+        if field.key_value == "-":
+            continue
+        if field.key_value == "":
+            continue
+        if not field.key_value.isascii():
+            continue
+        if " " in field.key_value:
+            continue
+        fields.append(field)
+    return category_id, fields
+
+
 async def get_layers_fields(layers: list[LayerNode]) -> dict[int, list[CardField]]:
     layers_fields = {}
-    for layer in layers:
-        if layer.category_id in layers_fields:
-            continue
-        r = (
-            await CLIENT.get(
-                f"/api/geoportal/v1/geom-card-display-settings/{layer.category_id}"
-            )
-        ).raise_for_status()
-        card = Card.model_validate(r.json())
-        fields = []
-        for field in card.card:
-            if field.key_value == "-":
-                continue
-            if field.key_value == "":
-                continue
-            if not field.key_value.isascii():
-                continue
-            if " " in field.key_value:
-                continue
-            fields.append(field)
-        layers_fields[layer.category_id] = fields
+    categories = list(set([i.category_id for i in layers]))
+    result = await asyncio.gather(*[get_category_card(i) for i in categories])
+    layers_fields = dict(result)
     return layers_fields
 
 
