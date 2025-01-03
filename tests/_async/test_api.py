@@ -4,7 +4,7 @@ from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
 
 from pynspd import AsyncNspd, NspdFeature
-from pynspd.schemas import Layer37578Feature
+from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -62,11 +62,33 @@ async def test_search_many_oks(api: AsyncNspd):
 
 
 @pytest.mark.asyncio
-async def test_search_in_contoir(api: AsyncNspd):
+async def test_search_zu_in_contoir(api: AsyncNspd):
     contour = wkt.loads(
         "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"
     )
     features = await api.search_zu_in_contour(contour)
     assert features is not None
+    assert all([isinstance(i, Layer36048Feature) for i in features])
     cns = [i.properties.options.cad_num for i in features]
     assert set(["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]) == set(cns)
+
+
+@pytest.mark.asyncio
+async def test_search_oks_in_contoir(api: AsyncNspd):
+    contour = wkt.loads(
+        "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"
+    )
+    features = await api.search_oks_in_contour(contour)
+    assert features is not None
+    assert all([isinstance(i, Layer36049Feature) for i in features])
+    cns = [i.properties.options.cad_num for i in features]
+    assert set(["77:01:0001011:1164", "77:01:0001011:1002"]) == set(cns)
+
+
+@pytest.mark.asyncio
+async def test_search_in_contoir_empty(api: AsyncNspd):
+    contour = wkt.loads(
+        "Polygon ((37.63215 55.75588, 37.63214 55.75557, 37.63271 55.75570, 37.63215 55.75588))"
+    )
+    features = await api.search_zu_in_contour(contour)
+    assert features is None

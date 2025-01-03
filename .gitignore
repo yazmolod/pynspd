@@ -12,3 +12,5 @@ wheels/
 .ruff_cache/
 .coverage
 .pytest_cache/
+htmlcov/
+%LOCALAPPDATA%/
