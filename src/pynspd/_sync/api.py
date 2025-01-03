@@ -1,7 +1,8 @@
+import json
 import re
 from typing import Any, Generator, Optional, Type, Union, cast
 
-from shapely import MultiPolygon, Point, Polygon
+from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd import asyncio_mock
 from pynspd.client import get_client
@@ -133,8 +134,100 @@ class Nspd:
         features = asyncio_mock.gather(*[self.search_oks(cn) for cn in cns])
         return features
 
-    def search_in_contour(self, countour: Union[Polygon, MultiPolygon]):
-        raise NotImplementedError
+    def search_in_contour(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        *category_ids: int,
+        epsg: int = 4326,
+    ) -> Optional[list[NspdFeature]]:
+        """Поиск объектов в контуре по id категорий слоев
+
+        Args:
+            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
+            category_ids (int): id категорий слоев
+            epsg (int, optional): Система координат контура. Defaults to 4326.
+
+        Returns:
+            Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
+        """
+        feature_geojson = json.loads(to_geojson(countour))
+        feature_geojson["crs"] = {
+            "type": "name",
+            "properties": {"name": f"EPSG:{epsg}"},
+        }
+        payload = {
+            "categories": [{"id": id_} for id_ in category_ids],
+            "geom": {
+                "type": "FeatureCollection",
+                "features": [
+                    {"geometry": feature_geojson, "type": "Feature", "properties": {}}
+                ],
+            },
+        }
+        response = self._client.post(
+            "/api/geoportal/v1/intersects",
+            params={"typeIntersect": "fullObject"},
+            json=payload,
+        )
+        response.raise_for_status()
+        features = response.json()["features"]
+        if len(features) == 0:
+            return None
+        return [NspdFeature.model_validate(i) for i in features]
+
+    def search_in_contour_by_model(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        layer_def: Type[Feat],
+        epsg: int = 4326,
+    ) -> Optional[list[Feat]]:
+        """Поиск объектов в контуре по определению слоя
+
+        Args:
+            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
+            layer_def (Type[Feat]): Модель слоя
+            epsg (int, optional): Система координат контура. Defaults to 4326.
+
+        Returns:
+            Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
+        """
+        raw_features = self.search_in_contour(
+            countour, layer_def.layer_meta.category_id, epsg=epsg
+        )
+        if raw_features is None:
+            return None
+        features = [
+            layer_def.model_validate(i.model_dump(by_alias=True)) for i in raw_features
+        ]
+        return features
+
+    def search_zu_in_contour(
+        self, countour: Union[Polygon, MultiPolygon], epsg: int = 4326
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в контуре
+
+        Args:
+            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
+            epsg (int, optional): Система координат контура. Defaults to 4326.
+
+        Returns:
+            Optional[list[Layer36048Feature]]: Список объектов, пересекающихся с контуром, если найден хоть один
+        """
+        return self.search_in_contour_by_model(countour, Layer36048Feature, epsg=epsg)
+
+    def search_oks_in_contour(
+        self, countour: Union[Polygon, MultiPolygon], epsg: int = 4326
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в контуре
+
+        Args:
+            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
+            epsg (int, optional): Система координат контура. Defaults to 4326.
+
+        Returns:
+            Optional[list[Layer36048Feature]]: Список объектов, пересекающихся с контуром, если найден хоть один
+        """
+        return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
 
     def search_at_point(self, pt: Point):
         raise NotImplementedError

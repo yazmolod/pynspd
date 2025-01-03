@@ -14,6 +14,7 @@ SUBS = [
     ("AsyncNspd", "Nspd"),
     ("aclose", "close"),
     ("@pytest.mark.asyncio", ""),
+    ("@pytest_asyncio", "@pytest"),
     ("asyncio", "asyncio_mock"),
 ]
 COMPILED_SUBS = [
