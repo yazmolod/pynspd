@@ -1,4 +1,4 @@
-from typing import ClassVar, Generic, Type, TypeVar, overload
+from typing import ClassVar, Generator, Generic, Type, TypeVar, overload
 
 from geojson_pydantic import Feature
 
@@ -21,15 +21,29 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
     """Базовая фича, приходящая из API, не привязанная к слою"""
 
     @classmethod
-    def by_title(cls, title: LayerTitle) -> Type["Feat"]:
-        """Получение модели слоя по имени"""
+    def _iter_layer_defs(cls) -> Generator[Type["NspdFeature"], None, None]:
         root_class = cls.__base__.__base__
         for generic_subclass in root_class.__subclasses__():
             for subclass in generic_subclass.__subclasses__():
                 meta = getattr(subclass, "layer_meta", None)
-                if meta and meta.title == title:
-                    return subclass
+                if meta is not None:
+                    yield subclass
+
+    @classmethod
+    def by_title(cls, title: LayerTitle) -> Type["NspdFeature"]:
+        """Получение модели слоя по имени"""
+        for layer_def in cls._iter_layer_defs():
+            if layer_def.layer_meta.title == title:
+                return layer_def
         raise UnknownLayer(title)
+
+    @classmethod
+    def by_category_id(cls, category_id: int) -> Type["NspdFeature"]:
+        """Получение модели категории"""
+        for layer_def in cls._iter_layer_defs():
+            if layer_def.layer_meta.category_id == category_id:
+                return layer_def
+        raise UnknownLayer(category_id)
 
     @overload
     def cast(
@@ -54,5 +68,11 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
         """
         if layer_def is None:
             assert self.properties is not None
-            layer_def = self.by_title(self.properties.category_name)  # type: ignore[arg-type]
+            try:
+                layer_def = self.by_title(self.properties.category_name)
+            except UnknownLayer:
+                # скрытый слой, пробуем определить свойства по категории
+                similiar_def = self.by_category_id(self.properties.category)
+                props_def = similiar_def.model_fields["properties"].annotation
+                layer_def = _BaseFeature[Geometry, props_def]
         return layer_def.model_validate(self.model_dump(by_alias=True))
