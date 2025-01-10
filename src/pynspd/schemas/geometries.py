@@ -1,33 +1,25 @@
-from typing import Annotated, Generic, TypeVar, Union
+from typing import Annotated, Generic, Union
 
 import geojson_pydantic.geometries as pyd_geom
-import pyproj
 import shapely.geometry as shape_geom
 from pydantic import Field
-from shapely.geometry.base import BaseGeometry
-from shapely.ops import transform
 
-T = TypeVar("T", bound=BaseGeometry)
-epsg4326_proj = pyproj.CRS("EPSG:4326")
-epsg3857_proj = pyproj.CRS("EPSG:3857")
-project = pyproj.Transformer.from_crs(
-    epsg3857_proj, epsg4326_proj, always_xy=True
-).transform
+from pynspd.utils import BaseGeomT, from_3857_to_4326
 
 
-class ShapeGeometry(Generic[T]):
-    def to_shape(self, epsg4326: bool = True) -> T:
+class ShapeGeometry(Generic[BaseGeomT]):
+    def to_shape(self, epsg4326: bool = True) -> BaseGeomT:
         """Конвертация в shapely-геометрию
 
         Args:
             epsg4326 (bool, optional): переводить ли в систему координат EPSG:4326. Defaults to True.
 
         Returns:
-            T: геометрия
+            BaseGeomT: геометрия
         """
         geom = shape_geom.shape(self)
         if epsg4326:
-            geom = transform(project, geom)
+            geom = from_3857_to_4326(geom)
         return geom
 
 
