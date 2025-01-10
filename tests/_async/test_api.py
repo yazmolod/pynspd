@@ -4,6 +4,7 @@ from shapely import wkt
 from shapely.geometry import MultiPolygon, Point, Polygon
 
 from pynspd import AsyncNspd, NspdFeature
+from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
@@ -83,6 +84,15 @@ async def test_search_oks_in_contour(api: AsyncNspd):
     assert all([isinstance(i, Layer36049Feature) for i in features])
     cns = [i.properties.options.cad_num for i in features]
     assert set(["77:01:0001011:1164", "77:01:0001011:1002"]) == set(cns)
+
+
+@pytest.mark.asyncio
+async def test_search_too_big_contour(api: AsyncNspd):
+    with pytest.raises(TooBigContour):
+        contour = wkt.loads(
+            "Polygon ((37.5658 55.8198, 37.5267 55.7710, 37.6214 55.8033, 37.5658 55.8198))"
+        )
+        await api.search_zu_in_contour(contour)
 
 
 @pytest.mark.asyncio

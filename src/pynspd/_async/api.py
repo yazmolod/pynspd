@@ -9,6 +9,7 @@ from httpx import Response
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd.client import get_async_client
+from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import SearchResponse
@@ -205,6 +206,8 @@ class AsyncNspd:
             params={"typeIntersect": "fullObject"},
             json=payload,
         )
+        if response.status_code == 500 and response.json()["code"] == 400004:
+            raise TooBigContour
         return self._validate_response(response)
 
     async def search_in_contour_by_model(
