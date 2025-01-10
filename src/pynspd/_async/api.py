@@ -59,7 +59,6 @@ class AsyncNspd:
     def _validate_response(response: Response) -> Optional[list[NspdFeature]]:
         response.raise_for_status()
         features = response.json()["features"]
-        print(len(features))
         if len(features) == 0:
             return None
         return [NspdFeature.model_validate(i) for i in features]
