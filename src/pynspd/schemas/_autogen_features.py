@@ -124,6 +124,8 @@ class Options36369(OptionProperties):
     """Количество этажей (в том числе подземных)"""
     underground_floors: Optional[str] = None
     """Количество подземных этажей"""
+    materials: Optional[str] = None
+    """Материал стен"""
     year_built: Optional[str] = None
     """Завершение строительства (г.)"""
     year_commisioning: Optional[str] = None
@@ -356,30 +358,40 @@ class Options36384(OptionProperties):
 
 
 class Options445347(OptionProperties):
+    cn: Optional[str] = None
+    """Кадастровый или условный номер"""
     kvartal_cn: Optional[str] = None
     """Кадастровый квартал"""
     reg_name: Optional[str] = None
     """Субъект Российской Федерации"""
     mun: Optional[str] = None
     """Муниципальное образование"""
+    np: Optional[str] = None
+    """Населенный пункт"""
     address: Optional[str] = None
     """Адрес"""
+    area: Optional[float] = None
+    """Площадь"""
     category_text: Optional[str] = None
     """Категория земель"""
-    right: Optional[str] = None
-    """Форма собственности"""
     util_by_doc: Optional[str] = None
     """Вид разрешенного использования"""
+    right: Optional[str] = None
+    """Форма собственности"""
     potential: Optional[str] = None
     """Потенциал использования"""
     has_oks: Optional[str] = None
     """Объекты капитального строительства"""
     has_network: Optional[str] = None
     """Инженерные сети"""
+    develop_build: Optional[str] = None
+    """Входит в территорию, в отношении которой возможно (планируется) комплексное развитие территории жилой застройки"""
     privileges_peo: Optional[str] = None
     """Предназначена для предоставления льготным категориям граждан"""
     privileges: Optional[str] = None
     """Льготная категория"""
+    dom_rf: Optional[str] = None
+    """Агентом Российской Федерации в отношении земельного участка выступает АО «ДОМ. РФ»"""
     uo_name: Optional[str] = None
     """Наименование уполномоченного органа"""
     uo_address: Optional[str] = None
@@ -392,14 +404,6 @@ class Options445347(OptionProperties):
     """e-mail"""
     inves_portal: Optional[str] = None
     """Инвестиционный портал региона"""
-    area: Optional[str] = None
-    """Площадь"""
-    cn: Optional[str] = None
-    """Кадастровый или условный номер"""
-    dom_rf: Optional[str] = None
-    """Агентом Российской Федерации в отношении земельного участка выступает АО «ДОМ. РФ»"""
-    develop_build: Optional[str] = None
-    """Входит в территорию, в отношении которой возможно (планируется) комплексное развитие территории жилой застройки"""
 
 
 class Options38942(OptionProperties):
@@ -705,34 +709,30 @@ class Options38996(OptionProperties):
 
 
 class Options445397(OptionProperties):
+    cn: Optional[str] = None
+    """Кадастровый или условный номер"""
     kvartal_cn: Optional[str] = None
     """Кадастровый квартал"""
     reg_name: Optional[str] = None
     """Субъект Российской Федерации"""
     mun: Optional[str] = None
     """Муниципальное образование"""
+    np: Optional[str] = None
+    """Населенный пункт"""
     address: Optional[str] = None
     """Адрес"""
-    right: Optional[str] = None
-    """Форма собственности"""
+    area: Optional[float] = None
+    """Площадь, м"""
     category_text: Optional[str] = None
     """Категория земель"""
-    cad_cost: Optional[str] = None
-    """Кадастровая стоимость"""
     terzone_name_by_pzz: Optional[str] = None
     """Территориальная зона"""
-    poi: Optional[str] = None
-    """Наименование ближайшего объекта туристского интереса"""
-    id_oti: Optional[str] = None
-    """Идентификационный номер объекта туристского интереса"""
-    poi_cn: Optional[str] = None
-    """Кадастровый или реестровый номер объекта туристского интереса"""
-    data_type: Optional[str] = None
-    """Тип данных"""
-    tour_object_description: Optional[str] = None
-    """Информационной ресурс, содержащий информацию об объекте туристского интереса"""
-    has_network: Optional[str] = None
-    """Наличие сети"""
+    util_by_doc: Optional[str] = None
+    """Вид разрешенного использования"""
+    right: Optional[str] = None
+    """Форма собственности"""
+    cad_cost: Optional[str] = None
+    """Кадастровая стоимость"""
     power_supply: Optional[str] = None
     """Электроснабжение"""
     water_supply: Optional[str] = None
@@ -743,44 +743,44 @@ class Options445397(OptionProperties):
     """Канализация"""
     heat_supply: Optional[str] = None
     """Теплоснабжение"""
-    distance_to_near_tour_object: Optional[str] = None
+    poi: Optional[str] = None
+    """Наименование ближайшего объекта туристского интереса"""
+    poi_cn: Optional[str] = None
+    """Кадастровый или реестровый номер объекта туристского интереса"""
+    distance_to_near_tour_object: Optional[float] = None
     """Расстояние до ближайшего объекта туристского интереса (км)"""
-    distance_to_near_fed_road: Optional[str] = None
+    id_oti: Optional[str] = None
+    """Идентификационный номер объекта туристского интереса"""
+    distance_to_near_fed_road: Optional[float] = None
     """Расстояние до ближайшей федеральной трассы (км)"""
-    distance_to_near_hard_road: Optional[str] = None
+    distance_to_near_hard_road: Optional[float] = None
     """Расстояние до ближайшей дороги с твердым покрытием (км)"""
-    distance_to_near_district: Optional[str] = None
+    distance_to_near_district: Optional[float] = None
     """Расстояние до ближайшего центра муниципального района или городского округа (км)"""
-    distance_to_near_locality: Optional[str] = None
+    distance_to_near_locality: Optional[float] = None
     """Расстояние до ближайшего населенного пункта (км)"""
-    distance_to_near_public_catering: Optional[str] = None
+    distance_to_near_public_catering: Optional[float] = None
     """Расстояние до ближайшего объекта общественного питания (км)"""
-    distance_to_near_health_care: Optional[str] = None
+    distance_to_near_health_care: Optional[float] = None
     """Расстояние до ближайшего объекта здравоохранения (км)"""
-    distance_to_near_public_transport: Optional[str] = None
+    distance_to_near_public_transport: Optional[float] = None
     """Расстояние до ближайшей остановки общественного транспорта (км)"""
-    distance_to_near_railway_station: Optional[str] = None
+    distance_to_near_railway_station: Optional[float] = None
     """Расстояние до ближайшей железнодорожной станции (км)"""
-    distance_to_near_airport: Optional[str] = None
+    distance_to_near_airport: Optional[float] = None
     """Расстояние до ближайшего аэропорта (км)"""
-    uo_name: Optional[str] = None
-    """Наименование уполномоченного органа"""
-    uo_address: Optional[str] = None
-    """Адресс уполномоченного органа"""
-    uo_phone: Optional[str] = None
-    """Телефон"""
-    uo_email: Optional[str] = None
-    """e-mail"""
     additional_info: Optional[str] = None
     """Инвестиционный портал региона"""
-    area: Optional[str] = None
-    """Площадь, м"""
-    util_by_doc: Optional[str] = None
-    """Вид разрешенного использования"""
-    oti: Optional[str] = None
-    """Объект туристского интереса"""
-    has_oks: Optional[str] = None
-    """Объекты капитального строительства"""
+    tour_object_description: Optional[str] = None
+    """Информационной ресурс, содержащий информацию об объекте туристского интереса"""
+    uo_name: Optional[str] = None
+    """Наименование уполномоченного органа"""
+    uo_phone: Optional[str] = None
+    """Телефон уполномоченного органа"""
+    uo_address: Optional[str] = None
+    """Адрес уполномоченного органа"""
+    uo_email: Optional[str] = None
+    """e-mail"""
 
 
 class Options38998(OptionProperties):
@@ -935,6 +935,8 @@ class Options445547(OptionProperties):
     """Вид особо охраняемой природной территории"""
     unesko: Optional[str] = None
     """Наличие у объекта туристского интереса статуса ЮНЕСКО"""
+    vid_okn: Optional[str] = None
+    """Вид объекта культурного-исторического наследия"""
     status: Optional[str] = None
     """Статус объекта туристского интереса"""
     potential: Optional[str] = None
@@ -945,10 +947,6 @@ class Options445547(OptionProperties):
     """Средний объем платных услуг, оказанных объектом туристского интереса за два предыдущих года(млн. руб.)"""
     url: Optional[str] = None
     """Ссылка на портал, содержащий информацию об объекте туристского интереса"""
-    vid_okn: Optional[str] = None
-    """Вид объекта культурного-исторического наследия"""
-    is_actual: Optional[str] = None
-    """Актуальность"""
 
 
 class Options39663(OptionProperties):
