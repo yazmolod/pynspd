@@ -42,7 +42,7 @@ class AsyncNspd:
         """Приведение базовой фичи к фиче конкретного слоя"""
         if raw_feature is None:
             return None
-        feature = layer_def.model_validate(raw_feature.model_dump(by_alias=True))
+        feature = raw_feature.cast(layer_def)
         return feature
 
     @staticmethod
@@ -52,9 +52,7 @@ class AsyncNspd:
         """Аналог `_cast_feature_to_layer_def` для списка фичей"""
         if raw_features is None:
             return None
-        features = [
-            layer_def.model_validate(i.model_dump(by_alias=True)) for i in raw_features
-        ]
+        features = [i.cast(layer_def) for i in raw_features]
         return features
 
     @staticmethod

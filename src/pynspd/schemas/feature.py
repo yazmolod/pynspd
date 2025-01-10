@@ -1,4 +1,4 @@
-from typing import ClassVar, Generic, Type, TypeVar
+from typing import ClassVar, Generic, Type, TypeVar, overload
 
 from geojson_pydantic import Feature
 
@@ -18,8 +18,10 @@ class _BaseFeature(Feature[Geom, Props], Generic[Geom, Props]):
 
 
 class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
+    """Базовая фича, приходящая из API, не привязанная к слою"""
+
     @classmethod
-    def by_title(cls, title: LayerTitle) -> Type["NspdFeature"]:
+    def by_title(cls, title: LayerTitle) -> Type["Feat"]:
         """Получение модели слоя по имени"""
         root_class = cls.__base__.__base__
         for generic_subclass in root_class.__subclasses__():
@@ -28,3 +30,29 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
                 if meta and meta.title == title:
                     return subclass
         raise UnknownLayer(title)
+
+    @overload
+    def cast(
+        self, layer_def: None = None
+    ) -> _BaseFeature[Geometry, Properties[OptionProperties]]: ...
+
+    @overload
+    def cast(self, layer_def: Type[Feat]) -> Feat: ...
+
+    def cast(self, layer_def: Type[Feat] | None = None):
+        """Приведение объекта к одному из типов перечня определений слоев
+
+        Args:
+            layer_def (Optional[Type[Feat]], optional):
+                Класс определение слоя. Если не указан, то попытается определить по свойствам. Defaults to None.
+
+        Raises:
+            UnknownLayer: Не удалось определить тип слоя по свойствам
+
+        Returns:
+            Feat: объект, приведенный к типу его слоя
+        """
+        if layer_def is None:
+            assert self.properties is not None
+            layer_def = self.by_title(self.properties.category_name)  # type: ignore[arg-type]
+        return layer_def.model_validate(self.model_dump(by_alias=True))
