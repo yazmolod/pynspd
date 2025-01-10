@@ -12,6 +12,7 @@ from pynspd.client import get_async_client
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import SearchResponse
+from pynspd.types.enums import ThemeId
 
 
 class AsyncNspd:
@@ -81,7 +82,7 @@ class AsyncNspd:
         return features[0]
 
     async def search_by_theme(
-        self, query: str, theme_id: int = 1
+        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
     ) -> Optional[NspdFeature]:
         """Глобальный поисковой запрос
 
@@ -95,7 +96,7 @@ class AsyncNspd:
         return await self._search_one(
             params={
                 "query": query,
-                "thematicSearchId": theme_id,
+                "thematicSearchId": theme_id.value,
             }
         )
 
