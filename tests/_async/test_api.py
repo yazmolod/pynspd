@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 import pytest_asyncio
 from shapely import wkt
@@ -6,6 +8,13 @@ from shapely.geometry import MultiPolygon, Point, Polygon
 from pynspd import AsyncNspd, NspdFeature
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
+
+
+@pytest.fixture(scope="module")
+def event_loop():
+    loop = asyncio.get_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest_asyncio.fixture(scope="session")

@@ -1,4 +1,4 @@
-from typing import ClassVar, Generator, Generic, Type, TypeVar, overload
+from typing import ClassVar, Generator, Generic, Optional, Type, TypeVar, overload
 
 from geojson_pydantic import Feature
 
@@ -53,7 +53,7 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
     @overload
     def cast(self, layer_def: Type[Feat]) -> Feat: ...
 
-    def cast(self, layer_def: Type[Feat] | None = None):
+    def cast(self, layer_def: Optional[Type[Feat]] = None):
         """Приведение объекта к одному из типов перечня определений слоев
 
         Args:

@@ -154,7 +154,9 @@ class AsyncNspd:
         )
         return await self.search_by_model(cn, layer_def)
 
-    async def search_many_zu(self, cns_string: str) -> list[Layer36048Feature | None]:
+    async def search_many_zu(
+        self, cns_string: str
+    ) -> list[Optional[Layer36048Feature]]:
         """Поиск всех ЗУ, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
         features = await asyncio.gather(*[self.search_zu(cn) for cn in cns])
@@ -165,7 +167,9 @@ class AsyncNspd:
         layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
         return await self.search_by_model(cn, layer_def)
 
-    async def search_many_oks(self, cns_string: str) -> list[Layer36049Feature | None]:
+    async def search_many_oks(
+        self, cns_string: str
+    ) -> list[Optional[Layer36049Feature]]:
         """Поиск всех ОКС, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
         features = await asyncio.gather(*[self.search_oks(cn) for cn in cns])
