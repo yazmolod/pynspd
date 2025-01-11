@@ -3,6 +3,7 @@ name = "pynspd"
 version = "0.2.0"
 description = "Python-библиотека для работы с https://nspd.gov.ru (ex-ПКК)"
 readme = "README.md"
+license = {file = "LICENSE"}
 authors = [
     { name = "yazmolod", email = "yazmolod@gmail.com" }
 ]
