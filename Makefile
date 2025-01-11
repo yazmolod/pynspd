@@ -16,4 +16,4 @@ coverage:
 	uv run coverage html && start "" "htmlcov\index.html"
 
 publish:
-	rmdir /s /q dist && uv build && dotenv --file .env -- set UV_PUBLISH_TOKEN %UV_PUBLISH_TOKEN% && uv run --no-project -- python -c "import os; print(os.environ['UV_PUBLISH_TOKEN'])"
+	rmdir /s /q dist && uv build && dotenv --file .env -- set UV_PUBLISH_TOKEN %UV_PUBLISH_TOKEN% && uv publish"
