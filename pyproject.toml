@@ -1,6 +1,6 @@
 [project]
 name = "pynspd"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python-библиотека для работы с https://nspd.gov.ru (ex-ПКК)"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -10,7 +10,6 @@ authors = [
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -23,7 +22,7 @@ dependencies = [
     "httpx>=0.28.1",
     "mercantile>=1.2.1",
     "pydantic>=2.10.4",
-    "pyproj<3.7",
+    "pyproj>=3.7",
     "shapely>=2.0.6",
 ]
 
