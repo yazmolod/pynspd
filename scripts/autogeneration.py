@@ -1,5 +1,4 @@
 import asyncio
-import subprocess
 
 from jinja2 import Template
 
@@ -103,20 +102,11 @@ async def get_layers_fields(layers: list[LayerNode]) -> dict[int, list[CardField
     return layers_fields
 
 
-def lint_and_format():
-    subprocess.call(".venv/Scripts/ruff.exe check --fix src/pynspd/**/_autogen*.py")
-    subprocess.call(
-        ".venv/Scripts/ruff.exe check --select I --fix src/pynspd/**/_autogen*.py"
-    )
-    subprocess.call(".venv/Scripts/ruff.exe format src/pynspd/**/_autogen*.py")
-
-
 async def main():
     tree = await get_layer_tree()
     layers = tree.layers
     layers_fields = await get_layers_fields(layers)
     generate_files(layers, layers_fields)
-    lint_and_format()
 
 
 if __name__ == "__main__":
