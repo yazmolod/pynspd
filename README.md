@@ -74,7 +74,7 @@ from shapely import Point
 
 async with AsyncNspd() as api:
     features = await api.search_zu_at_point(Point(37.546440653, 55.787139958))
-    print features[0].properties.options.cad_num
+    print(features[0].properties.options.cad_num)
     > "77:09:0005008:11446"
 ```
 
