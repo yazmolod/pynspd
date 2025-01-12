@@ -1,14 +1,26 @@
-# PyNSPD - работа с Национальной системой пространственных данных (ex-ПКК)
+# PyNSPD
 
-**pynspd** — Python-библиотека для работы с сайтом [НСПД](https://nspd.gov.ru/map). Особенности:
+<p align="center">
+  <em> Python-библиотека для работы с <a href="https://nspd.gov.ru" target="_blank">НСПД - Национальной системой пространственных данных</a> (ex-ПКК)</em>
+</p>
+<p align="center">
+  <a href="https://pypi.org/project/pynspd/" target="_blank">
+      <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pynspd">
+  </a>
+</p>
+
+---
+
+> ⚠️ **Важно**
+> - Это неофициальная библиотека
+> - НСПД часто меняет схемы объектов. Если у вас происходит ошибка валидации - попробуйте обновить библиотеку
+
+## Особенности
 - **Синхронное и асинхронное API**: полностью идентичные API позволяют одинаково удобно работать как в старых синхронных, так и высокопроизводительных асинхронных проектах.
 - **Полная типизации на [Pydantic](https://github.com/pydantic/pydantic)**: удобная работа с ответами благодаря автозаполнениям от IDE.
 - **Автогенерация типов**: данные о перечне слоев, их полях и их типов подтягиваются напрямую с НСПД.
 - **Встроенная поддержка [shapely](https://github.com/shapely/shapely)**: удобная аналитика полученной геометрии.
 
-> ⚠️ **Важно**
-> - Это неофициальная библиотека
-> - НСПД часто меняет схемы объектов. Если у вас происходит ошибка валидации - попробуйте обновить библиотеку
 
 ## Пример использования
 ### Поиск ЗУ
@@ -62,13 +74,14 @@ from shapely import Point
 
 async with AsyncNspd() as api:
     features = await api.search_zu_at_point(Point(37.546440653, 55.787139958))
-    print features[0].properties.options.cad_num
+    print(features[0].properties.options.cad_num)
     > "77:09:0005008:11446"
 ```
 
 ### Поиск объектов в контуре
 ```python
 from shapely import wkt
+
 async with AsyncNspd() as api:
     contour = wkt.loads(
         "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"

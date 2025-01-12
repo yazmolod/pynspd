@@ -1,11 +1,11 @@
 [project]
 name = "pynspd"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python-библиотека для работы с https://nspd.gov.ru (ex-ПКК)"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
-    { name = "yazmolod", email = "yazmolod@gmail.com" }
+    { name = "Aleksandr Litovchenko", email = "yazmolod@gmail.com" }
 ]
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-urls = { "Homepage" = "https://github.com/yazmolod/pynspd" }
+urls = { "Repository" = "https://github.com/yazmolod/pynspd" }
 requires-python = ">=3.10"
 dependencies = [
     "geojson-pydantic>=1.2.0",
@@ -35,6 +35,7 @@ build-backend = "hatchling.build"
 dev = [
     "folium>=0.19.4",
     "geopandas>=1.0.1",
+    "pandas>=2.2.3",
     "ipykernel>=6.29.5",
     "jinja2>=3.1.5",
     "pre-commit>=4.0.1",
