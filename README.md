@@ -81,6 +81,7 @@ async with AsyncNspd() as api:
 ### Поиск объектов в контуре
 ```python
 from shapely import wkt
+
 async with AsyncNspd() as api:
     contour = wkt.loads(
         "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"
