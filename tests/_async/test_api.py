@@ -26,7 +26,8 @@ async def api():
 @pytest.mark.asyncio
 async def test_search_by_theme(api: AsyncNspd):
     feat = await api.search_by_theme("77:02:0021001:5304")
-    assert feat.properties.options.type == "Машино-место"
+    assert feat is not None
+    assert feat.properties.options.model_dump()["type"] == "Машино-место"
 
 
 @pytest.mark.asyncio
@@ -41,6 +42,7 @@ async def test_search_by_model(api: AsyncNspd):
 @pytest.mark.asyncio
 async def test_search_zu(api: AsyncNspd):
     feat = await api.search_zu("77:05:0001005:19")
+    assert feat is not None
     assert feat.properties.options.land_record_type == "Земельный участок"
     assert isinstance(feat.geometry.to_shape(), Polygon)
     assert isinstance(feat.geometry.to_multi_shape(), MultiPolygon)
@@ -58,6 +60,7 @@ async def test_search_many_zu(api: AsyncNspd):
 @pytest.mark.asyncio
 async def test_search_oks(api: AsyncNspd):
     feat = await api.search_oks("77:03:0001001:3030")
+    assert feat is not None
     assert feat.properties.options.build_record_type_value == "Здание"
     assert isinstance(feat.geometry.to_shape(), Polygon)
 

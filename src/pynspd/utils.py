@@ -4,7 +4,7 @@ import pyproj
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import transform
 
-BaseGeomT = TypeVar("T", bound=BaseGeometry)
+BaseGeomT = TypeVar("BaseGeomT", bound=BaseGeometry)
 
 epsg4326_proj = pyproj.CRS("EPSG:4326")
 epsg3857_proj = pyproj.CRS("EPSG:3857")

@@ -16,6 +16,10 @@ Feat = TypeVar("Feat", bound="_BaseFeature")
 class _BaseFeature(Feature[Geom, Props], Generic[Geom, Props]):
     layer_meta: ClassVar[LayerNode]
 
+    # переопределяем поля из geojson-pydantic, т.к. там они не обязательные
+    geometry: Geom
+    properties: Props
+
 
 class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
     """Базовая фича, приходящая из API, не привязанная к слою"""

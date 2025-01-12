@@ -16,11 +16,12 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 urls = { "Homepage" = "https://github.com/yazmolod/pynspd" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "geojson-pydantic>=1.2.0",
     "httpx>=0.28.1",
     "mercantile>=1.2.1",
+    "numpy>1.24.4",
     "pydantic>=2.10.4",
     "pyproj>=3.7",
     "shapely>=2.0.6",
