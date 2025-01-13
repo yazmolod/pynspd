@@ -33,13 +33,17 @@ from pynspd import AsyncNspd
 async with AsyncNspd() as nspd:
     feat = await nspd.search_zu("77:05:0001005:19")
 
-    # исходная геометрия - geojson в EPSG:3857
-    print(feat.geometry.wkt)
-    # 'POLYGON ((4188557.382334785 7502956.580842949...'
+    # исходная геометрия - geojson
+    print(feat.geometry.model_dump())
+    # {'type': 'Polygon', 'coordinates': ...}
     
-    # но можем легко конвертировать в shapely EPSG:4326
-    print(feat.geometry.to_shape(epsg4326=True).wkt)
-    # 'POLYGON ((37.626451149629915 55.72040614723934...'
+    # но можем легко конвертировать в shapely
+    print(type(feat.geometry.to_shape()))
+    # <class 'shapely.geometry.polygon.Polygon'>
+
+    # или принудительно привести к мульти-типу
+    print(type(feat.geometry.to_multi_shape()))
+    # <class 'shapely.geometry.multipolygon.MultiPolygon'>
 
     # Доступ ко всему переченю свойств объекта
     print(feat.properties.options.model_dump())
