@@ -22,7 +22,8 @@ def api():
 
 def test_search_by_theme(api: Nspd):
     feat = api.search_by_theme("77:02:0021001:5304")
-    assert feat.properties.options.type == "Машино-место"
+    assert feat is not None
+    assert feat.properties.options.model_dump()["type"] == "Машино-место"
 
 
 def test_search_by_model(api: Nspd):
@@ -35,6 +36,7 @@ def test_search_by_model(api: Nspd):
 
 def test_search_zu(api: Nspd):
     feat = api.search_zu("77:05:0001005:19")
+    assert feat is not None
     assert feat.properties.options.land_record_type == "Земельный участок"
     assert isinstance(feat.geometry.to_shape(), Polygon)
     assert isinstance(feat.geometry.to_multi_shape(), MultiPolygon)
@@ -48,6 +50,7 @@ def test_search_many_zu(api: Nspd):
 
 def test_search_oks(api: Nspd):
     feat = api.search_oks("77:03:0001001:3030")
+    assert feat is not None
     assert feat.properties.options.build_record_type_value == "Здание"
     assert isinstance(feat.geometry.to_shape(), Polygon)
 
