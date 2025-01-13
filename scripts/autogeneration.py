@@ -28,7 +28,7 @@ from pydantic import Field
 from pynspd.schemas.geometries import Point, LineString, Polygon, MultiPolygon
 from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.feature import _BaseFeature
-from pynspd.schemas.properties import Properties, OptionProperties
+from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
 {% for category_id, fields in layers_fields.items() %}
@@ -47,7 +47,7 @@ class Layer{{ layer.layer_id }}Feature(_BaseFeature[
     {% else %}
     {{ layer.geometry_type }},
     {% endif -%}
-    Properties[Options{{ layer.category_id }}]
+    NspdProperties[Options{{ layer.category_id }}]
 ]):
     \"\"\"{{ layer.title }}\"\"\"
     layer_meta = LayerNode.model_validate({{ layer.model_dump(by_alias=True) }})

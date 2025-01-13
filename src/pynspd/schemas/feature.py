@@ -5,10 +5,10 @@ from geojson_pydantic import Feature
 from pynspd.errors import UnknownLayer
 from pynspd.schemas.geometries import Geometry
 from pynspd.schemas.layer_configs import LayerNode
-from pynspd.schemas.properties import OptionProperties, Properties
+from pynspd.schemas.properties import NspdProperties, OptionProperties
 from pynspd.types._autogen_layers import LayerTitle
 
-Props = TypeVar("Props", bound="Properties")
+Props = TypeVar("Props", bound="NspdProperties")
 Geom = TypeVar("Geom", bound="Geometry")
 Feat = TypeVar("Feat", bound="_BaseFeature")
 
@@ -21,7 +21,7 @@ class _BaseFeature(Feature[Geom, Props], Generic[Geom, Props]):
     properties: Props
 
 
-class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
+class NspdFeature(_BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     """Базовая фича, приходящая из API, не привязанная к слою"""
 
     @classmethod
@@ -43,7 +43,7 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
 
     @classmethod
     def by_category_id(cls, category_id: int) -> Type["NspdFeature"]:
-        """Получение модели категории"""
+        """Получение модели по категории"""
         for layer_def in cls._iter_layer_defs():
             if layer_def.layer_meta.category_id == category_id:
                 return layer_def
@@ -52,7 +52,7 @@ class NspdFeature(_BaseFeature[Geometry, Properties[OptionProperties]]):
     @overload
     def cast(
         self, layer_def: None = None
-    ) -> _BaseFeature[Geometry, Properties[OptionProperties]]: ...
+    ) -> _BaseFeature[Geometry, NspdProperties[OptionProperties]]: ...
 
     @overload
     def cast(self, layer_def: Type[Feat]) -> Feat: ...

@@ -5,7 +5,7 @@ from typing import Optional, Union
 from pynspd.schemas.feature import _BaseFeature
 from pynspd.schemas.geometries import LineString, MultiPolygon, Point, Polygon
 from pynspd.schemas.layer_configs import LayerNode
-from pynspd.schemas.properties import OptionProperties, Properties
+from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
 class Options36992(OptionProperties):
@@ -837,7 +837,7 @@ class Options39000(OptionProperties):
 class Options36948(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -1017,7 +1017,7 @@ class Options36991(OptionProperties):
 
 
 class Layer36945Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38030]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
 ):
     """Кадастровые округа"""
 
@@ -1036,7 +1036,7 @@ class Layer36945Feature(
 
 
 class Layer36316Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36947]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36947]]
 ):
     """Территории объектов культурного наследия"""
 
@@ -1055,7 +1055,7 @@ class Layer36316Feature(
 
 
 class Layer36070Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36382]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
 ):
     """Кадастровые районы"""
 
@@ -1074,7 +1074,7 @@ class Layer36070Feature(
 
 
 class Layer36071Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36381]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36381]]
 ):
     """Кадастровые кварталы"""
 
@@ -1092,7 +1092,7 @@ class Layer36071Feature(
     )
 
 
-class Layer37313Feature(_BaseFeature[LineString, Properties[Options38998]]):
+class Layer37313Feature(_BaseFeature[LineString, NspdProperties[Options38998]]):
     """Государственная граница Российской Федерации"""
 
     layer_meta = LayerNode.model_validate(
@@ -1109,7 +1109,7 @@ class Layer37313Feature(_BaseFeature[LineString, Properties[Options38998]]):
     )
 
 
-class Layer37314Feature(_BaseFeature[LineString, Properties[Options38999]]):
+class Layer37314Feature(_BaseFeature[LineString, NspdProperties[Options38999]]):
     """Субъекты Российской Федерации (линии)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1127,7 +1127,7 @@ class Layer37314Feature(_BaseFeature[LineString, Properties[Options38999]]):
 
 
 class Layer37315Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39000]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options39000]]
 ):
     """Субъекты Российской Федерации (полигоны)"""
 
@@ -1146,7 +1146,7 @@ class Layer37315Feature(
 
 
 class Layer36278Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36829]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36829]]
 ):
     """Муниципальные образования (полигональный)"""
 
@@ -1164,7 +1164,7 @@ class Layer36278Feature(
     )
 
 
-class Layer36279Feature(_BaseFeature[LineString, Properties[Options36830]]):
+class Layer36279Feature(_BaseFeature[LineString, NspdProperties[Options36830]]):
     """Муниципальные образования (линейный)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1182,7 +1182,7 @@ class Layer36279Feature(_BaseFeature[LineString, Properties[Options36830]]):
 
 
 class Layer36281Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36832]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36832]]
 ):
     """Населённые пункты (полигоны)"""
 
@@ -1200,7 +1200,7 @@ class Layer36281Feature(
     )
 
 
-class Layer37316Feature(_BaseFeature[LineString, Properties[Options38996]]):
+class Layer37316Feature(_BaseFeature[LineString, NspdProperties[Options38996]]):
     """Населённые пункты (линии)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1218,7 +1218,7 @@ class Layer37316Feature(_BaseFeature[LineString, Properties[Options38996]]):
 
 
 class Layer36048Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
     """Земельные участки из ЕГРН"""
 
@@ -1236,7 +1236,7 @@ class Layer36048Feature(
     )
 
 
-class Layer36472Feature(_BaseFeature[LineString, Properties[Options37153]]):
+class Layer36472Feature(_BaseFeature[LineString, NspdProperties[Options37153]]):
     """Земельные участки, образуемые по проекту межевания территории (линейный)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1254,7 +1254,7 @@ class Layer36472Feature(_BaseFeature[LineString, Properties[Options37153]]):
 
 
 class Layer36473Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options37158]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options37158]]
 ):
     """Земельные участки, образуемые по проекту межевания территории (полигональный)"""
 
@@ -1273,7 +1273,7 @@ class Layer36473Feature(
 
 
 class Layer37294Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38943]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38943]]
 ):
     """Земельные участки, образуемые по схеме расположения земельного участка"""
 
@@ -1292,7 +1292,7 @@ class Layer37294Feature(
 
 
 class Layer37299Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38981]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38981]]
 ):
     """Земельные участки, выставленные на аукцион"""
 
@@ -1311,7 +1311,7 @@ class Layer37299Feature(
 
 
 class Layer37298Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38979]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38979]]
 ):
     """Земельные участки, свободные от прав третьих лиц"""
 
@@ -1330,7 +1330,7 @@ class Layer37298Feature(
 
 
 class Layer849407Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445347]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options445347]]
 ):
     """Земля для стройки ПКК"""
 
@@ -1349,7 +1349,7 @@ class Layer849407Feature(
 
 
 class Layer849453Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options445397]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options445397]]
 ):
     """Земля для туризма ПКК"""
 
@@ -1368,7 +1368,7 @@ class Layer849453Feature(
 
 
 class Layer36049Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36369]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36369]]
 ):
     """Здания"""
 
@@ -1387,7 +1387,7 @@ class Layer36049Feature(
 
 
 class Layer36328Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36383]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36383]]
 ):
     """Сооружения"""
 
@@ -1406,7 +1406,7 @@ class Layer36328Feature(
 
 
 class Layer36329Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36384]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36384]]
 ):
     """Объекты незавершенного строительства"""
 
@@ -1424,7 +1424,7 @@ class Layer36329Feature(
     )
 
 
-class Layer37433Feature(_BaseFeature[Point, Properties[Options39663]]):
+class Layer37433Feature(_BaseFeature[Point, NspdProperties[Options39663]]):
     """Единые недвижимые комплексы"""
 
     layer_meta = LayerNode.model_validate(
@@ -1441,7 +1441,7 @@ class Layer37433Feature(_BaseFeature[Point, Properties[Options39663]]):
     )
 
 
-class Layer37434Feature(_BaseFeature[Point, Properties[Options39664]]):
+class Layer37434Feature(_BaseFeature[Point, NspdProperties[Options39664]]):
     """Предприятие как имущественный комплекс"""
 
     layer_meta = LayerNode.model_validate(
@@ -1459,7 +1459,7 @@ class Layer37434Feature(_BaseFeature[Point, Properties[Options39664]]):
 
 
 class Layer37577Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
 ):
     """ЗОУИТ объектов культурного наследия"""
 
@@ -1478,7 +1478,7 @@ class Layer37577Feature(
 
 
 class Layer37578Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
 ):
     """ЗОУИТ объектов энергетики, связи, транспорта"""
 
@@ -1497,7 +1497,7 @@ class Layer37578Feature(
 
 
 class Layer37580Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
 ):
     """ЗОУИТ природных территорий"""
 
@@ -1516,7 +1516,7 @@ class Layer37580Feature(
 
 
 class Layer37579Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
 ):
     """ЗОУИТ охраняемых объектов и безопасности"""
 
@@ -1535,7 +1535,7 @@ class Layer37579Feature(
 
 
 class Layer37581Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36940]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
 ):
     """Иные ЗОУИТ"""
 
@@ -1554,7 +1554,7 @@ class Layer37581Feature(
 
 
 class Layer36315Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36946]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36946]]
 ):
     """Территориальные зоны"""
 
@@ -1572,7 +1572,7 @@ class Layer36315Feature(
     )
 
 
-class Layer37293Feature(_BaseFeature[LineString, Properties[Options38942]]):
+class Layer37293Feature(_BaseFeature[LineString, NspdProperties[Options38942]]):
     """Красные линии"""
 
     layer_meta = LayerNode.model_validate(
@@ -1590,7 +1590,7 @@ class Layer37293Feature(_BaseFeature[LineString, Properties[Options38942]]):
 
 
 class Layer36317Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36948]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36948]]
 ):
     """Особо охраняемые природные территории"""
 
@@ -1609,7 +1609,7 @@ class Layer36317Feature(
 
 
 class Layer36311Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36942]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36942]]
 ):
     """Охотничьи угодья"""
 
@@ -1628,7 +1628,7 @@ class Layer36311Feature(
 
 
 class Layer36314Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36945]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36945]]
 ):
     """Лесничества"""
 
@@ -1647,7 +1647,7 @@ class Layer36314Feature(
 
 
 class Layer36469Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36992]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36992]]
 ):
     """Береговые линии (границы водных объектов) (полигональный)"""
 
@@ -1665,7 +1665,7 @@ class Layer36469Feature(
     )
 
 
-class Layer36470Feature(_BaseFeature[LineString, Properties[Options37148]]):
+class Layer36470Feature(_BaseFeature[LineString, NspdProperties[Options37148]]):
     """Береговые линии (границы водных объектов)(линейный)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1683,7 +1683,7 @@ class Layer36470Feature(_BaseFeature[LineString, Properties[Options37148]]):
 
 
 class Layer36303Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36941]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36941]]
 ):
     """Особые экономические зоны"""
 
@@ -1702,7 +1702,7 @@ class Layer36303Feature(
 
 
 class Layer36312Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36943]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36943]]
 ):
     """Территории опережающего развития"""
 
@@ -1721,7 +1721,7 @@ class Layer36312Feature(
 
 
 class Layer36313Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36944]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36944]]
 ):
     """Зоны территориального развития в Российской Федерации"""
 
@@ -1740,7 +1740,7 @@ class Layer36313Feature(
 
 
 class Layer36471Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36991]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36991]]
 ):
     """Игорные зоны"""
 
@@ -1759,7 +1759,7 @@ class Layer36471Feature(
 
 
 class Layer37430Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options39228]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options39228]]
 ):
     """Территории выполнения комплексных кадастровых работ"""
 
@@ -1778,7 +1778,7 @@ class Layer37430Feature(
 
 
 class Layer37295Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38944]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38944]]
 ):
     """Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"""
 
@@ -1797,7 +1797,7 @@ class Layer37295Feature(
 
 
 class Layer37296Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options38967]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
     """Негативные процессы"""
 
@@ -1815,7 +1815,7 @@ class Layer37296Feature(
     )
 
 
-class Layer849601Feature(_BaseFeature[Point, Properties[Options445547]]):
+class Layer849601Feature(_BaseFeature[Point, NspdProperties[Options445547]]):
     """Объекты туристского интереса"""
 
     layer_meta = LayerNode.model_validate(
@@ -1833,7 +1833,7 @@ class Layer849601Feature(_BaseFeature[Point, Properties[Options445547]]):
 
 
 class Layer37236Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
     """Кадастровая стоимость объекта"""
 
@@ -1852,7 +1852,7 @@ class Layer37236Feature(
 
 
 class Layer37758Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], Properties[Options36368]]
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
     """Удельный показатель кадастровой стоимости"""
 
