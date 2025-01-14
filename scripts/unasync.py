@@ -13,7 +13,7 @@ SUBS = [
     ("AsyncClient", "Client"),
     ("AsyncNspd", "Nspd"),
     ("aclose", "close"),
-    ("@pytest.mark.asyncio", ""),
+    (r'@pytest.mark.asyncio\(scope="session"\)', ""),
     ("@pytest_asyncio", "@pytest"),
     ("asyncio", "asyncio_mock"),
 ]

@@ -53,3 +53,6 @@ lint = [
 
 [tool.mypy]
 enable_incomplete_feature = "NewGenericSyntax"
+
+[tool.pytest]
+asyncio_mode = "auto"

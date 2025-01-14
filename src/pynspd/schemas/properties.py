@@ -49,7 +49,6 @@ class OptionProperties(BaseModel):
     @classmethod
     def valid_date(cls, values: dict) -> dict:
         for k, v in values.items():
-            print(k, v)
             if (
                 k in cls.model_fields
                 and "datetime.date" in str(cls.model_fields[k].annotation)

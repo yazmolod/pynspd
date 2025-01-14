@@ -2,21 +2,14 @@ import pytest
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Point, Polygon
 
-from pynspd import Nspd, NspdFeature, asyncio_mock
+from pynspd import Nspd, NspdFeature
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
-@pytest.fixture(scope="module")
-def event_loop():
-    loop = asyncio_mock.get_event_loop()
-    yield loop
-    loop.close()
-
-
 @pytest.fixture(scope="session")
 def api():
-    with Nspd() as client:
+    with Nspd(retries=10) as client:
         yield client
 
 
