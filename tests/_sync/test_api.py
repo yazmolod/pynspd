@@ -108,3 +108,13 @@ def test_search_oks_at_point(api: Nspd):
     features = api.search_oks_at_point(Point(37.547785813, 55.786436698))
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005014:1044"
+
+
+def test_search_with_two_features(api: Nspd):
+    resp = api._search({"query": "77:1:3033:1031", "thematicSearchId": 1})
+    assert resp is not None and resp.data is not None
+    features = resp.data.features
+    assert len(features) > 1
+
+    feat = api._search_one({"query": "77:1:3033:1031", "thematicSearchId": 1})
+    assert feat is None

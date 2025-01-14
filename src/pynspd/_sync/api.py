@@ -79,6 +79,16 @@ class Nspd:
         if response is None:
             return None
         features = response.data.features
+        # иногда поиск багует и дает помимо нужного еще и рандомный результат
+        if len(features) > 1:
+            features = list(
+                filter(
+                    lambda x: params["query"] in x.properties.model_dump_json(),
+                    features,
+                )
+            )
+        if len(features) == 0:
+            return None
         assert len(features) == 1
         return features[0]
 
