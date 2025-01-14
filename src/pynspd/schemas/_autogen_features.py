@@ -494,7 +494,7 @@ class Options36940(OptionProperties):
     """Вид"""
     type_zone: Optional[str] = None
     """Тип зоны"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -510,7 +510,7 @@ class Options36940(OptionProperties):
     """документ"""
     legal_act_document_number: Optional[str] = None
     """номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """дата"""
     legal_act_document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
@@ -519,7 +519,7 @@ class Options36940(OptionProperties):
 class Options36941(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -535,7 +535,7 @@ class Options36941(OptionProperties):
     """Наименование документа"""
     legal_act_document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """Дата"""
     legal_act_document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
@@ -544,7 +544,7 @@ class Options36941(OptionProperties):
 class Options36942(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -558,7 +558,7 @@ class Options36942(OptionProperties):
     """Наименование документа"""
     legal_act_document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """Дата"""
     legal_act_document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
@@ -567,7 +567,7 @@ class Options36942(OptionProperties):
 class Options36943(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -581,7 +581,7 @@ class Options36943(OptionProperties):
     """Наименование документа"""
     legal_act_document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """Дата"""
     legal_act_document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
@@ -613,7 +613,7 @@ class Options36944(OptionProperties):
 class Options36945(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -627,7 +627,7 @@ class Options36945(OptionProperties):
     """Наименование документа"""
     legal_act_document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """Дата"""
     legal_act_document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
@@ -638,7 +638,7 @@ class Options36946(OptionProperties):
     """Вид"""
     type_zone: Optional[str] = None
     """Тип зоны"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -654,7 +654,7 @@ class Options36946(OptionProperties):
     """документ"""
     legal_act_document_number: Optional[str] = None
     """номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """дата"""
     legal_act_document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
@@ -665,7 +665,7 @@ class Options36946(OptionProperties):
 class Options36947(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     reg_numb_border: Optional[str] = None
     """Реестровый номер границы"""
@@ -681,7 +681,7 @@ class Options36947(OptionProperties):
     """Наименование документа"""
     legal_act_document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    legal_act_document_date: Optional[date] = None
     """Дата"""
     legal_act_document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
@@ -702,7 +702,7 @@ class Options38996(OptionProperties):
     """документ"""
     document_number: Optional[str] = None
     """номер"""
-    document_date: Optional[str] = None
+    document_date: Optional[date] = None
     """дата"""
     document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
@@ -916,7 +916,7 @@ class Options36832(OptionProperties):
     """документ"""
     document_number: Optional[str] = None
     """номер"""
-    document_date: Optional[str] = None
+    document_date: Optional[date] = None
     """дата"""
     document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
