@@ -1,7 +1,8 @@
+import re
 from datetime import datetime
 from typing import Annotated, Generic, Optional, Type, TypeVar, overload
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from pynspd.errors import UnknownLayer
 from pynspd.schemas._common import CamelModel
@@ -37,9 +38,33 @@ class NspdProperties(CamelModel, Generic[OptProps]):
 
 
 class OptionProperties(BaseModel):
-    model_config = ConfigDict(extra="allow", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="allow",
+        use_attribute_docstrings=True,
+    )
 
     no_coords: Annotated[bool, Field(alias="geocoderObject", default=False)]
+
+    @model_validator(mode="before")
+    @classmethod
+    def valid_date(cls, values: dict) -> dict:
+        for k, v in values.items():
+            print(k, v)
+            if (
+                k in cls.model_fields
+                and "datetime.date" in str(cls.model_fields[k].annotation)
+                and re.match(r"\d+\.\d+\.\d+", v)
+            ):
+                values[k] = datetime.strptime(v, "%d.%m.%Y")
+        return values
+
+    @classmethod
+    def by_category_id(cls, category_id: int) -> Type["OptionProperties"]:
+        """Получение модели по категории"""
+        for sub_class in cls.__subclasses__():
+            if sub_class.__name__ == f"Options{category_id}":
+                return sub_class
+        raise UnknownLayer(category_id)
 
     def model_dump_human_readable(self):
         """Генерация словаря с ключами, аналогичным карточке на сайте"""
@@ -49,14 +74,6 @@ class OptionProperties(BaseModel):
         }
         aliased_data = {alias[k]: v for k, v in data.items() if k in alias}
         return aliased_data
-
-    @classmethod
-    def by_category_id(cls, category_id: int) -> Type["OptionProperties"]:
-        """Получение модели по категории"""
-        for sub_class in cls.__subclasses__():
-            if sub_class.__name__ == f"Options{category_id}":
-                return sub_class
-        raise UnknownLayer(category_id)
 
 
 class SystemInfoProperties(CamelModel):
