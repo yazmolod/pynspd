@@ -8,7 +8,7 @@ import numpy as np
 from httpx import Response
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
-from pynspd.client import get_async_client
+from pynspd.client import ProxyTypes, get_async_client
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
@@ -17,8 +17,11 @@ from pynspd.types.enums import ThemeId
 
 
 class AsyncNspd:
-    def __init__(self):
-        self._client = get_async_client()
+    def __init__(self, retries: int = 0, proxy: Optional[ProxyTypes] = None):
+        self._client = get_async_client(
+            retries=retries,
+            proxy=proxy,
+        )
 
     async def __aenter__(self):
         return self
