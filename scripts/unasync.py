@@ -16,6 +16,7 @@ SUBS = [
     (r'@pytest.mark.asyncio\(scope="session"\)', ""),
     ("@pytest_asyncio", "@pytest"),
     ("asyncio", "asyncio_mock"),
+    ("Асинхронный клиент", "Клиент"),
 ]
 COMPILED_SUBS = [
     (re.compile(r"(^|\b)" + regex + r"($|\b)"), repl) for regex, repl in SUBS

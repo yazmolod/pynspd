@@ -1,14 +1,14 @@
 import json
-import re
-from typing import Any, Generator, Optional, Type, Union, cast
+from functools import wraps
+from typing import Any, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
-from httpx import Response
+from httpx import HTTPStatusError
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd import asyncio_mock
-from pynspd.client import ProxyTypes, get_client
+from pynspd.client import BaseNspdClient, ProxyTypes, get_client
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
@@ -16,13 +16,44 @@ from pynspd.schemas.responses import SearchResponse
 from pynspd.types.enums import ThemeId
 
 
-class Nspd:
+def retry_on_http_status_error(func):
+    """Декоратор для повторения запроса при ошибке httpx.HTTPStatusError"""
+
+    @wraps(func)
+    def wrapper(self: "Nspd", *args, **kwargs):
+        attempt = 0
+        while attempt <= self.retries:
+            try:
+                return func(self, *args, **kwargs)
+            except HTTPStatusError as e:
+                if e.response.status_code < 500:
+                    raise e
+                attempt += 1
+                if attempt > self.retries:
+                    raise e
+
+    return wrapper
+
+
+class Nspd(BaseNspdClient):
     def __init__(
         self,
         timeout: Optional[int] = None,
-        retries: int = 0,
+        retries: int = 10,
         proxy: Optional[ProxyTypes] = None,
     ):
+        """Клиент для НСПД
+
+        Usage:
+        >>> with pynspd.Nspd() as nspd:
+        >>>     feat = nspd.search_zu("77:05:0001005:19")
+
+        Args:
+            timeout (Optional[int], optional): Время ожидания ответа. Defaults to None.
+            retries (int, optional): Количество попыток при неудачном запросе (таймаут или 5хх ошибки). Defaults to 10.
+            proxy (Optional[ProxyTypes], optional): Использовать прокси для запросов. Defaults to None.
+        """
+        super().__init__(retries=retries)
         self._client = get_client(
             timeout=timeout,
             retries=retries,
@@ -39,46 +70,10 @@ class Nspd:
         """Окончание сессии"""
         self._client.close()
 
-    @staticmethod
-    def iter_cn(input_str: str) -> Generator[str, None, None]:
-        """Извлечение кадастровых номеров из строки"""
-        for cn in re.findall(r"\d+:\d+:\d+:\d+", input_str):
-            yield cn
-
-    @staticmethod
-    def _cast_feature_to_layer_def(
-        raw_feature: Optional[NspdFeature], layer_def: Type[Feat]
-    ) -> Optional[Feat]:
-        """Приведение базовой фичи к фиче конкретного слоя"""
-        if raw_feature is None:
-            return None
-        feature = raw_feature.cast(layer_def)
-        return feature
-
-    @staticmethod
-    def _cast_features_to_layer_defs(
-        raw_features: Optional[list[NspdFeature]], layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
-        """Аналог `_cast_feature_to_layer_def` для списка фичей"""
-        if raw_features is None:
-            return None
-        features = [i.cast(layer_def) for i in raw_features]
-        return features
-
-    @staticmethod
-    def _validate_response(response: Response) -> Optional[list[NspdFeature]]:
-        response.raise_for_status()
-        features = response.json()["features"]
-        if len(features) == 0:
-            return None
-        return [NspdFeature.model_validate(i) for i in features]
-
+    @retry_on_http_status_error
     def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
         r = self._client.get("/api/geoportal/v2/search/geoportal", params=params)
-        if r.status_code == 404:
-            return None
-        r.raise_for_status()
-        return SearchResponse.model_validate(r.json())
+        return self._validate_search_response(r)
 
     def _search_one(self, params: dict[str, Any]) -> Optional[NspdFeature]:
         response = self._search(params)
@@ -137,21 +132,6 @@ class Nspd:
     def search_by_model(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
         """Поиск одного объекта по определению слоя
 
-        Определение слоя можно
-        1) импортировать из `pynspd.schemas`, зная его id
-        ```
-        from pynspd.schemas import Layer36048Feature    # 36048 - id слоя, которое мы подсмотрели из запросов к wms на сайте
-        feature = api.search_by_model("77:06:0004002:7207", Layer36048Feature)
-        feature.properties.options.cad_num    # IDE знает тип и подсказывает возможные свойства
-        ```
-
-        2) воспользоваться методом `NspdFeature.by_title`
-        ```
-        from pynspd.schemas import NspdFeature
-        feature = api.search_by_model("77:06:0004002:7207", NspdFeature.by_title("Земельные участки из ЕГРН"))    # IDE знает весь перечень слоев и подсказывает ввод
-        feature.properties.options.cad_num    # свойство будет так же доступно, но IDE уже не знает о нем
-        ```
-
         Args:
             query (str): поисковой запрос
             layer_def (Type[Feat]): Определение слоя
@@ -186,6 +166,7 @@ class Nspd:
         features = asyncio_mock.gather(*[self.search_oks(cn) for cn in cns])
         return features
 
+    @retry_on_http_status_error
     def search_in_contour(
         self,
         countour: Union[Polygon, MultiPolygon],
@@ -223,7 +204,7 @@ class Nspd:
         )
         if response.status_code == 500 and response.json()["code"] == 400004:
             raise TooBigContour
-        return self._validate_response(response)
+        return self._validate_feature_collection_response(response)
 
     def search_in_contour_by_model(
         self,
@@ -274,6 +255,7 @@ class Nspd:
         """
         return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
 
+    @retry_on_http_status_error
     def search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
         """Поиск объектов слоя в точке
 
@@ -315,7 +297,7 @@ class Nspd:
             "FEATURE_COUNT": "10",  # Если не указать - вернет только один, даже если попало на границу
         }
         response = self._client.get(f"/api/aeggis/v3/{layer_id}/wms", params=params)
-        return self._validate_response(response)
+        return self._validate_feature_collection_response(response)
 
     def search_at_point_by_model(
         self, pt: Point, layer_def: Type[Feat]
