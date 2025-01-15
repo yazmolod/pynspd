@@ -795,6 +795,8 @@ class Options38998(OptionProperties):
 class Options38999(OptionProperties):
     type: Optional[str] = None
     """Вид"""
+    date_reg: Optional[str] = None
+    """Дата постановки на учет / регистрации"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
     num: Optional[str] = None
