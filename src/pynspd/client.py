@@ -9,11 +9,11 @@ SSL_CONTEXT = ssl._create_unverified_context()
 SSL_CONTEXT.set_ciphers("ALL:@SECLEVEL=1")
 
 
-def _get_client_args(retries, proxy):
+def _get_client_args(timeout, retries, proxy):
     return (
         dict(
             base_url="https://nspd.gov.ru",
-            timeout=5,
+            timeout=timeout,
             headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
                 "Referer": "https://nspd.gov.ru",
@@ -24,14 +24,16 @@ def _get_client_args(retries, proxy):
 
 
 def get_async_client(
-    retries: int = 0, proxy: Optional[ProxyTypes] = None
+    timeout: Optional[int] = 10, retries: int = 0, proxy: Optional[ProxyTypes] = None
 ) -> httpx.AsyncClient:
-    client_args, transport_args = _get_client_args(retries, proxy)
+    client_args, transport_args = _get_client_args(timeout, retries, proxy)
     transport = httpx.AsyncHTTPTransport(**transport_args)
     return httpx.AsyncClient(**client_args, transport=transport)
 
 
-def get_client(retries: int = 0, proxy: Optional[ProxyTypes] = None) -> httpx.Client:
-    client_args, transport_args = _get_client_args(retries, proxy)
+def get_client(
+    timeout: Optional[int] = 10, retries: int = 0, proxy: Optional[ProxyTypes] = None
+) -> httpx.Client:
+    client_args, transport_args = _get_client_args(timeout, retries, proxy)
     transport = httpx.HTTPTransport(**transport_args)
     return httpx.Client(**client_args, transport=transport)

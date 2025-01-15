@@ -17,8 +17,14 @@ from pynspd.types.enums import ThemeId
 
 
 class Nspd:
-    def __init__(self, retries: int = 0, proxy: Optional[ProxyTypes] = None):
+    def __init__(
+        self,
+        timeout: Optional[int] = None,
+        retries: int = 0,
+        proxy: Optional[ProxyTypes] = None,
+    ):
         self._client = get_client(
+            timeout=timeout,
             retries=retries,
             proxy=proxy,
         )

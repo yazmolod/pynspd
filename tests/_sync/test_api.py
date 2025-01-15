@@ -9,7 +9,7 @@ from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Featu
 
 @pytest.fixture(scope="session")
 def api():
-    with Nspd(retries=10) as client:
+    with Nspd(timeout=None) as client:
         yield client
 
 

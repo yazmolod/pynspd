@@ -10,7 +10,7 @@ from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Featu
 
 @pytest_asyncio.fixture(scope="session")
 async def api():
-    async with AsyncNspd(retries=10) as client:
+    async with AsyncNspd(timeout=None) as client:
         yield client
 
 
