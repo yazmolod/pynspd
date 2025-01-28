@@ -11,25 +11,23 @@ from pynspd.schemas.properties import NspdProperties, OptionProperties
 class Options36992(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
-    registration_date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     brd_nmb: Optional[str] = None
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
-    name_by_doc: Optional[str] = None
+    name: Optional[str] = None
     """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
+    doc: Optional[str] = None
     """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
+    document_name: Optional[str] = None
     """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
+    document_number: Optional[str] = None
     """Номер"""
-    legal_act_document_date: Optional[str] = None
+    document_date: Optional[date] = None
     """Дата"""
-    legal_act_document_issuer: Optional[str] = None
+    document_issuer: Optional[str] = None
     """Орган власти, организация выдавшие документ"""
 
 
@@ -139,20 +137,26 @@ class Options36369(OptionProperties):
 
 
 class Options37148(OptionProperties):
-    type: Optional[str] = None
+    type_boundary_value: Optional[str] = None
     """Вид"""
-    date: Optional[str] = None
+    registration_date: Optional[date] = None
     """Дата присвоения"""
     brd_nmb: Optional[str] = None
     """Реестровый номер границы"""
-    cad_distr: Optional[str] = None
+    cadastral_district: Optional[str] = None
     """Кадастровый район"""
     name: Optional[str] = None
     """Наименование"""
-    encumb: Optional[str] = None
-    """Ограничение"""
     doc: Optional[str] = None
-    """Реквизиты правовых актов об установлении или изменении границ"""
+    """Реквизиты решения об установлении (изменении) границ"""
+    document_name: Optional[str] = None
+    """Наименование документа"""
+    document_number: Optional[str] = None
+    """Номер"""
+    document_date: Optional[date] = None
+    """Дата"""
+    document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
 
 
 class Options36381(OptionProperties):
@@ -295,27 +299,6 @@ class Options36383(OptionProperties):
     """Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит"""
 
 
-class Options37153(OptionProperties):
-    nominal_number: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    area: Optional[str] = None
-    """Площадь образуемого земельного участка (кв. м)"""
-    land_use_text: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-    nmb: Optional[str] = None
-    """номер"""
-    registration_date: Optional[date] = None
-    """дата"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[date] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
 class Options36384(OptionProperties):
     object_under_construction_record_record_type_value: Optional[str] = None
     """Вид объекта недвижимости"""
@@ -355,6 +338,21 @@ class Options36384(OptionProperties):
     """Проектируемое значение основной характеристики"""
     facility_cad_number: Optional[str] = None
     """Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса"""
+
+
+class Options38942(OptionProperties):
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничения"""
+    doc: Optional[str] = None
+    """Реквизиты решения об утверждении документации по планировке территории"""
+    DOC_TYPE: Optional[str] = None
+    """документ"""
+    DOC_NUMBER: Optional[str] = None
+    """номер"""
+    DOC_DATE: Optional[date] = None
+    """дата"""
+    DOC_GOV: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
 
 
 class Options445347(OptionProperties):
@@ -406,21 +404,6 @@ class Options445347(OptionProperties):
     """Инвестиционный портал региона"""
 
 
-class Options38942(OptionProperties):
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничения"""
-    doc: Optional[str] = None
-    """Реквизиты решения об утверждении документации по планировке территории"""
-    DOC_TYPE: Optional[str] = None
-    """документ"""
-    DOC_NUMBER: Optional[str] = None
-    """номер"""
-    DOC_DATE: Optional[date] = None
-    """дата"""
-    DOC_GOV: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
 class Options38944(OptionProperties):
     schema1: Optional[str] = None
     """Тип"""
@@ -465,9 +448,9 @@ class Options38967(OptionProperties):
     index_map: Optional[str] = None
     """Индекс"""
     process_ty_title: Optional[str] = None
-    """Вид и степень развития негативного процесса (га.)"""
+    """Вид и степень развития негативного процесса га."""
     shape_area: Optional[str] = None
-    """Площадь проявления негативного процесса (% к площади работ)"""
+    """Площадь проявления негативного процесса % к площади работ"""
     zone_proya: Optional[str] = None
     """Зона проявления"""
     soil_type: Optional[str] = None
@@ -692,6 +675,8 @@ class Options38996(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
+    registration_date: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
     reg_code: Optional[str] = None
     """Идентификационный номер"""
     name: Optional[str] = None
@@ -788,19 +773,15 @@ class Options38998(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
 
 
 class Options38999(OptionProperties):
     type: Optional[str] = None
     """Вид"""
-    date_reg: Optional[str] = None
-    """Дата постановки на учет / регистрации"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
+    date_reg: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
     name: Optional[str] = None
     """Наименование"""
     doc: Optional[str] = None
@@ -820,8 +801,8 @@ class Options39000(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
-    num: Optional[str] = None
-    """Идентификационный номер"""
+    date_reg: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
     name: Optional[str] = None
     """Наименование"""
     doc: Optional[str] = None
@@ -866,6 +847,8 @@ class Options36829(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
+    registration_date: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
     reg_code: Optional[str] = None
     """Идентификационный номер"""
     name: Optional[str] = None
@@ -887,7 +870,9 @@ class Options36830(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
-    num: Optional[float] = None
+    registration_date: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
+    reg_code: Optional[str] = None
     """Идентификационный номер"""
     name: Optional[str] = None
     """Наименование"""
@@ -908,6 +893,8 @@ class Options36832(OptionProperties):
     """Вид"""
     brd_nmb: Optional[str] = None
     """Реестровый номер"""
+    registration_date: Optional[date] = None
+    """Дата постановки на учет / регистрации"""
     reg_code: Optional[str] = None
     """Идентификационный номер"""
     name: Optional[str] = None
@@ -1238,42 +1225,6 @@ class Layer36048Feature(
     )
 
 
-class Layer36472Feature(_BaseFeature[LineString, NspdProperties[Options37153]]):
-    """Земельные участки, образуемые по проекту межевания территории (линейный)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земельные участки, образуемые по проекту межевания территории (линейный)",
-            "layerTreeId": 20,
-            "layerId": 36472,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Земельные участки, образуемые по проекту межевания территории (линейный)",
-            "layerVisibleByDefault": False,
-            "categoryId": 37153,
-        }
-    )
-
-
-class Layer36473Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options37158]]
-):
-    """Земельные участки, образуемые по проекту межевания территории (полигональный)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
-            "layerTreeId": 21,
-            "layerId": 36473,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
-            "layerVisibleByDefault": False,
-            "categoryId": 37158,
-        }
-    )
-
-
 class Layer37294Feature(
     _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38943]]
 ):
@@ -1365,6 +1316,25 @@ class Layer849453Feature(
             "layerName": "Земля для туризма",
             "layerVisibleByDefault": False,
             "categoryId": 445397,
+        }
+    )
+
+
+class Layer36473Feature(
+    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options37158]]
+):
+    """Земельные участки, образуемые по проекту межевания территории"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по проекту межевания территории",
+            "layerTreeId": 21,
+            "layerId": 36473,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 37158,
         }
     )
 
