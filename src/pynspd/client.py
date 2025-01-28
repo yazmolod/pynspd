@@ -22,6 +22,7 @@ def _get_client_args(timeout, retries, proxy):
             headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
                 "Referer": "https://nspd.gov.ru",
+                "Host": "nspd.gov.ru",
             },
         ),
         dict(verify=SSL_CONTEXT, retries=retries, proxy=proxy),

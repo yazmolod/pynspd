@@ -5,7 +5,8 @@ from typing import Any, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
-from httpx import HTTPStatusError
+from httpx import HTTPStatusError, RemoteProtocolError, Response
+from httpx._types import QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd.client import BaseNspdClient, ProxyTypes, get_async_client
@@ -16,8 +17,8 @@ from pynspd.schemas.responses import SearchResponse
 from pynspd.types.enums import ThemeId
 
 
-def retry_on_http_status_error(func):
-    """Декоратор для повторения запроса при ошибке httpx.HTTPStatusError"""
+def retry_on_http_error(func):
+    """Декоратор для повторения запроса при ошибках запроса"""
 
     @wraps(func)
     async def wrapper(self: "AsyncNspd", *args, **kwargs):
@@ -31,6 +32,9 @@ def retry_on_http_status_error(func):
                 attempt += 1
                 if attempt > self.retries:
                     raise e
+            except RemoteProtocolError:
+                # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
+                pass
 
     return wrapper
 
@@ -70,9 +74,18 @@ class AsyncNspd(BaseNspdClient):
         """Окончание сессии"""
         await self._client.aclose()
 
-    @retry_on_http_status_error
+    @retry_on_http_error
+    async def request(
+        self, method: str, url: str, params: Optional[QueryParamTypes] = None
+    ) -> Response:
+        """Базовый запрос к api с обработкой стандартных ошибок от НСПД"""
+        r = await self._client.request(method, url, params=params)
+        return r
+
     async def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
-        r = await self._client.get("/api/geoportal/v2/search/geoportal", params=params)
+        r = await self.request(
+            "get", "/api/geoportal/v2/search/geoportal", params=params
+        )
         return self._validate_search_response(r)
 
     async def _search_one(self, params: dict[str, Any]) -> Optional[NspdFeature]:
@@ -174,7 +187,7 @@ class AsyncNspd(BaseNspdClient):
         features = await asyncio.gather(*[self.search_oks(cn) for cn in cns])
         return features
 
-    @retry_on_http_status_error
+    @retry_on_http_error
     async def search_in_contour(
         self,
         countour: Union[Polygon, MultiPolygon],
@@ -267,7 +280,6 @@ class AsyncNspd(BaseNspdClient):
             countour, Layer36049Feature, epsg=epsg
         )
 
-    @retry_on_http_status_error
     async def search_at_point(
         self, pt: Point, layer_id: int
     ) -> Optional[list[NspdFeature]]:
@@ -310,8 +322,8 @@ class AsyncNspd(BaseNspdClient):
             "BBOX": bbox,
             "FEATURE_COUNT": "10",  # Если не указать - вернет только один, даже если попало на границу
         }
-        response = await self._client.get(
-            f"/api/aeggis/v3/{layer_id}/wms", params=params
+        response = await self.request(
+            "get", f"/api/aeggis/v3/{layer_id}/wms", params=params
         )
         return self._validate_feature_collection_response(response)
 

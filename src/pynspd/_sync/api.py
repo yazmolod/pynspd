@@ -4,7 +4,8 @@ from typing import Any, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
-from httpx import HTTPStatusError
+from httpx import HTTPStatusError, RemoteProtocolError, Response
+from httpx._types import QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd import asyncio_mock
@@ -16,8 +17,8 @@ from pynspd.schemas.responses import SearchResponse
 from pynspd.types.enums import ThemeId
 
 
-def retry_on_http_status_error(func):
-    """Декоратор для повторения запроса при ошибке httpx.HTTPStatusError"""
+def retry_on_http_error(func):
+    """Декоратор для повторения запроса при ошибках запроса"""
 
     @wraps(func)
     def wrapper(self: "Nspd", *args, **kwargs):
@@ -31,6 +32,9 @@ def retry_on_http_status_error(func):
                 attempt += 1
                 if attempt > self.retries:
                     raise e
+            except RemoteProtocolError:
+                # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
+                pass
 
     return wrapper
 
@@ -70,9 +74,16 @@ class Nspd(BaseNspdClient):
         """Окончание сессии"""
         self._client.close()
 
-    @retry_on_http_status_error
+    @retry_on_http_error
+    def request(
+        self, method: str, url: str, params: Optional[QueryParamTypes] = None
+    ) -> Response:
+        """Базовый запрос к api с обработкой стандартных ошибок от НСПД"""
+        r = self._client.request(method, url, params=params)
+        return r
+
     def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
-        r = self._client.get("/api/geoportal/v2/search/geoportal", params=params)
+        r = self.request("get", "/api/geoportal/v2/search/geoportal", params=params)
         return self._validate_search_response(r)
 
     def _search_one(self, params: dict[str, Any]) -> Optional[NspdFeature]:
@@ -166,7 +177,7 @@ class Nspd(BaseNspdClient):
         features = asyncio_mock.gather(*[self.search_oks(cn) for cn in cns])
         return features
 
-    @retry_on_http_status_error
+    @retry_on_http_error
     def search_in_contour(
         self,
         countour: Union[Polygon, MultiPolygon],
@@ -255,7 +266,6 @@ class Nspd(BaseNspdClient):
         """
         return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
 
-    @retry_on_http_status_error
     def search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
         """Поиск объектов слоя в точке
 
@@ -296,7 +306,7 @@ class Nspd(BaseNspdClient):
             "BBOX": bbox,
             "FEATURE_COUNT": "10",  # Если не указать - вернет только один, даже если попало на границу
         }
-        response = self._client.get(f"/api/aeggis/v3/{layer_id}/wms", params=params)
+        response = self.request("get", f"/api/aeggis/v3/{layer_id}/wms", params=params)
         return self._validate_feature_collection_response(response)
 
     def search_at_point_by_model(
