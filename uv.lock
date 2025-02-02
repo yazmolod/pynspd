@@ -1038,7 +1038,7 @@ wheels = [
 
 [[package]]
 name = "pynspd"
-version = "0.4.4"
+version = "0.4.5"
 source = { editable = "." }
 dependencies = [
     { name = "geojson-pydantic" },

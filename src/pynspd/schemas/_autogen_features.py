@@ -570,29 +570,6 @@ class Options36943(OptionProperties):
     """Орган власти, организация выдавшие документ"""
 
 
-class Options36944(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
 class Options36945(OptionProperties):
     type_boundary_value: Optional[str] = None
     """Вид"""
@@ -1688,25 +1665,6 @@ class Layer36312Feature(
             "layerName": "Территории опережающего развития (ЕГРН)",
             "layerVisibleByDefault": False,
             "categoryId": 36943,
-        }
-    )
-
-
-class Layer36313Feature(
-    _BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36944]]
-):
-    """Зоны территориального развития в Российской Федерации"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Зоны территориального развития в Российской Федерации",
-            "layerTreeId": 60,
-            "layerId": 36313,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Зоны территориального развития в Российской Федерации (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36944,
         }
     )
 
