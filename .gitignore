@@ -16,3 +16,4 @@ htmlcov/
 %LOCALAPPDATA%/
 .env
 playground.ipynb
+.coveralls.yml

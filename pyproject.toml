@@ -45,6 +45,7 @@ tests = [
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.0",
     "coverage>=7.6.10",
+    "coveralls[yaml]>=4.0.1",
 ]
 lint = [
     "ruff>=0.8.4",

@@ -13,7 +13,7 @@ test:
 	uv run coverage run -m pytest
 
 coverage:
-	uv run coverage html && start "" "htmlcov\index.html"
+	uv run coveralls && uv run coverage html && start "" "htmlcov\index.html"
 
 publish:
 	rmdir /s /q dist && uv build && dotenv --file .env -- set UV_PUBLISH_TOKEN %UV_PUBLISH_TOKEN% && uv publish"

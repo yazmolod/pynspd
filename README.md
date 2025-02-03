@@ -7,6 +7,10 @@
   <a href="https://pypi.org/project/pynspd/" target="_blank">
       <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pynspd">
   </a>
+  <a href='https://coveralls.io/github/yazmolod/pynspd?branch=main'>
+    <img src='https://coveralls.io/repos/github/yazmolod/pynspd/badge.svg?branch=main' alt='Coverage Status' />
+  </a>
+
 </p>
 
 ---
