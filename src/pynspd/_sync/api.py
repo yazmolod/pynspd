@@ -1,6 +1,6 @@
 import json
 from functools import wraps
-from typing import Any, Optional, Type, Union, cast
+from typing import Any, Literal, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
@@ -13,7 +13,11 @@ from pynspd.client import BaseNspdClient, ProxyTypes, get_client
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
-from pynspd.schemas.responses import SearchResponse
+from pynspd.schemas.responses import (
+    NspdTabGroupResponse,
+    NspdTabResponse,
+    SearchResponse,
+)
 from pynspd.types.enums import ThemeId
 
 
@@ -331,3 +335,75 @@ class Nspd(BaseNspdClient):
     def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в точке"""
         return self.search_at_point_by_model(pt, Layer36049Feature)
+
+    def _tab_request(
+        self, feat: NspdFeature, tab_class: str, type_: Literal["values", "group"]
+    ) -> Optional[dict]:
+        if feat.properties.options.no_coords:
+            params = {
+                "tabClass": tab_class,
+                "objdocId": feat.properties.options.objdoc_id,
+                "registersId": feat.properties.options.registers_id,
+            }
+        else:
+            params = {
+                "tabClass": tab_class,
+                "categoryId": feat.properties.category,
+                "geomId": feat.id,
+            }
+        try:
+            r = self.request(
+                "get", f"/api/geoportal/v1/tab-{type_}-data", params=params
+            )
+            r.raise_for_status()
+            return r.json()
+        except HTTPStatusError as e:
+            if e.response.status_code == 404:
+                return None
+            raise e
+
+    def _tab_values_request(
+        self, feat: NspdFeature, tab_class: str
+    ) -> Optional[list[str]]:
+        resp = self._tab_request(feat, tab_class, "values")
+        if resp is None:
+            return None
+        return NspdTabResponse.model_validate(resp).value
+
+    def _tab_groups_request(
+        self, feat: NspdFeature, tab_class: str
+    ) -> Optional[dict[str, Optional[list[str]]]]:
+        resp = self._tab_request(feat, tab_class, "group")
+        if resp is None:
+            return None
+        item = NspdTabGroupResponse.model_validate(resp).object
+        data = {i.title: i.value for i in item}
+        if len(data) == 0:
+            return None
+        return data
+
+    def tab_land_parts(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Части ЗУ\" """
+        return self._tab_values_request(feat, "landParts")
+
+    def tab_land_links(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Связанные ЗУ\" """
+        return self._tab_values_request(feat, "landLinks")
+
+    def tab_permission_type(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Виды разрешенного использования\" """
+        return self._tab_values_request(feat, "permissionType")
+
+    def tab_composition_land(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Состав ЕЗП\" """
+        return self._tab_values_request(feat, "compositionLand")
+
+    def tab_build_parts(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Части ОКС\" """
+        return self._tab_values_request(feat, "buildParts")
+
+    def tab_objects_list(
+        self, feat: NspdFeature
+    ) -> Optional[dict[str, Optional[list[str]]]]:
+        """Получение данных с вкладки \"Объекты\" """
+        return self._tab_groups_request(feat, "objectsList")

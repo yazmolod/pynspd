@@ -43,7 +43,10 @@ class OptionProperties(BaseModel):
         use_attribute_docstrings=True,
     )
 
-    no_coords: Annotated[bool, Field(alias="geocoderObject", default=False)]
+    # TODO: определять объекты без геометрии отдельной схемой
+    no_coords: Annotated[bool, Field(alias="geocoderObject")] = False
+    objdoc_id: Annotated[Optional[int], Field(alias="objdocId")] = None
+    registers_id: Annotated[Optional[int], Field(alias="registersId")] = None
 
     @model_validator(mode="before")
     @classmethod

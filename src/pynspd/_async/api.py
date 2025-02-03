@@ -1,7 +1,7 @@
 import asyncio
 import json
 from functools import wraps
-from typing import Any, Optional, Type, Union, cast
+from typing import Any, Literal, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
@@ -13,7 +13,11 @@ from pynspd.client import BaseNspdClient, ProxyTypes, get_async_client
 from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
-from pynspd.schemas.responses import SearchResponse
+from pynspd.schemas.responses import (
+    NspdTabGroupResponse,
+    NspdTabResponse,
+    SearchResponse,
+)
 from pynspd.types.enums import ThemeId
 
 
@@ -349,3 +353,75 @@ class AsyncNspd(BaseNspdClient):
     async def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в точке"""
         return await self.search_at_point_by_model(pt, Layer36049Feature)
+
+    async def _tab_request(
+        self, feat: NspdFeature, tab_class: str, type_: Literal["values", "group"]
+    ) -> Optional[dict]:
+        if feat.properties.options.no_coords:
+            params = {
+                "tabClass": tab_class,
+                "objdocId": feat.properties.options.objdoc_id,
+                "registersId": feat.properties.options.registers_id,
+            }
+        else:
+            params = {
+                "tabClass": tab_class,
+                "categoryId": feat.properties.category,
+                "geomId": feat.id,
+            }
+        try:
+            r = await self.request(
+                "get", f"/api/geoportal/v1/tab-{type_}-data", params=params
+            )
+            r.raise_for_status()
+            return r.json()
+        except HTTPStatusError as e:
+            if e.response.status_code == 404:
+                return None
+            raise e
+
+    async def _tab_values_request(
+        self, feat: NspdFeature, tab_class: str
+    ) -> Optional[list[str]]:
+        resp = await self._tab_request(feat, tab_class, "values")
+        if resp is None:
+            return None
+        return NspdTabResponse.model_validate(resp).value
+
+    async def _tab_groups_request(
+        self, feat: NspdFeature, tab_class: str
+    ) -> Optional[dict[str, Optional[list[str]]]]:
+        resp = await self._tab_request(feat, tab_class, "group")
+        if resp is None:
+            return None
+        item = NspdTabGroupResponse.model_validate(resp).object
+        data = {i.title: i.value for i in item}
+        if len(data) == 0:
+            return None
+        return data
+
+    async def tab_land_parts(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Части ЗУ\" """
+        return await self._tab_values_request(feat, "landParts")
+
+    async def tab_land_links(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Связанные ЗУ\" """
+        return await self._tab_values_request(feat, "landLinks")
+
+    async def tab_permission_type(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Виды разрешенного использования\" """
+        return await self._tab_values_request(feat, "permissionType")
+
+    async def tab_composition_land(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Состав ЕЗП\" """
+        return await self._tab_values_request(feat, "compositionLand")
+
+    async def tab_build_parts(self, feat: NspdFeature) -> Optional[list[str]]:
+        """Получение данных с вкладки \"Части ОКС\" """
+        return await self._tab_values_request(feat, "buildParts")
+
+    async def tab_objects_list(
+        self, feat: NspdFeature
+    ) -> Optional[dict[str, Optional[list[str]]]]:
+        """Получение данных с вкладки \"Объекты\" """
+        return await self._tab_groups_request(feat, "objectsList")
