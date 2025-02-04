@@ -6,6 +6,7 @@ from typing import Any, Literal, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
+import typing_extensions
 from httpx import HTTPStatusError, RemoteProtocolError, Response, TimeoutException
 from httpx._types import QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
@@ -190,6 +191,7 @@ class AsyncNspd(BaseNspdClient):
         )
         return await self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     async def search_many_zu(
         self, cns_string: str
     ) -> list[Optional[Layer36048Feature]]:
@@ -203,6 +205,7 @@ class AsyncNspd(BaseNspdClient):
         layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
         return await self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     async def search_many_oks(
         self, cns_string: str
     ) -> list[Optional[Layer36049Feature]]:

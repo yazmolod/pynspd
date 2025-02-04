@@ -1,5 +1,11 @@
 # Changelog
 
+## development
+
+### Устарело
+
+- Методы `api.search_many_zu()` и `api.search_many_oks()` будут убраны в версии `0.6.0`  
+
 ## 0.5.1 - 2025-02-04
 
 ### Исправлено

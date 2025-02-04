@@ -5,6 +5,7 @@ from typing import Any, Literal, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
+import typing_extensions
 from httpx import HTTPStatusError, RemoteProtocolError, Response, TimeoutException
 from httpx._types import QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
@@ -184,6 +185,7 @@ class Nspd(BaseNspdClient):
         )
         return self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_zu(self, cns_string: str) -> list[Optional[Layer36048Feature]]:
         """Поиск всех ЗУ, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
@@ -195,6 +197,7 @@ class Nspd(BaseNspdClient):
         layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
         return self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_oks(self, cns_string: str) -> list[Optional[Layer36049Feature]]:
         """Поиск всех ОКС, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
