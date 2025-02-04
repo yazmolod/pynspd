@@ -1,0 +1,4 @@
+site_name: My site
+site_url: https://mydomain.org/mysite
+theme:
+  name: material

@@ -51,6 +51,9 @@ lint = [
     "ruff>=0.8.4",
     "mypy>=1.14.0",
 ]
+docs = [
+    "mkdocs-material>=9.6.2",
+]
 
 [tool.mypy]
 enable_incomplete_feature = "NewGenericSyntax"
