@@ -1,35 +1,6 @@
-# PyNSPD
+## API поиска (на примере ЗУ)
 
-<p align="center">
-  <em> Python-библиотека для работы с <a href="https://nspd.gov.ru" target="_blank">НСПД - Национальной системой пространственных данных</a> (ex-ПКК)</em>
-</p>
-<p align="center">
-  <a href="https://pypi.org/project/pynspd/" target="_blank">
-      <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pynspd">
-  </a>
-  <a href='https://coveralls.io/github/yazmolod/pynspd?branch=main'>
-    <img src='https://coveralls.io/repos/github/yazmolod/pynspd/badge.svg?branch=main' alt='Coverage Status' />
-  </a>
-
-</p>
-
----
-
-> ⚠️ **Важно**
-> - Это неофициальная библиотека
-> - НСПД часто меняет схемы объектов. Если у вас происходит ошибка валидации - попробуйте обновить библиотеку
-
-## Особенности
-- **Синхронное и асинхронное API**: полностью идентичные API позволяют одинаково удобно работать как в старых синхронных, так и высокопроизводительных асинхронных проектах.
-- **Полная типизации на [Pydantic](https://github.com/pydantic/pydantic)**: удобная работа с ответами благодаря автозаполнениям от IDE.
-- **Автогенерация типов**: данные о перечне слоев, их полях и их типов подтягиваются напрямую с НСПД.
-- **Встроенная поддержка [shapely](https://github.com/shapely/shapely)**: удобная аналитика полученной геометрии.
-
-
-## Пример использования
-### API поиска (на примере ЗУ)
-
-**По кадастровому номеру**:
+### По кадастровому номеру
 
 ```python
 from pynspd import AsyncNspd
@@ -146,15 +117,3 @@ from pynspd.schemas import Options36384
 print(props.cast(Options36384).options.human_readable())
 # {'Кадастровый номер': '77:01:0004042:23609', ...}
 ```
-
-
-## Установка
-```
-pip install pynspd
-```
-
-## Зависимости
-- `httpx` - запросы к API НСПД
-- `pydantic`, `geojson-pydantic` - типизации проекта
-- `pyproj`, `shapely` - для конвертации geojson-геометрии в удобный для аналитики формат
--  `mercantile` - решение задач обратного геокодирования
