@@ -2,6 +2,7 @@ import re
 from pathlib import Path
 
 SUBS = [
+    ("from asyncio import sleep", "from time import sleep"),
     ("import asyncio", "from pynspd import asyncio_mock"),
     ("async def", "def"),
     ("async with", "with"),

@@ -1,4 +1,4 @@
-.PHONY: unasync autogen test coverage ruff publish
+.PHONY: unasync autogen tests coverage ruff publish
 
 ruff:
 	uv run ruff check --fix && uv run ruff check --select I --fix && ruff format
@@ -9,7 +9,7 @@ unasync:
 autogen:
 	uv run scripts/autogeneration.py && make ruff
 
-test:
+tests:
 	uv run coverage run -m pytest
 
 coverage:

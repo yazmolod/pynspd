@@ -81,7 +81,6 @@ class BaseNspdClient:
     def _validate_feature_collection_response(
         response: httpx.Response,
     ) -> Optional[list[NspdFeature]]:
-        response.raise_for_status()
         features = response.json()["features"]
         if len(features) == 0:
             return None
@@ -89,7 +88,4 @@ class BaseNspdClient:
 
     @staticmethod
     def _validate_search_response(response: httpx.Response) -> Optional[SearchResponse]:
-        if response.status_code == 404:
-            return None
-        response.raise_for_status()
         return SearchResponse.model_validate(response.json())

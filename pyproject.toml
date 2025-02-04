@@ -1,6 +1,6 @@
 [project]
 name = "pynspd"
-version = "0.5.0"
+version = "0.5.1"
 description = "Python-библиотека для работы с https://nspd.gov.ru (ex-ПКК)"
 readme = "README.md"
 license = {file = "LICENSE"}
