@@ -10,23 +10,23 @@ async with AsyncNspd() as nspd:
 
     # исходная геометрия - geojson
     print(feat.geometry.model_dump())
-    # {'type': 'Polygon', 'coordinates': ...}
+    #> {'type': 'Polygon', 'coordinates': ...}
     
     # но можем легко конвертировать в shapely
     print(type(feat.geometry.to_shape()))
-    # <class 'shapely.geometry.polygon.Polygon'>
+    #> <class 'shapely.geometry.polygon.Polygon'>
 
     # или принудительно привести к мульти-типу
     print(type(feat.geometry.to_multi_shape()))
-    # <class 'shapely.geometry.multipolygon.MultiPolygon'>
+    #> <class 'shapely.geometry.multipolygon.MultiPolygon'>
 
     # Доступ ко всему переченю свойств объекта
     print(feat.properties.options.model_dump())
-    # {'land_record_type': 'Земельный участок', ...}
+    #> {'land_record_type': 'Земельный участок', ...}
 
     # А также форматирование свойств по примеру карточки с сайта
     print(feat.properties.options.model_dump_human_readable())
-    # {'Вид объекта недвижимости': 'Земельный участок', ...}
+    #> {'Вид объекта недвижимости': 'Земельный участок', ...}
 ```
 
 **В точке**:
@@ -35,7 +35,7 @@ from shapely import Point
 
 features = await nspd.search_zu_at_point(Point(37.546440653, 55.787139958))
 print(features[0].properties.options.cad_num)
-# "77:09:0005008:11446"
+#> "77:09:0005008:11446"
 ```
 
 **В контуре**:
@@ -48,7 +48,7 @@ contour = wkt.loads(
 features = await nspd.search_zu_in_contour(contour)
 cns = [i.properties.options.cad_num for i in features]
 print(cns)
-> ["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]
+#> ["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]
 ```
 
 ### Типизированный поиск объекта из любого слоя
@@ -73,7 +73,7 @@ feat = await nspd.search_by_model("Останкинская телебашня",
 ```python
 feat = await nspd.search_by_theme("77:01:0004042:23609")
 print(feat.properties.category_name)
-# 'Объекты незавершенного строительства'
+#> 'Объекты незавершенного строительства'
 ```
 
 В данном случае вернется нетипизированный объект `NspdFeature`, 
@@ -84,16 +84,16 @@ print(feat.properties.category_name)
 ```python
 # Исходный результат поиска
 print(type(feat).__name__)
-# NspdFeature
+#> NspdFeature
 print(feat.layer_meta.layer_id, feat.layer_meta.category_id)
-# raise AttributeError
+#> raise AttributeError
 
 # Автоопределение типа
 # Быстрый способ, но объект останется без подсказок IDE 
 # и возможна ошибка UnknownLayer
 casted_feat = feat.cast()
 print(type(casted_feat).__name__)
-# Layer36329Feature
+#> Layer36329Feature
 
 # Ручное определение типа
 # Будут активны подсказки, 
@@ -101,19 +101,19 @@ print(type(casted_feat).__name__)
 from pynspd.schemas import Layer36329Feature 
 casted_feat = feat.cast(Layer36329Feature)
 print(casted_feat.layer_meta.category_id)
-# 36384
+#> 36384
 
 # Также мы можем привести к типу только свойства
 props = feat.properties
 print(props.options.model_dump_human_readable())
-# {}
+#> {}
 
 # Автоопределение без подсказок IDE
 print(props.cast().options.human_readable())
-# {'Кадастровый номер': '77:01:0004042:23609', ...}
+#> {'Кадастровый номер': '77:01:0004042:23609', ...}
 
 # Ручное определение
 from pynspd.schemas import Options36384 
 print(props.cast(Options36384).options.human_readable())
-# {'Кадастровый номер': '77:01:0004042:23609', ...}
+#> {'Кадастровый номер': '77:01:0004042:23609', ...}
 ```
