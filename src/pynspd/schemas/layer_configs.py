@@ -1,6 +1,6 @@
 from typing import Any, Literal, Optional
 
-from pydantic import ConfigDict, field_serializer, field_validator
+from pydantic import ConfigDict, field_serializer, field_validator, model_validator
 
 from pynspd.schemas._common import CamelModel
 
@@ -59,6 +59,13 @@ class CardField(CamelModel):
     show_empty: bool
     prefix: Optional[str] = None
     postfix: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _update_mistyped_data(self):
+        # тип в конфиге отличается от реального
+        if self.key_value == "specified_area":
+            self.key_type = "Union[str, float]"
+        return self
 
     @field_validator("key_value", mode="before")
     @classmethod
