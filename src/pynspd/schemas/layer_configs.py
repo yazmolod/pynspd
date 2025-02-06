@@ -63,7 +63,7 @@ class CardField(CamelModel):
     @model_validator(mode="after")
     def _update_mistyped_data(self):
         # тип в конфиге отличается от реального
-        if self.key_value == "specified_area":
+        if self.key_type == "str" and "_area" in self.key_value:
             self.key_type = "Union[str, float]"
         return self
 

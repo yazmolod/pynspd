@@ -75,7 +75,7 @@ class Options36368(OptionProperties):
     """Адрес"""
     specified_area: Optional[Union[str, float]] = None
     """Площадь уточненная (кв. м)"""
-    declared_area: Optional[str] = None
+    declared_area: Optional[Union[str, float]] = None
     """Площадь декларированная (кв. м)"""
     area: Optional[str] = None
     """Площадь (кв. м)"""
@@ -449,7 +449,7 @@ class Options38967(OptionProperties):
     """Индекс"""
     process_ty_title: Optional[str] = None
     """Вид и степень развития негативного процесса га."""
-    shape_area: Optional[str] = None
+    shape_area: Optional[Union[str, float]] = None
     """Площадь проявления негативного процесса % к площади работ"""
     zone_proya: Optional[str] = None
     """Зона проявления"""
