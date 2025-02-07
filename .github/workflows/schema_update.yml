@@ -43,22 +43,27 @@ jobs:
           uv run ruff check --select I --fix && 
           ruff format
 
-      - uses: tj-actions/verify-changed-files@v20
-        id: verify-changed-files
-
-      - name: Update Version
-        if: ${{ steps.verify-changed-files.outputs.files_changed }}
-        run: uv run hatch version patch
-
-      - name: "Set current date as env variable"
-        run: |
+      - run: |
           Write-Output "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $Env:GITHUB_OUTPUT
-          Write-Output "version=v$(uv run -- python -c "from pynspd import __version__; print(__version__)")_test_tag" >> $Env:GITHUB_OUTPUT
-        id: version
+        id: date
 
       - uses: EndBug/add-and-commit@v9
-        if: ${{ steps.verify-changed-files.outputs.files_changed }}
+        id: commit
         with:
-          message: ${{ steps.version.outputs.builddate }} schema update
+          message: ${{ steps.date.outputs.builddate }} schema update
+          default_author: github_actions
+          push: false
+
+      - name: Bump version
+        if: ${{ steps.commit.outputs.committed }}
+        run: |
+          uv run hatch version patch
+          Write-Output "version=v$(uv run -- python -c "from pynspd import __version__; print(__version__)")_test_tag" >> $Env:GITHUB_OUTPUT
+        id: version
+        
+      - uses: EndBug/add-and-commit@v9
+        if: ${{ steps.commit.outputs.committed }}
+        with:
+          message: Bump version
           default_author: github_actions
           tag: ${{ steps.version.outputs.version }}
