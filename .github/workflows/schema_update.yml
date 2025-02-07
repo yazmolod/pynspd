@@ -1,0 +1,27 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+        
+      - name: Run schema update script
+        run: make autogen
+
+      - name: Debug git
+        run: echo $(git status)
+      
