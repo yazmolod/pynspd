@@ -25,7 +25,12 @@ jobs:
         run: uv sync --all-extras --dev
         
       - name: Run schema update script
-        run: make autogen
+        run:
+          echo $(ls); 
+          uv run scripts/autogeneration.py && 
+          uv run ruff check --fix && 
+          uv run ruff check --select I --fix && 
+          ruff format
 
       - name: Debug git
         run: echo $(git status)
