@@ -60,14 +60,14 @@ jobs:
       - run: echo ${{ steps.commit.outputs.committed }}
 
       - name: Bump version
-        if: ${{ steps.commit.outputs.committed }}
+        if: steps.commit.outputs.committed
         run: |
           uv run --with hatch hatch version patch
           Write-Output "version=v$(uv run -- python -c "from pynspd import __version__; print(__version__)")_test_tag" >> $Env:GITHUB_OUTPUT
         id: version
         
       - uses: EndBug/add-and-commit@v9
-        if: ${{ steps.commit.outputs.committed }}
+        if: steps.commit.outputs.committed
         with:
           message: Bump version
           default_author: github_actions
