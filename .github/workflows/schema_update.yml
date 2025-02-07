@@ -6,8 +6,14 @@ on:
       - 3-*
   schedule:
     - cron: '0 0 * * *'
+
 permissions:
   contents: write
+
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   check:
     runs-on: self-hosted
@@ -15,7 +21,7 @@ jobs:
       # https://github.com/actions/runner/issues/686#issuecomment-1636899369
       - name: powershell allow...
         shell: cmd
-        run: powershell -Command "Set-ExecutionPolicy Unrestricted -Scope CurrentUser"
+        run: pwsh -Command "Set-ExecutionPolicy Unrestricted -Scope CurrentUser"
 
       - uses: actions/checkout@v4
       
