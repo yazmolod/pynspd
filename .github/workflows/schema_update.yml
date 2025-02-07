@@ -1,3 +1,5 @@
+name: schema-update
+
 on:
   schedule:
     - cron: '0 0 * * *'
