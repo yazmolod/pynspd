@@ -7,7 +7,7 @@ from pynspd import AsyncNspd
 from pynspd._async.api import retry_on_http_error
 from pynspd.schemas.layer_configs import Card, CardField, LayerNode, LayersTree
 
-CLIENT = AsyncNspd()
+CLIENT = AsyncNspd(timeout=10)
 request = partial(retry_on_http_error(AsyncNspd.request), CLIENT)
 
 
