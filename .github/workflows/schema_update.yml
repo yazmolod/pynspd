@@ -50,6 +50,7 @@ jobs:
       - name: Install the project
         run: uv sync --all-extras --dev
 
+
       # - name: Run schema update script
       #   run:
       #     uv run ./scripts/autogeneration.py && 
