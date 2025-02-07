@@ -48,6 +48,8 @@ jobs:
           echo "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $GITHUB_OUTPUT
         id: version
 
+      - run: echo ${{ steps.version.outputs.builddate }}
+
       - uses: EndBug/add-and-commit@v9
         with:
           message: "'${{ steps.version.outputs.builddate }}' schema update"
