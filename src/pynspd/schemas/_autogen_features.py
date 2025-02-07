@@ -73,11 +73,11 @@ class Options36368(OptionProperties):
     """Кадастровый квартал"""
     readable_address: Optional[str] = None
     """Адрес"""
-    specified_area: Optional[Union[str, float]] = None
+    specified_area: Optional[float] = None
     """Площадь уточненная (кв. м)"""
-    declared_area: Optional[Union[str, float]] = None
+    declared_area: Optional[float] = None
     """Площадь декларированная (кв. м)"""
-    area: Optional[str] = None
+    area: Optional[float] = None
     """Площадь (кв. м)"""
     status: Optional[str] = None
     """Статус"""
