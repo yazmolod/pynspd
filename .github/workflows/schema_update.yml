@@ -17,7 +17,6 @@ defaults:
 
 env:
   UV_FROZEN: 1
-  UV_CACHE_DIR: ${{ github.workspace }}/.cache/uv
 
 jobs:
   check:
@@ -35,8 +34,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
-          enable-cache: true
-          prune-cache: false
+          # с кэшированием работает даже дольше ¯\_(ツ)_/¯
+          enable-cache: false
 
       - name: Install the project
         run: uv sync --all-extras --dev
