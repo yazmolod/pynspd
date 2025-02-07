@@ -47,9 +47,7 @@ jobs:
         run: Write-Output "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $Env:GITHUB_OUTPUT
         id: version
 
-      - run: echo ${{ steps.version.outputs.builddate }}
-
       - uses: EndBug/add-and-commit@v9
         with:
-          message: "'${{ steps.version.outputs.builddate }}' schema update"
+          message: ${{ steps.version.outputs.builddate }} schema update
           default_author: github_actions
