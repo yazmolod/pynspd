@@ -12,6 +12,11 @@ jobs:
   check:
     runs-on: self-hosted
     steps:
+      # https://github.com/actions/runner/issues/686#issuecomment-1636899369
+      - name: powershell allow...
+        shell: cmd
+        run: powershell -Command "Set-ExecutionPolicy Unrestricted -Scope CurrentUser"
+
       - uses: actions/checkout@v4
       
       - name: Install the latest version of uv
