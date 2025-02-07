@@ -1,6 +1,9 @@
 name: schema-update
 
 on:
+  push:
+    branches:
+      - 3-*
   schedule:
     - cron: '0 0 * * *'
 permissions:
