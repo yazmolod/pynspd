@@ -42,7 +42,7 @@ jobs:
       - name: Run schema update script
         run:
           echo $(ls); 
-          uv run scripts/autogeneration.py && 
+          uv run ./scripts/autogeneration.py && 
           uv run ruff check --fix && 
           uv run ruff check --select I --fix && 
           ruff format
