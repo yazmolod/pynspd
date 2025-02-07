@@ -37,19 +37,19 @@ def retry_on_http_error(func):
             except (TimeoutException, HTTPStatusError) as e:
                 if isinstance(e, HTTPStatusError):
                     if e.response.status_code == 429:
-                        logger.debug("%s too many requests", logger_suffix)
+                        logger.error("%s too many requests", logger_suffix)
                         await sleep(1)
                     elif e.response.status_code < 500:
-                        logger.debug("%s not server error", logger_suffix)
+                        logger.error("%s not server error", logger_suffix)
                         raise e
                 attempt += 1
                 if attempt > self.retries:
-                    logger.debug("%s run out attempts", logger_suffix)
+                    logger.error("%s run out attempts", logger_suffix)
                     raise e
-                logger.debug("%s attempt %d/%d", logger_suffix, attempt, self.retries)
+                logger.error("%s attempt %d/%d", logger_suffix, attempt, self.retries)
             except RemoteProtocolError:
                 # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
-                logger.debug("%s server disconnect", logger_suffix)
+                logger.error("%s server disconnect", logger_suffix)
 
     return wrapper
 
