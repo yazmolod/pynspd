@@ -57,7 +57,7 @@ jobs:
       - name: Bump version
         if: ${{ steps.commit.outputs.committed }}
         run: |
-          uv run hatch version patch
+          uv run --with hatch hatch version patch
           Write-Output "version=v$(uv run -- python -c "from pynspd import __version__; print(__version__)")_test_tag" >> $Env:GITHUB_OUTPUT
         id: version
         
