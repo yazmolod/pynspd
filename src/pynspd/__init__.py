@@ -5,4 +5,4 @@ from pynspd.schemas import NspdFeature
 from pynspd.types.enums import ThemeId
 
 __all__ = ["AsyncNspd", "Nspd", "NspdFeature", "ThemeId", "UnknownLayer"]
-__version__ = "0.5.6"
+__version__ = "0.5.7"
