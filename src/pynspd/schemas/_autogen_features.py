@@ -488,6 +488,17 @@ class Options36940(OptionProperties):
     name_by_doc: Optional[str] = None
     """Наименование"""
     content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    doc: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) ЗОУИТ"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[date] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
 
 
 class Options36941(OptionProperties):
