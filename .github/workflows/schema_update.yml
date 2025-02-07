@@ -44,8 +44,7 @@ jobs:
           ruff format
 
       - name: "Set current date as env variable"
-        run: |
-          echo "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $GITHUB_OUTPUT
+        run: Write-Output "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $Env:GITHUB_OUTPUT
         id: version
 
       - run: echo ${{ steps.version.outputs.builddate }}
