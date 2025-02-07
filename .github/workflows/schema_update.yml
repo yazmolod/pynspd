@@ -14,6 +14,9 @@ defaults:
   run:
     shell: pwsh
 
+env:
+  UV_FROZEN: 1
+
 jobs:
   check:
     if: github.repository_owner == 'yazmolod'
