@@ -48,7 +48,8 @@ jobs:
           uv run ruff check --select I --fix && 
           ruff format
 
-      - run: |
+      - name: Save date to env
+        run: |
           Write-Output "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $Env:GITHUB_OUTPUT
         id: date
 
@@ -58,8 +59,6 @@ jobs:
           message: ${{ steps.date.outputs.builddate }} schema update
           default_author: github_actions
           push: false
-
-      - run: echo ${{ steps.commit.outputs.committed }}
 
       - name: Bump version
         if: steps.commit.outputs.committed == 'true'
