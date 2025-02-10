@@ -1,16 +1,19 @@
 import json
 from functools import wraps
+from time import sleep
 from typing import Any, Literal, Optional, Type, Union, cast
 
 import mercantile
 import numpy as np
-from httpx import HTTPStatusError, RemoteProtocolError, Response
+import typing_extensions
+from httpx import HTTPStatusError, RemoteProtocolError, Response, TimeoutException
 from httpx._types import QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd import asyncio_mock
 from pynspd.client import BaseNspdClient, ProxyTypes, get_client
 from pynspd.errors import TooBigContour
+from pynspd.logger import logger
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import (
@@ -28,17 +31,25 @@ def retry_on_http_error(func):
     def wrapper(self: "Nspd", *args, **kwargs):
         attempt = 0
         while attempt <= self.retries:
+            logger_suffix = f"HTTP call {func.__name__} -"
             try:
                 return func(self, *args, **kwargs)
-            except HTTPStatusError as e:
-                if e.response.status_code < 500:
-                    raise e
+            except (TimeoutException, HTTPStatusError) as e:
+                if isinstance(e, HTTPStatusError):
+                    if e.response.status_code == 429:
+                        logger.debug("%s too many requests", logger_suffix)
+                        sleep(1)
+                    elif e.response.status_code < 500:
+                        logger.debug("%s not server error", logger_suffix)
+                        raise e
                 attempt += 1
                 if attempt > self.retries:
+                    logger.debug("%s run out attempts", logger_suffix)
                     raise e
+                logger.debug("%s attempt %d/%d", logger_suffix, attempt, self.retries)
             except RemoteProtocolError:
                 # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
-                pass
+                logger.debug("%s server disconnect", logger_suffix)
 
     return wrapper
 
@@ -78,17 +89,27 @@ class Nspd(BaseNspdClient):
         """Окончание сессии"""
         self._client.close()
 
-    @retry_on_http_error
     def request(
-        self, method: str, url: str, params: Optional[QueryParamTypes] = None
+        self,
+        method: str,
+        url: str,
+        params: Optional[QueryParamTypes] = None,
+        json: Optional[dict] = None,
     ) -> Response:
         """Базовый запрос к api с обработкой стандартных ошибок от НСПД"""
-        r = self._client.request(method, url, params=params)
+        r = self._client.request(method, url, params=params, json=json)
+        r.raise_for_status()
         return r
 
+    @retry_on_http_error
     def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
-        r = self.request("get", "/api/geoportal/v2/search/geoportal", params=params)
-        return self._validate_search_response(r)
+        try:
+            r = self.request("get", "/api/geoportal/v2/search/geoportal", params=params)
+            return self._validate_search_response(r)
+        except HTTPStatusError as e:
+            if e.response.status_code == 404:
+                return None
+            raise e
 
     def _search_one(self, params: dict[str, Any]) -> Optional[NspdFeature]:
         response = self._search(params)
@@ -164,6 +185,7 @@ class Nspd(BaseNspdClient):
         )
         return self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_zu(self, cns_string: str) -> list[Optional[Layer36048Feature]]:
         """Поиск всех ЗУ, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
@@ -175,6 +197,7 @@ class Nspd(BaseNspdClient):
         layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
         return self.search_by_model(cn, layer_def)
 
+    @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_oks(self, cns_string: str) -> list[Optional[Layer36049Feature]]:
         """Поиск всех ОКС, содержащихся в строке"""
         cns = list(self.iter_cn(cns_string))
@@ -212,13 +235,17 @@ class Nspd(BaseNspdClient):
                 ],
             },
         }
-        response = self._client.post(
-            "/api/geoportal/v1/intersects",
-            params={"typeIntersect": "fullObject"},
-            json=payload,
-        )
-        if response.status_code == 500 and response.json()["code"] == 400004:
-            raise TooBigContour
+        try:
+            response = self.request(
+                "post",
+                "/api/geoportal/v1/intersects",
+                params={"typeIntersect": "fullObject"},
+                json=payload,
+            )
+        except HTTPStatusError as e:
+            if e.response.status_code == 500 and e.response.json()["code"] == 400004:
+                raise TooBigContour from e
+            raise e
         return self._validate_feature_collection_response(response)
 
     def search_in_contour_by_model(
@@ -270,6 +297,7 @@ class Nspd(BaseNspdClient):
         """
         return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
 
+    @retry_on_http_error
     def search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
         """Поиск объектов слоя в точке
 
@@ -336,6 +364,7 @@ class Nspd(BaseNspdClient):
         """Поиск ОКС в точке"""
         return self.search_at_point_by_model(pt, Layer36049Feature)
 
+    @retry_on_http_error
     def _tab_request(
         self, feat: NspdFeature, tab_class: str, type_: Literal["values", "group"]
     ) -> Optional[dict]:
@@ -355,7 +384,6 @@ class Nspd(BaseNspdClient):
             r = self.request(
                 "get", f"/api/geoportal/v1/tab-{type_}-data", params=params
             )
-            r.raise_for_status()
             return r.json()
         except HTTPStatusError as e:
             if e.response.status_code == 404:

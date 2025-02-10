@@ -73,11 +73,11 @@ class Options36368(OptionProperties):
     """Кадастровый квартал"""
     readable_address: Optional[str] = None
     """Адрес"""
-    specified_area: Optional[str] = None
+    specified_area: Optional[float] = None
     """Площадь уточненная (кв. м)"""
-    declared_area: Optional[str] = None
+    declared_area: Optional[float] = None
     """Площадь декларированная (кв. м)"""
-    area: Optional[str] = None
+    area: Optional[float] = None
     """Площадь (кв. м)"""
     status: Optional[str] = None
     """Статус"""
@@ -449,7 +449,7 @@ class Options38967(OptionProperties):
     """Индекс"""
     process_ty_title: Optional[str] = None
     """Вид и степень развития негативного процесса га."""
-    shape_area: Optional[str] = None
+    shape_area: Optional[Union[str, float]] = None
     """Площадь проявления негативного процесса % к площади работ"""
     zone_proya: Optional[str] = None
     """Зона проявления"""
@@ -483,6 +483,8 @@ class Options36940(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     content_restrict_encumbrances: Optional[str] = None
@@ -508,6 +510,8 @@ class Options36941(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     description: Optional[str] = None
@@ -533,6 +537,8 @@ class Options36942(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     document_name: Optional[str] = None
@@ -579,6 +585,8 @@ class Options36945(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     document_name: Optional[str] = None
@@ -604,6 +612,8 @@ class Options36946(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     content_restrict_encumbrances: Optional[str] = None
@@ -803,6 +813,8 @@ class Options36948(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     name_by_doc: Optional[str] = None
     """Наименование"""
     content_restrict_encumbrances: Optional[str] = None
@@ -968,6 +980,8 @@ class Options36991(OptionProperties):
     """Реестровый номер границы"""
     cadastral_district: Optional[str] = None
     """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
     loc: Optional[str] = None
     """Наименование"""
     document_name: Optional[str] = None

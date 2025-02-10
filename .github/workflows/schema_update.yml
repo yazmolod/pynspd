@@ -1,0 +1,71 @@
+name: schema-update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  UV_FROZEN: 1
+
+jobs:
+  check:
+    if: github.repository_owner == 'yazmolod'
+    runs-on: self-hosted
+    steps:
+      # https://github.com/actions/runner/issues/686#issuecomment-1636899369
+      - name: powershell allow...
+        shell: cmd
+        run: pwsh -Command "Set-ExecutionPolicy Unrestricted -Scope CurrentUser"
+
+      - uses: actions/checkout@v4
+      
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          # с кэшированием работает даже дольше ¯\_(ツ)_/¯
+          enable-cache: false
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run schema update script
+        run:
+          uv run ./scripts/autogeneration.py && 
+          uv run ruff check --fix && 
+          uv run ruff check --select I --fix && 
+          ruff format
+
+      - name: Save date to env
+        run: |
+          Write-Output "builddate=$((Get-Date).ToString('yyyy-MM-dd'))" >> $Env:GITHUB_OUTPUT
+        id: date
+
+      - uses: EndBug/add-and-commit@v9
+        id: commit
+        with:
+          message: ${{ steps.date.outputs.builddate }} schema update
+          default_author: github_actions
+          push: false
+
+      - name: Bump version
+        if: steps.commit.outputs.committed == 'true'
+        run: |
+          uv run --with hatch hatch version patch
+          Write-Output "version=v$(uv run -- python -c "from pynspd import __version__; print(__version__)")" >> $Env:GITHUB_OUTPUT
+        id: version
+        
+      - uses: EndBug/add-and-commit@v9
+        if: steps.commit.outputs.committed == 'true'
+        with:
+          message: Bump version
+          default_author: github_actions
+          tag: ${{ steps.version.outputs.version }}
