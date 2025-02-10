@@ -4,6 +4,10 @@ repo_url: https://github.com/yazmolod/pynspd
 
 theme:
   name: material
+  language: ru
+
+  features:
+    - content.code.copy
 
   palette:
   - scheme: default
@@ -26,7 +30,14 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - admonition
+  - pymdownx.details
 
 nav:
   - О проекте: README.md
-  - Руководство пользователя: userguide.md
+  - Базовое руководство: userguide.md
+  - Расширенное руководство:
+    - Настройка клиента: advanced/client.md
+    - Типизация ответов: advanced/typing.md
+    - Работа из консоли (CLI): advanced/cli.md
+  - Как поддержать проект: contributing.md
