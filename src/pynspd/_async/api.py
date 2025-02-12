@@ -7,11 +7,25 @@ from typing import Any, Literal, Optional, Type, Union, cast
 import mercantile
 import numpy as np
 import typing_extensions
-from httpx import HTTPStatusError, RemoteProtocolError, Response, TimeoutException
-from httpx._types import QueryParamTypes
+from hishel import AsyncBaseStorage, AsyncCacheTransport, Controller
+from httpx import (
+    AsyncBaseTransport,
+    AsyncClient,
+    AsyncHTTPTransport,
+    HTTPStatusError,
+    RemoteProtocolError,
+    Response,
+    TimeoutException,
+)
+from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
-from pynspd.client import BaseNspdClient, ProxyTypes, get_async_client
+from pynspd.client import (
+    SSL_CONTEXT,
+    BaseNspdClient,
+    get_client_args,
+    get_controller_args,
+)
 from pynspd.errors import TooBigContour
 from pynspd.logger import logger
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -57,9 +71,12 @@ def retry_on_http_error(func):
 class AsyncNspd(BaseNspdClient):
     def __init__(
         self,
+        *,
         timeout: Optional[int] = None,
         retries: int = 10,
         proxy: Optional[ProxyTypes] = None,
+        use_cache: bool = False,
+        cache_storage: Optional[AsyncBaseStorage] = None,
     ):
         """Асинхронный клиент для НСПД
 
@@ -68,16 +85,45 @@ class AsyncNspd(BaseNspdClient):
         >>>     feat = await nspd.search_zu("77:05:0001005:19")
 
         Args:
-            timeout (Optional[int], optional): Время ожидания ответа. Defaults to None.
-            retries (int, optional): Количество попыток при неудачном запросе (таймаут или 5хх ошибки). Defaults to 10.
-            proxy (Optional[ProxyTypes], optional): Использовать прокси для запросов. Defaults to None.
+            timeout (Optional[int], optional):
+                Время ожидания ответа. Defaults to None.
+            retries (int, optional):
+                Количество попыток при неудачном запросе (таймаут или 5хх ошибки). Defaults to 10.
+            proxy (Optional[ProxyTypes], optional):
+                Использовать прокси для запросов. Defaults to None.
+            use_cache (bool, optional):
+                Кэшировать ответы на запросы. Defaults to False.
+            cache_storage (Optional[AsyncBaseStorage], optional):
+                Настройка хранения кэша (см. https://hishel.com/advanced/storages/). Defaults to False.
         """
         super().__init__(retries=retries)
-        self._client = get_async_client(
+        self._client = self._build_client(
             timeout=timeout,
             retries=retries,
             proxy=proxy,
+            use_cache=use_cache,
+            cache_storage=cache_storage,
         )
+
+    @staticmethod
+    def _build_client(
+        timeout: Optional[int],
+        retries: int,
+        proxy: Optional[ProxyTypes],
+        use_cache: bool,
+        cache_storage: Optional[AsyncBaseStorage],
+    ) -> AsyncClient:
+        client_args = get_client_args(timeout)
+        transport: AsyncBaseTransport = AsyncHTTPTransport(
+            verify=SSL_CONTEXT, retries=retries, proxy=proxy
+        )
+        if use_cache:
+            cache_args = get_controller_args()
+            controller = Controller(**cache_args)
+            transport = AsyncCacheTransport(
+                transport=transport, storage=cache_storage, controller=controller
+            )
+        return AsyncClient(**client_args, transport=transport)
 
     async def __aenter__(self):
         return self
@@ -182,7 +228,9 @@ class AsyncNspd(BaseNspdClient):
             Optional[Feat]: валидированная модель слоя, если найдено
         """
         feature = await self.search_by_layers(query, layer_def.layer_meta.layer_id)
-        return self._cast_feature_to_layer_def(feature, layer_def)
+        if feature is None:
+            return None
+        return feature.cast(layer_def)
 
     async def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
         """Поиск ЗУ по кадастровому номеру"""

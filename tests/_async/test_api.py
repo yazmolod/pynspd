@@ -1,5 +1,10 @@
+import shutil
+from functools import partial
+from pathlib import Path
+
 import pytest
 import pytest_asyncio
+from hishel import AsyncFileStorage
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Point, Polygon
 
@@ -22,12 +27,24 @@ async def test_search_by_theme(api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
+async def test_search_by_theme_non_exists(api: AsyncNspd):
+    feat = await api.search_by_theme("77:02:0021001:5304111111")
+    assert feat is None
+
+
+@pytest.mark.asyncio(scope="session")
 async def test_search_by_model(api: AsyncNspd):
     lf_def = NspdFeature.by_title("ЗОУИТ объектов энергетики, связи, транспорта")
     assert lf_def == Layer37578Feature
     feat = await api.search_by_model("Останкинская телебашня", lf_def)
     assert isinstance(feat, lf_def)
     assert len(feat.properties.options.model_dump_human_readable()) > 0
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_search_by_model_non_exists(api: AsyncNspd):
+    feat = await api.search_by_model("77:02:0021001:5304111111", Layer36048Feature)
+    assert feat is None
 
 
 @pytest.mark.asyncio(scope="session")
@@ -134,3 +151,29 @@ async def test_search_with_two_features(api: AsyncNspd):
 
     feat = await api._search_one({"query": "77:1:3033:1031", "thematicSearchId": 1})
     assert feat is None
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_cache_client():
+    cache_folder = Path.cwd() / ".cache/hishel"
+    if cache_folder.exists():
+        shutil.rmtree(cache_folder)
+    async with AsyncNspd(
+        use_cache=True, cache_storage=AsyncFileStorage(base_path=cache_folder, ttl=10)
+    ) as nspd:
+        req = partial(
+            nspd.request,
+            "get",
+            "/api/geoportal/v2/search/geoportal",
+            params={
+                "query": "77:02:0021001:5304",
+                "thematicSearchId": 1,
+            },
+        )
+        r = await req()
+        assert not r.extensions["from_cache"]
+        t1 = r.elapsed
+        r = await req()
+        assert r.extensions["from_cache"]
+        t2 = r.elapsed
+        assert t2 < t1
