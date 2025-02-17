@@ -1,5 +1,11 @@
 # Changelog
 
+## Development
+
+### Добавлено 
+
+- Поддержка кэширования результатов благодаря [Hishel](https://github.com/karpetrosyan/hishel)
+
 ## 0.5.4 - 2025-02-07
 
 ### Исправлено
