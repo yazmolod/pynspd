@@ -139,9 +139,7 @@ def test_cache_client():
     cache_folder = Path.cwd() / ".cache/hishel"
     if cache_folder.exists():
         shutil.rmtree(cache_folder)
-    with Nspd(
-        use_cache=True, cache_storage=FileStorage(base_path=cache_folder, ttl=10)
-    ) as nspd:
+    with Nspd(cache_storage=FileStorage(base_path=cache_folder, ttl=10)) as nspd:
         req = partial(
             nspd.request,
             "get",

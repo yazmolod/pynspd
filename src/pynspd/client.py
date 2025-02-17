@@ -26,7 +26,10 @@ def get_client_args(timeout: Optional[int]) -> dict:
 
 
 def get_controller_args() -> dict:
-    return dict(force_cache=True, cacheable_status_codes=[200, 204, 404, 301, 308])
+    return dict(
+        force_cache=True,
+        cacheable_status_codes=[200, 204, 404, 301, 308],
+    )
 
 
 class BaseNspdClient:

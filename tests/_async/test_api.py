@@ -159,7 +159,7 @@ async def test_cache_client():
     if cache_folder.exists():
         shutil.rmtree(cache_folder)
     async with AsyncNspd(
-        use_cache=True, cache_storage=AsyncFileStorage(base_path=cache_folder, ttl=10)
+        cache_storage=AsyncFileStorage(base_path=cache_folder, ttl=10)
     ) as nspd:
         req = partial(
             nspd.request,
