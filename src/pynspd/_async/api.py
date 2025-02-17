@@ -7,11 +7,25 @@ from typing import Any, Literal, Optional, Type, Union, cast
 import mercantile
 import numpy as np
 import typing_extensions
-from httpx import HTTPStatusError, RemoteProtocolError, Response, TimeoutException
-from httpx._types import QueryParamTypes
+from hishel import AsyncBaseStorage, AsyncCacheTransport, Controller
+from httpx import (
+    AsyncBaseTransport,
+    AsyncClient,
+    AsyncHTTPTransport,
+    HTTPStatusError,
+    RemoteProtocolError,
+    Response,
+    TimeoutException,
+)
+from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
-from pynspd.client import BaseNspdClient, ProxyTypes, get_async_client
+from pynspd.client import (
+    SSL_CONTEXT,
+    BaseNspdClient,
+    get_client_args,
+    get_controller_args,
+)
 from pynspd.errors import TooBigContour
 from pynspd.logger import logger
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -31,8 +45,9 @@ def retry_on_http_error(func):
     async def wrapper(self: "AsyncNspd", *args, **kwargs):
         attempt = 0
         while attempt <= self.retries:
-            logger_suffix = f"HTTP call {func.__name__} -"
+            logger_suffix = f'Wrapped method "{func.__name__}" -'
             try:
+                logger.debug("%s start request", logger_suffix)
                 return await func(self, *args, **kwargs)
             except (TimeoutException, HTTPStatusError) as e:
                 if isinstance(e, HTTPStatusError):
@@ -57,9 +72,11 @@ def retry_on_http_error(func):
 class AsyncNspd(BaseNspdClient):
     def __init__(
         self,
+        *,
         timeout: Optional[int] = None,
         retries: int = 10,
         proxy: Optional[ProxyTypes] = None,
+        cache_storage: Optional[AsyncBaseStorage] = None,
     ):
         """Асинхронный клиент для НСПД
 
@@ -68,16 +85,46 @@ class AsyncNspd(BaseNspdClient):
         >>>     feat = await nspd.search_zu("77:05:0001005:19")
 
         Args:
-            timeout (Optional[int], optional): Время ожидания ответа. Defaults to None.
-            retries (int, optional): Количество попыток при неудачном запросе (таймаут или 5хх ошибки). Defaults to 10.
-            proxy (Optional[ProxyTypes], optional): Использовать прокси для запросов. Defaults to None.
+            timeout (Optional[int], optional):
+                Время ожидания ответа.
+                Если не установлен - есть вероятность бесконечного ожидания. По умолчанию None.
+            retries (int, optional):
+                Количество попыток при неудачном запросе
+                (таймаут, неожиданный обрыв соединения, 5хх ошибки). По умолчанию 10.
+            proxy (Optional[ProxyTypes], optional):
+                Использовать прокси для запросов. По умолчанию None.
+            cache_storage (Optional[AsyncBaseStorage], optional):
+                Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
+                Если установлен, то при повторном запросе результат будет
+                извлекаться из хранилища кэша, что сильно увеличивает произвожительность
+                и снижает риск ошибки 429 - Too many requests. По умолчанию None.
         """
         super().__init__(retries=retries)
-        self._client = get_async_client(
+        self._client = self._build_client(
             timeout=timeout,
             retries=retries,
             proxy=proxy,
+            cache_storage=cache_storage,
         )
+
+    @staticmethod
+    def _build_client(
+        timeout: Optional[int],
+        retries: int,
+        proxy: Optional[ProxyTypes],
+        cache_storage: Optional[AsyncBaseStorage],
+    ) -> AsyncClient:
+        client_args = get_client_args(timeout)
+        transport: AsyncBaseTransport = AsyncHTTPTransport(
+            verify=SSL_CONTEXT, retries=retries, proxy=proxy
+        )
+        if cache_storage is not None:
+            cache_args = get_controller_args()
+            controller = Controller(**cache_args)
+            transport = AsyncCacheTransport(
+                transport=transport, storage=cache_storage, controller=controller
+            )
+        return AsyncClient(**client_args, transport=transport)
 
     async def __aenter__(self):
         return self
@@ -97,6 +144,7 @@ class AsyncNspd(BaseNspdClient):
         json: Optional[dict] = None,
     ) -> Response:
         """Базовый запрос к api с обработкой стандартных ошибок от НСПД"""
+        logger.debug("Request %s", url)
         r = await self._client.request(method, url, params=params, json=json)
         r.raise_for_status()
         return r
@@ -141,7 +189,8 @@ class AsyncNspd(BaseNspdClient):
             theme_id (int): вид объекта (кадастровое деление, объект недвижимости и т.д.)
 
         Returns:
-            Optional[SearchResponse]: положительный ответ от сервиса, либо None, если ничего не найдено
+            Optional[SearchResponse]:
+            положительный ответ от сервиса, либо None, если ничего не найдено
         """
         return await self._search_one(
             params={
@@ -160,7 +209,8 @@ class AsyncNspd(BaseNspdClient):
             *layer_ids (int): id слоев, в которых будет производиться поиск
 
         Returns:
-            Optional[SearchResponse]: положительный ответ от сервиса, либо None, если ничего не найдено
+            Optional[SearchResponse]:
+            положительный ответ от сервиса, либо None, если ничего не найдено
         """
         return await self._search_one(
             params={
@@ -182,7 +232,9 @@ class AsyncNspd(BaseNspdClient):
             Optional[Feat]: валидированная модель слоя, если найдено
         """
         feature = await self.search_by_layers(query, layer_def.layer_meta.layer_id)
-        return self._cast_feature_to_layer_def(feature, layer_def)
+        if feature is None:
+            return None
+        return feature.cast(layer_def)
 
     async def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
         """Поиск ЗУ по кадастровому номеру"""
@@ -226,7 +278,7 @@ class AsyncNspd(BaseNspdClient):
         Args:
             countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
             category_ids (int): id категорий слоев
-            epsg (int, optional): Система координат контура. Defaults to 4326.
+            epsg (int, optional): Система координат контура. По умолчанию 4326.
 
         Returns:
             Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
@@ -269,7 +321,7 @@ class AsyncNspd(BaseNspdClient):
         Args:
             countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
             layer_def (Type[Feat]): Модель слоя
-            epsg (int, optional): Система координат контура. Defaults to 4326.
+            epsg (int, optional): Система координат контура. По умолчанию 4326.
 
         Returns:
             Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
@@ -286,10 +338,11 @@ class AsyncNspd(BaseNspdClient):
 
         Args:
             countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            epsg (int, optional): Система координат контура. Defaults to 4326.
+            epsg (int, optional): Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Layer36048Feature]]: Список объектов, пересекающихся с контуром, если найден хоть один
+            Optional[list[Layer36048Feature]]:
+            Список объектов, пересекающихся с контуром, если найден хоть один
         """
         return await self.search_in_contour_by_model(
             countour, Layer36048Feature, epsg=epsg
@@ -302,10 +355,11 @@ class AsyncNspd(BaseNspdClient):
 
         Args:
             countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            epsg (int, optional): Система координат контура. Defaults to 4326.
+            epsg (int, optional): Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Layer36048Feature]]: Список объектов, пересекающихся с контуром, если найден хоть один
+            Optional[list[Layer36048Feature]]:
+            Список объектов, пересекающихся с контуром, если найден хоть один
         """
         return await self.search_in_contour_by_model(
             countour, Layer36049Feature, epsg=epsg
@@ -324,13 +378,13 @@ class AsyncNspd(BaseNspdClient):
         Returns:
             Optional[list[NspdFeature]]: Список объектов, если найдены
         """
-        TILE_SIZE = 512
+        tile_size = 512
         tile = mercantile.tile(
             pt.x, pt.y, zoom=24
         )  # zoom=24 должно быть достаточно для самого точного совпадения
         tile_bounds = mercantile.bounds(tile)
-        i = np.interp(pt.x, [tile_bounds.west, tile_bounds.east], [0, TILE_SIZE])
-        j = np.interp(pt.y, [tile_bounds.south, tile_bounds.north], [0, TILE_SIZE])
+        i = np.interp(pt.x, [tile_bounds.west, tile_bounds.east], [0, tile_size])
+        j = np.interp(pt.y, [tile_bounds.south, tile_bounds.north], [0, tile_size])
         bbox = ",".join(
             map(str, mercantile.xy_bounds(tile))
         )  # bbox в 3857, см. комментарий про CRS
@@ -344,10 +398,10 @@ class AsyncNspd(BaseNspdClient):
             "TRANSPARENT": "true",
             "QUERY_LAYERS": layer_id,
             "LAYERS": layer_id,
-            "WIDTH": TILE_SIZE,
-            "HEIGHT": TILE_SIZE,
+            "WIDTH": tile_size,
+            "HEIGHT": tile_size,
             "I": int(i),
-            "J": TILE_SIZE - int(j),  # отсчет координат для пикселей ведется сверху
+            "J": tile_size - int(j),  # отсчет координат для пикселей ведется сверху
             "CRS": "EPSG:3857",  # CRS для bbox
             # можно указать и 4326, но тогда и геометрия будет в 4326
             # Но в других методах мы всегда ждем 3857, поэтому оставляем
