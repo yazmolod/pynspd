@@ -736,7 +736,7 @@ version = "1.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "ghp-import" },
     { name = "jinja2" },
     { name = "markdown" },
@@ -1219,7 +1219,6 @@ wheels = [
 
 [[package]]
 name = "pynspd"
-version = "0.5.4"
 source = { editable = "." }
 dependencies = [
     { name = "geojson-pydantic" },
