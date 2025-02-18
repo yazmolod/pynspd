@@ -22,8 +22,6 @@ nspd.close()
 
 О том, почему важно закрывать сессию, вы можете прочитать в документации [httpx](https://www.python-httpx.org/advanced/clients/#usage) - замечательной библиотеке для http-запросов, которую `pynspd` использует под капотом.
 
-Подробнее о более тонкой настройки клиента `pynspd` вы можете прочитать в статье ["Настройка клиента"](advanced/client.md).
-
 ## Поиск объектов
 
 ### По поисковому запросу
@@ -75,7 +73,6 @@ feat = nspd.search_in_layer_by_model(
 
 ```python
 from shapely import Point
-from pynspd.schemas import Layer36048Feature
 
 # по id слоя
 feats = nspd.search_at_point(Point(37.546440653, 55.787139958), 36048)
@@ -83,7 +80,7 @@ feats = nspd.search_at_point(Point(37.546440653, 55.787139958), 36048)
 # по модели слоя
 feats = nspd.search_at_point_by_model(    
     Point(37.546440653, 55.787139958), 
-    Layer36048Feature
+    NspdFeature.by_title("Земельные участки из ЕГРН"),
 )
 print(feats[0].properties.options.cad_num)
 #> "77:09:0005008:11446"
@@ -104,7 +101,10 @@ contour = wkt.loads(
 feats = nspd.search_in_contour(contour, 36368)
 
 # по модели слоя
-feats = nspd.search_in_contour_by_model(contour, Layer36048Feature)
+feats = nspd.search_in_contour_by_model(
+    contour,
+    NspdFeature.by_title("Земельные участки из ЕГРН"),
+)
 cns = [i.properties.options.cad_num for i in feats]
 print(cns)
 #> ["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]

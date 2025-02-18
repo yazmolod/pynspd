@@ -11,7 +11,7 @@ Feat = TypeVar("Feat", bound="BaseFeature")
 
 
 class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
-    """Базовая фича, приходящая из API, не привязанная к слою"""
+    """Базовый класс для валидации GeoJSON-объекта из НСПД"""
 
     @classmethod
     def _iter_layer_defs(cls) -> Generator[Type[BaseFeature], None, None]:
@@ -42,14 +42,14 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
         """Приведение объекта к одному из типов перечня определений слоев
 
         Args:
-            layer_def (Optional[Type[Feat]], optional):
-                Класс определение слоя. Если не указан, то попытается определить по свойствам. Defaults to None.
+            layer_def:
+                Класс определение слоя. Если не указан, то попытается определить по свойствам. По умолчанию None.
 
         Raises:
             UnknownLayer: Не удалось определить тип слоя по свойствам
 
         Returns:
-            Feat: объект, приведенный к типу его слоя
+            Объект, приведенный к типу его слоя
         """
         if layer_def is None:
             assert self.properties is not None

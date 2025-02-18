@@ -32,6 +32,11 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - tables
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 plugins: 
 - mkdocstrings:
@@ -55,5 +60,7 @@ nav:
       - pynspd.Nspd: api/client.md
       - pynspd.AsyncNspd: api/async_client.md
       - pynspd.NspdFeature: api/feature.md
+      - pynspd.schemas.options.NspdProperties: api/properties.md
+      - pynspd.schemas.options.NspdOptions: api/options.md
       - pynspd.errors: api/errors.md
   - Как поддержать проект: contributing.md

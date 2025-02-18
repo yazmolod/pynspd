@@ -12,9 +12,17 @@ T = TypeVar("T", bound="OptionProperties")
 
 
 class NspdProperties(CamelModel, Generic[OptProps]):
+    """Базовый класс для валидации поля `property` в GeoJSON-объекте из НСПД"""
+
     category: int
+    """ID категории слоя"""
+
     category_name: str
+    """Имя категории слоя"""
+
     options: OptProps
+    """Свойства объекта"""
+
     system_info: Optional["SystemInfoProperties"] = None
     cadastral_districts_code: Optional[int] = None
     descr: Optional[str] = None
@@ -38,6 +46,8 @@ class NspdProperties(CamelModel, Generic[OptProps]):
 
 
 class OptionProperties(BaseModel):
+    """Базовый класс для валидации поля `property.options` в GeoJSON-объекте из НСПД"""
+
     model_config = ConfigDict(
         extra="allow",
         use_attribute_docstrings=True,

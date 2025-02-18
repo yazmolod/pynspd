@@ -1,0 +1,1 @@
+::: pynspd.schemas.properties.OptionProperties
