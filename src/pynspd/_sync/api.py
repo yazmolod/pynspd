@@ -1,7 +1,7 @@
 import json
 from functools import wraps
 from time import sleep
-from typing import Any, Literal, Optional, Type, Union, cast
+from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -19,7 +19,6 @@ from httpx import (
 from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
-from pynspd import asyncio_mock
 from pynspd.client import (
     SSL_CONTEXT,
     BaseNspdClient,
@@ -286,29 +285,13 @@ class Nspd(BaseNspdClient):
 
     def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
         """Поиск ЗУ по кадастровому номеру"""
-        layer_def = cast(
-            Type[Layer36048Feature], NspdFeature.by_title("Земельные участки из ЕГРН")
-        )
+        layer_def = NspdFeature.by_title("Земельные участки из ЕГРН")
         return self.search_in_layer_by_model(cn, layer_def)
-
-    @typing_extensions.deprecated("Will be removed in 0.6.0")
-    def search_many_zu(self, cns_string: str) -> list[Optional[Layer36048Feature]]:
-        """Поиск всех ЗУ, содержащихся в строке"""
-        cns = list(self.iter_cn(cns_string))
-        features = asyncio_mock.gather(*[self.search_zu(cn) for cn in cns])
-        return features
 
     def search_oks(self, cn: str) -> Optional[Layer36049Feature]:
         """Поиск ОКС по кадастровому номеру"""
-        layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
+        layer_def = NspdFeature.by_title("Здания")
         return self.search_in_layer_by_model(cn, layer_def)
-
-    @typing_extensions.deprecated("Will be removed in 0.6.0")
-    def search_many_oks(self, cns_string: str) -> list[Optional[Layer36049Feature]]:
-        """Поиск всех ОКС, содержащихся в строке"""
-        cns = list(self.iter_cn(cns_string))
-        features = asyncio_mock.gather(*[self.search_oks(cn) for cn in cns])
-        return features
 
     @retry_on_http_error
     def search_in_contour(

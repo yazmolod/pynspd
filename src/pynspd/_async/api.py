@@ -1,8 +1,7 @@
-import asyncio
 import json
 from asyncio import sleep
 from functools import wraps
-from typing import Any, Literal, Optional, Type, Union, cast
+from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -292,33 +291,13 @@ class AsyncNspd(BaseNspdClient):
 
     async def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
         """Поиск ЗУ по кадастровому номеру"""
-        layer_def = cast(
-            Type[Layer36048Feature], NspdFeature.by_title("Земельные участки из ЕГРН")
-        )
+        layer_def = NspdFeature.by_title("Земельные участки из ЕГРН")
         return await self.search_in_layer_by_model(cn, layer_def)
-
-    @typing_extensions.deprecated("Will be removed in 0.6.0")
-    async def search_many_zu(
-        self, cns_string: str
-    ) -> list[Optional[Layer36048Feature]]:
-        """Поиск всех ЗУ, содержащихся в строке"""
-        cns = list(self.iter_cn(cns_string))
-        features = await asyncio.gather(*[self.search_zu(cn) for cn in cns])
-        return features
 
     async def search_oks(self, cn: str) -> Optional[Layer36049Feature]:
         """Поиск ОКС по кадастровому номеру"""
-        layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
+        layer_def = NspdFeature.by_title("Здания")
         return await self.search_in_layer_by_model(cn, layer_def)
-
-    @typing_extensions.deprecated("Will be removed in 0.6.0")
-    async def search_many_oks(
-        self, cns_string: str
-    ) -> list[Optional[Layer36049Feature]]:
-        """Поиск всех ОКС, содержащихся в строке"""
-        cns = list(self.iter_cn(cns_string))
-        features = await asyncio.gather(*[self.search_oks(cn) for cn in cns])
-        return features
 
     @retry_on_http_error
     async def search_in_contour(

@@ -11,14 +11,18 @@
 ### Устарело
 
 - Будут убраны в версии `0.7.0` методы:
-    - `.search_by_theme()` - заменится на `.search_in_theme()`
-    - `.search_by_layers()` - заменится на `.search_in_layer()`
-    - `.search_by_model()` - заменится на `.search_in_layer_by_model()`
+    - `api.search_by_theme()` - заменится на `api.search_in_theme()`
+    - `api.search_by_layers()` - заменится на `api.search_in_layer()`
+    - `api.search_by_model()` - заменится на `api.search_in_layer_by_model()`
 
 ### Изменено
 
 - Статический анализатор теперь понимает вывод метода `NspdFeature.by_title(...)` 
   и приводит его к типу конкретного слоя
+
+### Удалено
+
+- Методы `api.search_many_zu()` и `api.search_many_oks()`
 
 
 ## 0.5.4 - 2025-02-07
