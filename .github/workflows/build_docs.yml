@@ -26,4 +26,5 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocstrings[python]
+      - run: pip install --editable /home/runner/work/pynspd/pynspd
       - run: mkdocs gh-deploy --force
