@@ -1,5 +1,15 @@
 # Changelog
 
+## Development
+
+### Устарело
+
+- Будут убраны в версии `0.7.0` методы:
+    - `.search_by_theme()` - заменится на `.search_in_theme()`
+    - `.search_by_layers()` - заменится на `.search_in_layer()`
+    - `.search_by_model()` - заменится на `.search_in_layer_by_model()`
+
+
 ## 0.5.4 - 2025-02-07
 
 ### Исправлено

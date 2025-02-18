@@ -41,7 +41,7 @@ pip install pynspd
 from pynspd import Nspd
 
 with Nspd() as nspd:
-    feat = nspd.search_by_theme("77:05:0001005:19")
+    feat = nspd.search_in_theme("77:05:0001005:19")
 ```
 
 Доступен полный список аттрибутов (в том числе скрытых), а также сокращенный в человекочитаемом формате:

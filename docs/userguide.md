@@ -35,7 +35,7 @@ nspd.close()
 ```python
 from pynspd import ThemeId
 
-feat = nspd.search_by_theme("77:05:0001005:19", ThemeId.REAL_ESTATE_OBJECTS)
+feat = nspd.search_in_theme("77:05:0001005:19", ThemeId.REAL_ESTATE_OBJECTS)
 print(feat.properties.options.land_record_type)
 #> Земельный участок
 ```
@@ -45,13 +45,13 @@ print(feat.properties.options.land_record_type)
 Для более точного поиска мы можем указать id конкретных слоев для поиска, подсмотрев их в запросах НСПД:
 
 ```python
-feat = nspd.search_by_layers("77:05:0001005:19", 36048) # id земельных участков
+feat = nspd.search_in_layer("77:05:0001005:19", 36048) # id земельных участков
 ```
 
 Разумеется, не очень удобно каждый раз подглядывать в запросы НСПД. Здесь нам приходит на помощь собранная с НСПД информация о слоях:
 
 ```python
-feat = nspd.search_by_model(
+feat = nspd.search_in_layer_by_model(
     "77:05:0001005:19", 
     NspdFeature.by_title("Земельные участки из ЕГРН")
 )
@@ -61,7 +61,8 @@ feat = nspd.search_by_model(
 
 ![Layer titles example](assets/layer_assist.png)
 
-Метод `.search_by_model(...)` удобен не только тем, что нам не нужно прописывать id слоя, но и тем что он может привести ответ НСПД к статическому типу: 
+Метод `.search_in_layer_by_model(...)` удобен не только тем, что нам не нужно прописывать id слоя, 
+но и тем что он может привести ответ НСПД к статическому типу: 
 
 ![Typed answer example](assets/typed_answer.png)
 
@@ -137,7 +138,7 @@ feat.geometry.to_multi_shape()
 Свойства объекта лежат в свойстве `.properties`:
 
 ```python
-feat = nspd.search_by_model(
+feat = nspd.search_in_layer_by_model(
     '63:01:0810003:510', 
     NspdFeature.by_title("Земельные участки из ЕГРН")
 )

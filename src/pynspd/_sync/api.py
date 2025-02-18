@@ -179,10 +179,27 @@ class Nspd(BaseNspdClient):
         assert len(features) == 1
         return features[0]
 
+    @typing_extensions.deprecated(
+        "Will be removed in 0.7.0; use `.search_in_theme(...)` instead`"
+    )
     def search_by_theme(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
     ) -> Optional[NspdFeature]:
-        """Глобальный поисковой запрос
+        """Поисковой запрос по предустановленной теме
+
+        Args:
+            query: Поисковой запрос
+            theme_id: Вид объекта (кадастровое деление, объект недвижимости и т.д.)
+
+        Returns:
+            Положительный ответ от сервиса, либо None, если ничего не найдено
+        """
+        return self.search_in_theme(query, theme_id)
+
+    def search_in_theme(
+        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
+    ) -> Optional[NspdFeature]:
+        """Поисковой запрос по предустановленной теме
 
         Args:
             query: Поисковой запрос
@@ -198,6 +215,9 @@ class Nspd(BaseNspdClient):
             }
         )
 
+    @typing_extensions.deprecated(
+        "Will be removed in 0.7.0; use `.search_in_layer(...)` instead`"
+    )
     def search_by_layers(self, query: str, *layer_ids: int) -> Optional[NspdFeature]:
         """Поисковой запрос по указанным слоям
 
@@ -215,6 +235,26 @@ class Nspd(BaseNspdClient):
             }
         )
 
+    def search_in_layer(self, query: str, layer_id: int) -> Optional[NspdFeature]:
+        """Поисковой запрос по указанному слою
+
+        Args:
+            query: поисковой запрос
+            layer_id: id слоя, в которых будет производиться поиск
+
+        Returns:
+            Положительный ответ от сервиса, либо None, если ничего не найдено
+        """
+        return self._search_one(
+            params={
+                "query": query,
+                "layersId": layer_id,
+            }
+        )
+
+    @typing_extensions.deprecated(
+        "Will be removed in 0.7.0; use `.search_in_layer_by_model(...)` instead`"
+    )
     def search_by_model(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
         """Поиск одного объекта по определению слоя
 
@@ -225,7 +265,21 @@ class Nspd(BaseNspdClient):
         Returns:
             Валидированная модель слоя, если найдено
         """
-        feature = self.search_by_layers(query, layer_def.layer_meta.layer_id)
+        return self.search_in_layer_by_model(query, layer_def)
+
+    def search_in_layer_by_model(
+        self, query: str, layer_def: Type[Feat]
+    ) -> Optional[Feat]:
+        """Поиск объекта по определению слоя
+
+        Args:
+            query: Поисковой запрос
+            layer_def: Определение слоя
+
+        Returns:
+            Валидированная модель слоя, если найдено
+        """
+        feature = self.search_in_layer(query, layer_def.layer_meta.layer_id)
         if feature is None:
             return None
         return feature.cast(layer_def)
@@ -235,7 +289,7 @@ class Nspd(BaseNspdClient):
         layer_def = cast(
             Type[Layer36048Feature], NspdFeature.by_title("Земельные участки из ЕГРН")
         )
-        return self.search_by_model(cn, layer_def)
+        return self.search_in_layer_by_model(cn, layer_def)
 
     @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_zu(self, cns_string: str) -> list[Optional[Layer36048Feature]]:
@@ -247,7 +301,7 @@ class Nspd(BaseNspdClient):
     def search_oks(self, cn: str) -> Optional[Layer36049Feature]:
         """Поиск ОКС по кадастровому номеру"""
         layer_def = cast(Type[Layer36049Feature], NspdFeature.by_title("Здания"))
-        return self.search_by_model(cn, layer_def)
+        return self.search_in_layer_by_model(cn, layer_def)
 
     @typing_extensions.deprecated("Will be removed in 0.6.0")
     def search_many_oks(self, cns_string: str) -> list[Optional[Layer36049Feature]]:
