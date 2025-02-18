@@ -70,6 +70,29 @@ def retry_on_http_error(func):
 
 
 class Nspd(BaseNspdClient):
+    """Клиент для НСПД
+
+    ```python
+    with pynspd.Nspd() as nspd:
+        feat = nspd.search_zu("77:05:0001005:19")
+    ```
+
+    Args:
+        timeout:
+            Время ожидания ответа.
+            Если не установлен - есть вероятность бесконечного ожидания. По умолчанию None.
+        retries:
+            Количество попыток при неудачном запросе
+            (таймаут, неожиданный обрыв соединения, 5хх ошибки). По умолчанию 10.
+        proxy:
+            Использовать прокси для запросов. По умолчанию None.
+        cache_storage:
+            Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
+            Если установлен, то при повторном запросе результат будет
+            извлекаться из хранилища кэша, что сильно увеличивает произвожительность
+            и снижает риск ошибки 429 - Too many requests. По умолчанию None.
+    """
+
     def __init__(
         self,
         *,
@@ -78,27 +101,6 @@ class Nspd(BaseNspdClient):
         proxy: Optional[ProxyTypes] = None,
         cache_storage: Optional[BaseStorage] = None,
     ):
-        """Клиент для НСПД
-
-        Usage:
-        >>> with pynspd.Nspd() as nspd:
-        >>>     feat = nspd.search_zu("77:05:0001005:19")
-
-        Args:
-            timeout (Optional[int], optional):
-                Время ожидания ответа.
-                Если не установлен - есть вероятность бесконечного ожидания. По умолчанию None.
-            retries (int, optional):
-                Количество попыток при неудачном запросе
-                (таймаут, неожиданный обрыв соединения, 5хх ошибки). По умолчанию 10.
-            proxy (Optional[ProxyTypes], optional):
-                Использовать прокси для запросов. По умолчанию None.
-            cache_storage (Optional[BaseStorage], optional):
-                Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
-                Если установлен, то при повторном запросе результат будет
-                извлекаться из хранилища кэша, что сильно увеличивает произвожительность
-                и снижает риск ошибки 429 - Too many requests. По умолчанию None.
-        """
         super().__init__(retries=retries)
         self._client = self._build_client(
             timeout=timeout,
@@ -133,7 +135,7 @@ class Nspd(BaseNspdClient):
         self.close()
 
     def close(self):
-        """Окончание сессии"""
+        """Завершение сессии"""
         self._client.close()
 
     def request(
@@ -143,7 +145,7 @@ class Nspd(BaseNspdClient):
         params: Optional[QueryParamTypes] = None,
         json: Optional[dict] = None,
     ) -> Response:
-        """Базовый запрос к api с обработкой стандартных ошибок от НСПД"""
+        """Базовый запрос к api НСПД"""
         logger.debug("Request %s", url)
         r = self._client.request(method, url, params=params, json=json)
         r.raise_for_status()
@@ -183,12 +185,11 @@ class Nspd(BaseNspdClient):
         """Глобальный поисковой запрос
 
         Args:
-            query (str): поисковой запрос
-            theme_id (int): вид объекта (кадастровое деление, объект недвижимости и т.д.)
+            query: Поисковой запрос
+            theme_id: Вид объекта (кадастровое деление, объект недвижимости и т.д.)
 
         Returns:
-            Optional[SearchResponse]:
-            положительный ответ от сервиса, либо None, если ничего не найдено
+            Положительный ответ от сервиса, либо None, если ничего не найдено
         """
         return self._search_one(
             params={
@@ -201,12 +202,11 @@ class Nspd(BaseNspdClient):
         """Поисковой запрос по указанным слоям
 
         Args:
-            query (str): поисковой запрос
-            *layer_ids (int): id слоев, в которых будет производиться поиск
+            query: поисковой запрос
+            *layer_ids: id слоев, в которых будет производиться поиск
 
         Returns:
-            Optional[SearchResponse]:
-            положительный ответ от сервиса, либо None, если ничего не найдено
+            Положительный ответ от сервиса, либо None, если ничего не найдено
         """
         return self._search_one(
             params={
@@ -219,11 +219,11 @@ class Nspd(BaseNspdClient):
         """Поиск одного объекта по определению слоя
 
         Args:
-            query (str): поисковой запрос
-            layer_def (Type[Feat]): Определение слоя
+            query: Поисковой запрос
+            layer_def: Определение слоя
 
         Returns:
-            Optional[Feat]: валидированная модель слоя, если найдено
+            Валидированная модель слоя, если найдено
         """
         feature = self.search_by_layers(query, layer_def.layer_meta.layer_id)
         if feature is None:
@@ -263,15 +263,15 @@ class Nspd(BaseNspdClient):
         *category_ids: int,
         epsg: int = 4326,
     ) -> Optional[list[NspdFeature]]:
-        """Поиск объектов в контуре по id категорий слоев
+        """Поиск объектов в контуре по ID категорий слоев
 
         Args:
-            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            category_ids (int): id категорий слоев
-            epsg (int, optional): Система координат контура. По умолчанию 4326.
+            countour: Геометрический объект с контуром
+            category_ids: ID категорий слоев
+            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
+            Список объектов, пересекающихся с контуром, если найден хоть один
         """
         feature_geojson = json.loads(to_geojson(countour))
         feature_geojson["crs"] = {
@@ -309,12 +309,12 @@ class Nspd(BaseNspdClient):
         """Поиск объектов в контуре по определению слоя
 
         Args:
-            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            layer_def (Type[Feat]): Модель слоя
-            epsg (int, optional): Система координат контура. По умолчанию 4326.
+            countour: Геометрический объект с контуром
+            layer_def: Модель слоя
+            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Feat]]: Список объектов, пересекающихся с контуром, если найден хоть один
+            Список объектов, пересекающихся с контуром, если найден хоть один
         """
         raw_features = self.search_in_contour(
             countour, layer_def.layer_meta.category_id, epsg=epsg
@@ -327,11 +327,10 @@ class Nspd(BaseNspdClient):
         """Поиск ЗУ в контуре
 
         Args:
-            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            epsg (int, optional): Система координат контура. По умолчанию 4326.
+            countour: Геометрический объект с контуром
+            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Layer36048Feature]]:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
         return self.search_in_contour_by_model(countour, Layer36048Feature, epsg=epsg)
@@ -342,26 +341,17 @@ class Nspd(BaseNspdClient):
         """Поиск ОКС в контуре
 
         Args:
-            countour (Union[Polygon, MultiPolygon]): Геометрический объект с контуром
-            epsg (int, optional): Система координат контура. По умолчанию 4326.
+            countour: Геометрический объект с контуром
+            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
-            Optional[list[Layer36048Feature]]:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
         return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
 
     @retry_on_http_error
     def search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
-        """Поиск объектов слоя в точке
-
-        Args:
-            pt (Point):
-            layer_id (int):
-
-        Returns:
-            Optional[list[NspdFeature]]: Список объектов, если найдены
-        """
+        """Поиск объектов слоя в точке"""
         tile_size = 512
         tile = mercantile.tile(
             pt.x, pt.y, zoom=24
@@ -401,11 +391,11 @@ class Nspd(BaseNspdClient):
         """Поиск объектов слоя в точке (с типизацией)
 
         Args:
-            pt (Point):
-            layer_def (Type[Feat]): Тип слоя
+            pt: Точка поиска
+            layer_def: Тип слоя
 
         Returns:
-            Optional[list[Feat]]: Типизированный список объектов, если найдены
+            Типизированный список объектов, если найдены
         """
         raw_features = self.search_at_point(pt, layer_def.layer_meta.layer_id)
         return self._cast_features_to_layer_defs(raw_features, layer_def)
@@ -487,5 +477,7 @@ class Nspd(BaseNspdClient):
     def tab_objects_list(
         self, feat: NspdFeature
     ) -> Optional[dict[str, Optional[list[str]]]]:
-        """Получение данных с вкладки \"Объекты\" """
+        """
+        Получение данных с вкладки \"Объекты\"
+        """
         return self._tab_groups_request(feat, "objectsList")

@@ -33,11 +33,27 @@ markdown_extensions:
   - admonition
   - pymdownx.details
 
+plugins: 
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        options:
+          show_source: false
+          show_bases: false
+          show_root_heading: true
+
 nav:
   - О проекте: README.md
   - Руководство пользователя: userguide.md
   - Расширенное руководство:
-    - Настройка клиента: advanced/client.md
+    - Какой клиент выбрать?: advanced/sync_vs_async.md
+    - Настройка кэширования: advanced/caching.md
     - Типизация ответов: advanced/typing.md
     - Работа из консоли (CLI): advanced/cli.md
+  - API Reference: 
+      - pynspd.Nspd: api/client.md
+      - pynspd.AsyncNspd: api/async_client.md
+      - pynspd.NspdFeature: api/feature.md
+      - pynspd.errors: api/errors.md
   - Как поддержать проект: contributing.md

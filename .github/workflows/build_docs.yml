@@ -2,6 +2,7 @@ name: build-docs
 on:
   push:
     branches:
+      - main
       - docs
 permissions:
   contents: write

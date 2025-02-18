@@ -59,6 +59,7 @@ lint = [
 ]
 docs = [
     "mkdocs-material>=9.6.2",
+    "mkdocstrings[python]>=0.28.1",
 ]
 
 [tool.mypy]
