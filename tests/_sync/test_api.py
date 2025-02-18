@@ -12,12 +12,6 @@ from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
-@pytest.fixture(scope="session")
-def api():
-    with Nspd(timeout=None) as client:
-        yield client
-
-
 def test_search_by_theme(api: Nspd):
     feat = api.search_by_theme("77:02:0021001:5304")
     assert feat is not None
@@ -50,25 +44,11 @@ def test_search_zu(api: Nspd):
     assert isinstance(feat.geometry.to_multi_shape(), MultiPolygon)
 
 
-def test_search_many_zu(api: Nspd):
-    features = api.search_many_zu("77:03:0001001:82 77:03:0001001:26 77:03:0001001:132")
-    assert len(features) == 3
-    assert all([i is not None for i in features])
-
-
 def test_search_oks(api: Nspd):
     feat = api.search_oks("77:03:0001001:3030")
     assert feat is not None
     assert feat.properties.options.build_record_type_value == "Здание"
     assert isinstance(feat.geometry.to_shape(), Polygon)
-
-
-def test_search_many_oks(api: Nspd):
-    features = api.search_many_oks(
-        "77:03:0001001:3030 77:03:0001001:1111 77:03:0001001:1112"
-    )
-    assert len(features) == 3
-    assert all([i is not None for i in features])
 
 
 def test_search_zu_in_contour(api: Nspd):

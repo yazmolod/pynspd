@@ -1,5 +1,3 @@
-import pytest
-
 from pynspd import Nspd, NspdFeature
 
 
@@ -7,12 +5,6 @@ def get_feat(api: Nspd, cn: str) -> NspdFeature:
     feat = api.search_by_theme(cn)
     assert feat is not None
     return feat
-
-
-@pytest.fixture(scope="session")
-def api():
-    with Nspd(timeout=None) as client:
-        yield client
 
 
 def test_tab_land_parts(api: Nspd):

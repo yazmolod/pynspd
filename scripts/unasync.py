@@ -21,6 +21,7 @@ SUBS = [
     ("aclose", "close"),
     (r'@pytest.mark.asyncio\(scope="session"\)', ""),
     ("@pytest_asyncio", "@pytest"),
+    ("async_api", "api"),
     ("Асинхронный клиент", "Клиент"),
 ]
 COMPILED_SUBS = [

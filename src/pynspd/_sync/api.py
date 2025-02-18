@@ -144,11 +144,22 @@ class Nspd(BaseNspdClient):
         params: Optional[QueryParamTypes] = None,
         json: Optional[dict] = None,
     ) -> Response:
-        """Базовый запрос к api НСПД"""
+        """Базовый запрос к API НСПД"""
         logger.debug("Request %s", url)
         r = self._client.request(method, url, params=params, json=json)
         r.raise_for_status()
         return r
+
+    @retry_on_http_error
+    def save_request(
+        self,
+        method: str,
+        url: str,
+        params: Optional[QueryParamTypes] = None,
+        json: Optional[dict] = None,
+    ) -> Response:
+        """Базовый запрос к api НСПД с обработкой ошибок"""
+        return self.request(method, url, params, json)
 
     @retry_on_http_error
     def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
