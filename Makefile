@@ -1,13 +1,16 @@
-.PHONY: unasync autogen tests coverage ruff publish
+.PHONY: unasync autogen tests coverage lint publish docs
 
-ruff:
+install:
+	uv sync --all-groups --all-extras --frozen && uv run pre-commit install
+
+lint:
 	uv run ruff check --fix && uv run ruff check --select I --fix && ruff format
 
 unasync:
-	uv run scripts/unasync.py && make ruff
+	uv run scripts/unasync.py && make lint
 
 autogen:
-	uv run scripts/autogeneration.py && make ruff
+	uv run scripts/autogeneration.py && make lint
 
 tests:
 	uv run coverage run -m pytest
@@ -17,3 +20,6 @@ coverage:
 
 publish:
 	rmdir /s /q dist && uv build && dotenv --file .env -- set UV_PUBLISH_TOKEN %UV_PUBLISH_TOKEN% && uv publish"
+
+docs:
+	uv run mkdocs serve

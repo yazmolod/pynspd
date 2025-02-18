@@ -30,7 +30,7 @@ from pydantic import Field
 
 from pynspd.schemas.geometries import Point, LineString, Polygon, MultiPolygon
 from pynspd.schemas.layer_configs import LayerNode
-from pynspd.schemas.feature import _BaseFeature
+from pynspd.schemas.base_feature import BaseFeature
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
@@ -44,7 +44,7 @@ class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...
 
 
 {% for layer in layers %}
-class Layer{{ layer.layer_id }}Feature(_BaseFeature[
+class Layer{{ layer.layer_id }}Feature(BaseFeature[
     {%- if layer.geometry_type == 'Polygon' %}
     Union[MultiPolygon, Polygon, Point],
     {% else %}
@@ -57,6 +57,16 @@ class Layer{{ layer.layer_id }}Feature(_BaseFeature[
 {% endfor %}
 """
 
+OVERLOAD_TEMPLATE = """{%- for layer in layers %}
+    @overload
+    @classmethod
+    def by_title(cls, title: Literal["{{ layer.title }}"]) -> Type[auto.Layer{{ layer.layer_id }}Feature]: ...
+{% endfor %}
+    @overload
+    @classmethod
+    def by_title(cls, title: Any) -> NoReturn: ...
+"""
+
 
 def generate_files(layers: list[LayerNode], layers_fields: dict[int, Card]):
     output = Template(SCHEMAS_TEMPLATE).render(
@@ -64,9 +74,27 @@ def generate_files(layers: list[LayerNode], layers_fields: dict[int, Card]):
     )
     with open("src/pynspd/schemas/_autogen_features.py", "w", encoding="utf-8") as file:
         file.write(output)
+
     output = Template(TYPES_TEMPLATE).render(layers=layers)
     with open("src/pynspd/types/_autogen_layers.py", "w", encoding="utf-8") as file:
         file.write(output)
+
+    output = Template(OVERLOAD_TEMPLATE).render(layers=layers)
+    lines = []
+    with open("src/pynspd/schemas/feature.py", "r", encoding="utf-8") as from_file:
+        for line in from_file:
+            lines.append(line)
+    with open("src/pynspd/schemas/feature.py", "w", encoding="utf-8") as to_file:
+        write_flag = True
+        for line in lines:
+            if "# END_AUTOGEN" in line:
+                write_flag = True
+            if write_flag:
+                to_file.write(line)
+            if "# START_AUTOGEN" in line:
+                write_flag = False
+                to_file.write(output)
+                to_file.write("\n\n")
 
 
 async def get_layer_tree() -> LayersTree:

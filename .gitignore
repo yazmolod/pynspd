@@ -17,4 +17,5 @@ htmlcov/
 .env
 playground.ipynb
 .coveralls.yml
+.vscode/
 .cache/

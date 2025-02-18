@@ -2,7 +2,7 @@
 name = "pynspd"
 dynamic = ["version"]
 description = "Python-библиотека для работы с https://nspd.gov.ru (ex-ПКК)"
-readme = "README.md"
+readme = "docs/README.md"
 license = {file = "LICENSE"}
 authors = [
     { name = "Aleksandr Litovchenko", email = "yazmolod@gmail.com" }
@@ -15,7 +15,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-urls = { "Repository" = "https://github.com/yazmolod/pynspd" }
 requires-python = ">=3.10"
 dependencies = [
     "geojson-pydantic>=1.2.0",
@@ -27,6 +26,12 @@ dependencies = [
     "pyproj>=3.7",
     "shapely>=2.0.6",
 ]
+
+[project.urls]
+Homepage = "https://yazmolod.github.io/pynspd/"
+Repository = "https://github.com/yazmolod/pynspd"
+Issues = "https://github.com/yazmolod/pynspd/issues"
+Changelog = "https://github.com/yazmolod/pynspd/releases"
 
 [build-system]
 requires = ["hatchling"]
@@ -51,6 +56,10 @@ tests = [
 lint = [
     "ruff>=0.8.4",
     "mypy>=1.14.0",
+]
+docs = [
+    "mkdocs-material>=9.6.2",
+    "mkdocstrings[python]>=0.28.1",
 ]
 
 [tool.mypy]
