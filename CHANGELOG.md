@@ -1,12 +1,11 @@
 # Changelog
 
-## Development
+## 0.6.0 - 2025-02-18
 
 ### Добавлено 
 
 - Поддержка кэширования результатов благодаря [Hishel](https://github.com/karpetrosyan/hishel)
-
-## Development
+- [Пользовательская документация](https://yazmolod.github.io/pynspd/)
 
 ### Устарело
 
