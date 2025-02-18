@@ -1,27 +1,15 @@
-from typing import ClassVar, Generator, Generic, Optional, Type, TypeVar, overload
-
-from geojson_pydantic import Feature
+from typing import Generator, Optional, Type, TypeVar, overload
 
 from pynspd.errors import UnknownLayer
+from pynspd.schemas.base_feature import BaseFeature
 from pynspd.schemas.geometries import Geometry
-from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 from pynspd.types._autogen_layers import LayerTitle
 
-Props = TypeVar("Props", bound="NspdProperties")
-Geom = TypeVar("Geom", bound="Geometry")
-Feat = TypeVar("Feat", bound="_BaseFeature")
+Feat = TypeVar("Feat", bound="BaseFeature")
 
 
-class _BaseFeature(Feature[Geom, Props], Generic[Geom, Props]):
-    layer_meta: ClassVar[LayerNode]
-
-    # переопределяем поля из geojson-pydantic, т.к. там они не обязательные
-    geometry: Geom
-    properties: Props
-
-
-class NspdFeature(_BaseFeature[Geometry, NspdProperties[OptionProperties]]):
+class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     """Базовая фича, приходящая из API, не привязанная к слою"""
 
     @classmethod
@@ -52,7 +40,7 @@ class NspdFeature(_BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     def cast(
         self, layer_def: None = None
-    ) -> _BaseFeature[Geometry, NspdProperties[OptionProperties]]: ...
+    ) -> BaseFeature[Geometry, NspdProperties[OptionProperties]]: ...
 
     @overload
     def cast(self, layer_def: Type[Feat]) -> Feat: ...
@@ -78,5 +66,5 @@ class NspdFeature(_BaseFeature[Geometry, NspdProperties[OptionProperties]]):
                 # скрытый слой, пробуем определить свойства по категории
                 similiar_def = self.by_category_id(self.properties.category)
                 props_def = similiar_def.model_fields["properties"].annotation
-                layer_def = _BaseFeature[Geometry, props_def]
+                layer_def = BaseFeature[Geometry, props_def]
         return layer_def.model_validate(self.model_dump(by_alias=True))

@@ -2,7 +2,7 @@ import pytest
 
 from pynspd import Nspd, UnknownLayer
 from pynspd.schemas import Layer36049Feature, Options36369, Options36383
-from pynspd.schemas.feature import _BaseFeature
+from pynspd.schemas.base_feature import BaseFeature
 
 
 def search(cn: str):
@@ -22,7 +22,7 @@ def test_feature_cast():
 def test_feature_cast_by_category():
     """Приведение объекта из скрытого слоя, но с известной категорией"""
     cf = search("77:01:0001044:2938").cast()
-    assert isinstance(cf, _BaseFeature)
+    assert isinstance(cf, BaseFeature)
     assert isinstance(cf.properties.options, Options36383)
     assert len(cf.properties.options.model_dump_human_readable()) > 0
 
