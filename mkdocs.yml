@@ -35,7 +35,7 @@ markdown_extensions:
 
 nav:
   - О проекте: README.md
-  - Базовое руководство: userguide.md
+  - Руководство пользователя: userguide.md
   - Расширенное руководство:
     - Настройка клиента: advanced/client.md
     - Типизация ответов: advanced/typing.md

@@ -10,7 +10,6 @@
   <a href='https://coveralls.io/github/yazmolod/pynspd?branch=main'>
     <img src='https://coveralls.io/repos/github/yazmolod/pynspd/badge.svg?branch=main' alt='Coverage Status' />
   </a>
-
 </p>
 
 ---
@@ -71,10 +70,11 @@ with Nspd() as nspd:
     #> (37.62575417009177, 55.719792499833524, 37.626451149629915, 55.72046606889391)
 ```
 
-## Документация
-С полной документацией можно ознакомиться [здесь](https://yazmolod.github.io/pynspd/)
+---
+
+С более детальным описанием библиотеки можно ознакомиться в [руководстве пользователя](https://yazmolod.github.io/pynspd/userguide/).
 
 ## Поддержка проекта
 
-Самый простой способ - это оставить ⭐ проекту и отправить его своим коллегам. 
+Самый простой способ - это оставить ⭐ проекту на [GitHub](https://github.com/yazmolod/pynspd) и отправить его своим коллегам. 
 Если же вы хотите принять участие в его развитии, ознакомьтесь со статьей ["Как поддержать проект?"](https://yazmolod.github.io/pynspd/contributing/).
