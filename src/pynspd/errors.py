@@ -14,6 +14,8 @@ class TooBigContour(Exception):
 
 
 class AmbiguousSearchError(Exception):
+    """Поисковой запрос выдал неоднозначный результат"""
+
     def __init__(self, query: str):
         msg = f"Найдено больше одного объекта по запросу {query}"
         super().__init__(msg)
