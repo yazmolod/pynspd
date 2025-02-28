@@ -25,7 +25,7 @@ from pynspd.client import (
     get_client_args,
     get_controller_args,
 )
-from pynspd.errors import TooBigContour
+from pynspd.errors import AmbiguousSearchError, TooBigContour
 from pynspd.logger import logger
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
@@ -178,17 +178,12 @@ class AsyncNspd(BaseNspdClient):
         if response is None:
             return None
         features = response.data.features
-        # иногда поиск багует и дает помимо нужного еще и рандомный результат
         if len(features) > 1:
-            features = list(
-                filter(
-                    lambda x: params["query"] in x.properties.model_dump_json(),
-                    features,
-                )
-            )
+            features = self.filter_features_by_query(params["query"], features)
         if len(features) == 0:
             return None
-        assert len(features) == 1
+        if len(features) != 1:
+            raise AmbiguousSearchError(params["query"])
         return features[0]
 
     @typing_extensions.deprecated(

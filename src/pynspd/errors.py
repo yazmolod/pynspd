@@ -11,3 +11,9 @@ class TooBigContour(Exception):
 
     def __init__(self):
         super().__init__("Попробуйте уменьшить площадь поиска")
+
+
+class AmbiguousSearchError(Exception):
+    def __init__(self, query: str):
+        msg = f"Найдено больше одного объекта по запросу {query}"
+        super().__init__(msg)

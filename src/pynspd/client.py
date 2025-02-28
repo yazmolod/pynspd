@@ -1,9 +1,10 @@
 import re
 import ssl
-from typing import Generator, Optional, Type
+from typing import Any, Generator, Optional, Type
 
 import httpx
 
+from pynspd.errors import UnknownLayer
 from pynspd.schemas import NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import SearchResponse
@@ -66,3 +67,45 @@ class BaseNspdClient:
     @staticmethod
     def _validate_search_response(response: httpx.Response) -> Optional[SearchResponse]:
         return SearchResponse.model_validate(response.json())
+
+    @staticmethod
+    def filter_features_by_query(
+        query: str, features: list[NspdFeature]
+    ) -> list[NspdFeature]:
+        """Поиск точного совпадения поискового запроса в наборе фичей"""
+
+        def in_upper_props(query: str, props: dict[str, Any]) -> bool:
+            # если есть в верхнеуровневых свойствах - это точное совпадение
+            for v in props.values():
+                if v == query:
+                    return True
+            return False
+
+        def in_option_props(query: str, opts: dict[str, Any]) -> bool:
+            # в опциональных свойствах проверяем ключ свойства
+            for k, v in opts.items():
+                if v == query and "parent" not in k:
+                    return True
+            return False
+
+        def is_known_category(feat: NspdFeature) -> bool:
+            # убеждаемся, что это отображаемая категория
+            try:
+                feat.cast()
+                return True
+            except UnknownLayer:
+                return False
+
+        filtered_features = []
+        for f in features:
+            if query not in f.properties.model_dump_json():
+                continue
+            # иногда поиск дает результат не только по к/н, но и прочим полям
+            # например, родительский к/н для помещений
+            props = f.properties.model_dump()
+            opts = props.pop("options")
+            if (
+                in_upper_props(query, props) or in_option_props(query, opts)
+            ) and is_known_category(f):
+                filtered_features.append(f)
+        return filtered_features
