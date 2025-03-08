@@ -4,10 +4,9 @@ from typing import Any, Generator, Optional, Type
 
 import httpx
 
-from pynspd.errors import UnknownLayer
+from pynspd.errors import AmbiguousSearchError, UnknownLayer
 from pynspd.schemas import NspdFeature
 from pynspd.schemas.feature import Feat
-from pynspd.schemas.responses import SearchResponse
 
 # Нет гарантий, что установлены сертификаты Минцифры, поэтому принудительно отключает проверку ssl
 SSL_CONTEXT = ssl._create_unverified_context()
@@ -64,14 +63,22 @@ class BaseNspdClient:
             return None
         return [NspdFeature.model_validate(i) for i in features]
 
-    @staticmethod
-    def _validate_search_response(response: httpx.Response) -> Optional[SearchResponse]:
-        return SearchResponse.model_validate(response.json())
+    @classmethod
+    def _filter_search_by_query(
+        cls, features: Optional[list[Feat]], query: str
+    ) -> Optional[Feat]:
+        if features is None:
+            return None
+        if len(features) > 1:
+            features = cls._filter_features_by_query(features, query)
+        if len(features) == 0:
+            return None
+        if len(features) != 1:
+            raise AmbiguousSearchError(query)
+        return features[0]
 
     @staticmethod
-    def filter_features_by_query(
-        query: str, features: list[NspdFeature]
-    ) -> list[NspdFeature]:
+    def _filter_features_by_query(features: list[Feat], query: str) -> list[Feat]:
         """Поиск точного совпадения поискового запроса в наборе фичей"""
 
         def in_upper_props(query: str, props: dict[str, Any]) -> bool:
@@ -88,10 +95,10 @@ class BaseNspdClient:
                     return True
             return False
 
-        def is_known_category(feat: NspdFeature) -> bool:
+        def is_known_category(feat: Feat) -> bool:
             # убеждаемся, что это отображаемая категория
             try:
-                feat.cast()
+                feat.cast()  # type: ignore[union-attr]
                 return True
             except UnknownLayer:
                 return False

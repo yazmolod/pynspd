@@ -1,4 +1,14 @@
-from typing import Any, Generator, Literal, NoReturn, Optional, Type, TypeVar, overload
+from typing import (
+    Any,
+    Generator,
+    Literal,
+    NoReturn,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from pynspd.errors import UnknownLayer
 from pynspd.schemas import _autogen_features as auto
@@ -7,7 +17,7 @@ from pynspd.schemas.geometries import Geometry
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 from pynspd.types._autogen_layers import LayerTitle
 
-Feat = TypeVar("Feat", bound="BaseFeature")
+Feat = TypeVar("Feat", bound=Union["BaseFeature", "NspdFeature"])
 
 
 class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):

@@ -5,7 +5,6 @@ from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
-import typing_extensions
 from hishel import BaseStorage, CacheTransport, Controller
 from httpx import (
     BaseTransport,
@@ -25,7 +24,7 @@ from pynspd.client import (
     get_client_args,
     get_controller_args,
 )
-from pynspd.errors import AmbiguousSearchError, TooBigContour
+from pynspd.errors import TooBigContour
 from pynspd.logger import logger
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
@@ -162,119 +161,40 @@ class Nspd(BaseNspdClient):
         return self.request(method, url, params, json)
 
     @retry_on_http_error
-    def _search(self, params: dict[str, Any]) -> Optional[SearchResponse]:
+    def _search(self, params: dict[str, Any]) -> Optional[list[NspdFeature]]:
+        """Базовый поисковый запрос на НСПД"""
         try:
             r = self.request("get", "/api/geoportal/v2/search/geoportal", params=params)
-            return self._validate_search_response(r)
+            return SearchResponse.model_validate(r.json()).data.features
         except HTTPStatusError as e:
             if e.response.status_code == 404:
                 return None
             raise e
 
-    def _search_one(self, params: dict[str, Any]) -> Optional[NspdFeature]:
-        response = self._search(params)
-        if response is None:
-            return None
-        features = response.data.features
-        if len(features) > 1:
-            features = self.filter_features_by_query(params["query"], features)
-        if len(features) == 0:
-            return None
-        if len(features) != 1:
-            raise AmbiguousSearchError(params["query"])
-        return features[0]
-
-    @typing_extensions.deprecated(
-        "Will be removed in 0.7.0; use `.search_in_theme(...)` instead`"
-    )
-    def search_by_theme(
+    def search(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
-    ) -> Optional[NspdFeature]:
+    ) -> Optional[list[NspdFeature]]:
         """Поисковой запрос по предустановленной теме
 
         Args:
             query: Поисковой запрос
-            theme_id: Вид объекта (кадастровое деление, объект недвижимости и т.д.)
+            theme_id:
+                Вид объекта (кадастровое деление, объект недвижимости и т.д.).
+                По умолчанию: объекты недвижимости
 
         Returns:
             Положительный ответ от сервиса, либо None, если ничего не найдено
         """
-        return self.search_in_theme(query, theme_id)
-
-    def search_in_theme(
-        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
-    ) -> Optional[NspdFeature]:
-        """Поисковой запрос по предустановленной теме
-
-        Args:
-            query: Поисковой запрос
-            theme_id: Вид объекта (кадастровое деление, объект недвижимости и т.д.)
-
-        Returns:
-            Положительный ответ от сервиса, либо None, если ничего не найдено
-        """
-        return self._search_one(
+        return self._search(
             params={
                 "query": query,
                 "thematicSearchId": theme_id.value,
             }
         )
 
-    @typing_extensions.deprecated(
-        "Will be removed in 0.7.0; use `.search_in_layer(...)` instead`"
-    )
-    def search_by_layers(self, query: str, *layer_ids: int) -> Optional[NspdFeature]:
-        """Поисковой запрос по указанным слоям
-
-        Args:
-            query: поисковой запрос
-            *layer_ids: id слоев, в которых будет производиться поиск
-
-        Returns:
-            Положительный ответ от сервиса, либо None, если ничего не найдено
-        """
-        return self._search_one(
-            params={
-                "query": query,
-                "layersId": layer_ids,
-            }
-        )
-
-    def search_in_layer(self, query: str, layer_id: int) -> Optional[NspdFeature]:
-        """Поисковой запрос по указанному слою
-
-        Args:
-            query: поисковой запрос
-            layer_id: id слоя, в которых будет производиться поиск
-
-        Returns:
-            Положительный ответ от сервиса, либо None, если ничего не найдено
-        """
-        return self._search_one(
-            params={
-                "query": query,
-                "layersId": layer_id,
-            }
-        )
-
-    @typing_extensions.deprecated(
-        "Will be removed in 0.7.0; use `.search_in_layer_by_model(...)` instead`"
-    )
-    def search_by_model(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
-        """Поиск одного объекта по определению слоя
-
-        Args:
-            query: Поисковой запрос
-            layer_def: Определение слоя
-
-        Returns:
-            Валидированная модель слоя, если найдено
-        """
-        return self.search_in_layer_by_model(query, layer_def)
-
-    def search_in_layer_by_model(
+    def search_in_layer(
         self, query: str, layer_def: Type[Feat]
-    ) -> Optional[Feat]:
+    ) -> Optional[list[Feat]]:
         """Поиск объекта по определению слоя
 
         Args:
@@ -284,34 +204,71 @@ class Nspd(BaseNspdClient):
         Returns:
             Валидированная модель слоя, если найдено
         """
-        feature = self.search_in_layer(query, layer_def.layer_meta.layer_id)
-        if feature is None:
-            return None
-        return feature.cast(layer_def)
+        raw_features = self._search(
+            params={
+                "query": query,
+                "layersId": layer_def.layer_meta.layer_id,
+            }
+        )
+        return self._cast_features_to_layer_defs(raw_features, layer_def)
 
-    def search_zu(self, cn: str) -> Optional[Layer36048Feature]:
+    def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ по кадастровому номеру"""
-        layer_def = NspdFeature.by_title("Земельные участки из ЕГРН")
-        return self.search_in_layer_by_model(cn, layer_def)
+        return self.search_in_layer(cn, Layer36048Feature)
 
-    def search_oks(self, cn: str) -> Optional[Layer36049Feature]:
+    def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС по кадастровому номеру"""
-        layer_def = NspdFeature.by_title("Здания")
-        return self.search_in_layer_by_model(cn, layer_def)
+        return self.search_in_layer(cn, Layer36049Feature)
+
+    def find(
+        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
+    ) -> Optional[NspdFeature]:
+        """Найти объект по предустановленной теме
+
+        Args:
+            query: Поисковой запрос
+            theme_id:
+                Вид объекта (кадастровое деление, объект недвижимости и т.д.).
+                По умолчанию: объекты недвижимости
+
+        Returns:
+            Положительный ответ от сервиса, либо None, если ничего не найдено
+        """
+        return self._filter_search_by_query(self.search(query, theme_id), query)
+
+    def find_in_layer(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
+        """Найти объект по определению слоя
+
+        Args:
+            query: Поисковой запрос
+            layer_def: Определение слоя
+
+        Returns:
+            Валидированная модель слоя, если найдено
+        """
+        return self._filter_search_by_query(
+            self.search_in_layer(query, layer_def), query
+        )
+
+    def find_zu(self, cn: str) -> Optional[Layer36048Feature]:
+        """Найти ЗУ по кадастровому номеру"""
+        return self.find_in_layer(cn, Layer36048Feature)
+
+    def find_oks(self, cn: str) -> Optional[Layer36049Feature]:
+        """Найти ОКС по кадастровому номеру"""
+        return self.find_in_layer(cn, Layer36049Feature)
 
     @retry_on_http_error
-    def search_in_contour(
+    def _search_in_contour(
         self,
         countour: Union[Polygon, MultiPolygon],
         *category_ids: int,
-        epsg: int = 4326,
     ) -> Optional[list[NspdFeature]]:
         """Поиск объектов в контуре по ID категорий слоев
 
         Args:
             countour: Геометрический объект с контуром
             category_ids: ID категорий слоев
-            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
@@ -319,7 +276,7 @@ class Nspd(BaseNspdClient):
         feature_geojson = json.loads(to_geojson(countour))
         feature_geojson["crs"] = {
             "type": "name",
-            "properties": {"name": f"EPSG:{epsg}"},
+            "properties": {"name": "EPSG:4326"},
         }
         payload = {
             "categories": [{"id": id_} for id_ in category_ids],
@@ -343,57 +300,53 @@ class Nspd(BaseNspdClient):
             raise e
         return self._validate_feature_collection_response(response)
 
-    def search_in_contour_by_model(
+    def search_in_contour(
         self,
         countour: Union[Polygon, MultiPolygon],
         layer_def: Type[Feat],
-        epsg: int = 4326,
     ) -> Optional[list[Feat]]:
         """Поиск объектов в контуре по определению слоя
 
         Args:
             countour: Геометрический объект с контуром
             layer_def: Модель слоя
-            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
-        raw_features = self.search_in_contour(
-            countour, layer_def.layer_meta.category_id, epsg=epsg
+        raw_features = self._search_in_contour(
+            countour, layer_def.layer_meta.category_id
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
     def search_zu_in_contour(
-        self, countour: Union[Polygon, MultiPolygon], epsg: int = 4326
+        self, countour: Union[Polygon, MultiPolygon]
     ) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в контуре
 
         Args:
             countour: Геометрический объект с контуром
-            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
-        return self.search_in_contour_by_model(countour, Layer36048Feature, epsg=epsg)
+        return self.search_in_contour(countour, Layer36048Feature)
 
     def search_oks_in_contour(
-        self, countour: Union[Polygon, MultiPolygon], epsg: int = 4326
+        self, countour: Union[Polygon, MultiPolygon]
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в контуре
 
         Args:
             countour: Геометрический объект с контуром
-            epsg: Система координат контура. По умолчанию 4326.
 
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
-        return self.search_in_contour_by_model(countour, Layer36049Feature, epsg=epsg)
+        return self.search_in_contour(countour, Layer36049Feature)
 
     @retry_on_http_error
-    def search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
+    def _search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
         """Поиск объектов слоя в точке"""
         tile_size = 512
         tile = mercantile.tile(
@@ -419,18 +372,18 @@ class Nspd(BaseNspdClient):
             "HEIGHT": tile_size,
             "I": int(i),
             "J": tile_size - int(j),  # отсчет координат для пикселей ведется сверху
-            "CRS": "EPSG:3857",  # CRS для bbox
-            # можно указать и 4326, но тогда и геометрия будет в 4326
-            # Но в других методах мы всегда ждем 3857, поэтому оставляем
+            "CRS": "EPSG:4326",  # CRS для bbox
             "BBOX": bbox,
-            "FEATURE_COUNT": "10",  # Если не указать - вернет только один, даже если попало на границу
+            "FEATURE_COUNT": "10",  # Иначе вернет только один, даже если попало на границу
         }
-        response = self.request("get", f"/api/aeggis/v3/{layer_id}/wms", params=params)
+        response = self.request(
+            "get",
+            f"/api/aeggis/v3/{layer_id}/wms",
+            params=params,  # type: ignore[arg-type]
+        )
         return self._validate_feature_collection_response(response)
 
-    def search_at_point_by_model(
-        self, pt: Point, layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
+    def search_at_point(self, pt: Point, layer_def: Type[Feat]) -> Optional[list[Feat]]:
         """Поиск объектов слоя в точке (с типизацией)
 
         Args:
@@ -440,16 +393,43 @@ class Nspd(BaseNspdClient):
         Returns:
             Типизированный список объектов, если найдены
         """
-        raw_features = self.search_at_point(pt, layer_def.layer_meta.layer_id)
+        raw_features = self._search_at_point(pt, layer_def.layer_meta.layer_id)
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
     def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в точке"""
-        return self.search_at_point_by_model(pt, Layer36048Feature)
+        return self.search_at_point(pt, Layer36048Feature)
 
     def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в точке"""
-        return self.search_at_point_by_model(pt, Layer36049Feature)
+        return self.search_at_point(pt, Layer36049Feature)
+
+    def search_at_coords(
+        self, lat: float, lng: float, layer_def: Type[Feat]
+    ) -> Optional[list[Feat]]:
+        """Поиск объектов слоя в координатах
+
+        Args:
+            lat: Широта
+            lng: Долгота
+            layer_def: Тип слоя
+
+        Returns:
+            Типизированный список объектов, если найдены
+        """
+        return self.search_at_point(Point(lng, lat), layer_def)
+
+    def search_zu_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в координатах"""
+        return self.search_zu_at_point(Point(lng, lat))
+
+    def search_oks_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в координатах"""
+        return self.search_oks_at_point(Point(lng, lat))
 
     @retry_on_http_error
     def _tab_request(
