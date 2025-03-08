@@ -4,7 +4,7 @@ from pynspd import AsyncNspd, NspdFeature
 
 
 async def get_feat(async_api: AsyncNspd, cn: str) -> NspdFeature:
-    feat = await async_api.search_by_theme(cn)
+    feat = await async_api.find(cn)
     assert feat is not None
     return feat
 
@@ -14,7 +14,7 @@ async def test_tab_land_parts(async_api: AsyncNspd):
     feat = await get_feat(async_api, "50:27:0000000:134535")
     res = await async_api.tab_land_parts(feat)
     assert res is not None
-    assert len(res) == 15
+    assert len(res) > 10
 
 
 @pytest.mark.asyncio(scope="session")

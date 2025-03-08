@@ -69,6 +69,9 @@ class BaseNspdClient:
     ) -> Optional[Feat]:
         if features is None:
             return None
+        features = list(
+            filter(lambda f: query in f.properties.model_dump_json(), features)
+        )
         if len(features) > 1:
             features = cls._filter_features_by_query(features, query)
         if len(features) == 0:
@@ -105,8 +108,6 @@ class BaseNspdClient:
 
         filtered_features = []
         for f in features:
-            if query not in f.properties.model_dump_json():
-                continue
             # иногда поиск дает результат не только по к/н, но и прочим полям
             # например, родительский к/н для помещений
             props = f.properties.model_dump()

@@ -7,7 +7,7 @@ from pynspd.schemas.base_feature import BaseFeature
 
 def search(cn: str):
     with Nspd(retries=10) as api:
-        feat = api.search_by_theme(cn)
+        feat = api.find(cn)
         assert feat is not None
         return feat
 

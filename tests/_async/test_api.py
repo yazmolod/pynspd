@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from hishel import AsyncFileStorage
 from shapely import wkt
-from shapely.geometry import MultiPolygon, Point, Polygon
+from shapely.geometry import MultiPolygon, Polygon
 
 from pynspd import AsyncNspd, NspdFeature
 from pynspd.errors import TooBigContour
@@ -13,38 +13,36 @@ from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Featu
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_by_theme(async_api: AsyncNspd):
-    feat = await async_api.search_by_theme("77:02:0021001:5304")
+async def test_find(async_api: AsyncNspd):
+    feat = await async_api.find("77:02:0021001:5304")
     assert feat is not None
     assert feat.properties.options.model_dump()["type"] == "Машино-место"
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_by_theme_non_exists(async_api: AsyncNspd):
-    feat = await async_api.search_by_theme("77:02:0021001:5304111111")
+async def test_find_non_exists(async_api: AsyncNspd):
+    feat = await async_api.find("77:02:0021001:5304111111")
     assert feat is None
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_by_model(async_api: AsyncNspd):
+async def test_find_in_layer(async_api: AsyncNspd):
     lf_def = NspdFeature.by_title("ЗОУИТ объектов энергетики, связи, транспорта")
     assert lf_def == Layer37578Feature
-    feat = await async_api.search_by_model("Останкинская телебашня", lf_def)
+    feat = await async_api.find_in_layer("Останкинская телебашня", lf_def)
     assert isinstance(feat, lf_def)
     assert len(feat.properties.options.model_dump_human_readable()) > 0
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_by_model_non_exists(async_api: AsyncNspd):
-    feat = await async_api.search_by_model(
-        "77:02:0021001:5304111111", Layer36048Feature
-    )
+async def test_find_in_layer_non_exists(async_api: AsyncNspd):
+    feat = await async_api.find_in_layer("77:02:0021001:5304111111", Layer36048Feature)
     assert feat is None
 
 
 @pytest.mark.asyncio(scope="session")
 async def test_search_zu(async_api: AsyncNspd):
-    feat = await async_api.search_zu("77:05:0001005:19")
+    feat = await async_api.find_zu("77:05:0001005:19")
     assert feat is not None
     assert feat.properties.options.land_record_type == "Земельный участок"
     assert isinstance(feat.geometry.to_shape(), Polygon)
@@ -53,7 +51,7 @@ async def test_search_zu(async_api: AsyncNspd):
 
 @pytest.mark.asyncio(scope="session")
 async def test_search_oks(async_api: AsyncNspd):
-    feat = await async_api.search_oks("77:03:0001001:3030")
+    feat = await async_api.find_oks("77:03:0001001:3030")
     assert feat is not None
     assert feat.properties.options.build_record_type_value == "Здание"
     assert isinstance(feat.geometry.to_shape(), Polygon)
@@ -102,33 +100,28 @@ async def test_search_in_contour_empty(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_zu_at_point(async_api: AsyncNspd):
-    features = await async_api.search_zu_at_point(Point(37.54658156, 55.78729561))
+async def test_search_zu_at_coords(async_api: AsyncNspd):
+    features = await async_api.search_zu_at_coords(55.78729561, 37.54658156)
     assert features is None
-    features = await async_api.search_zu_at_point(Point(37.546440653, 55.787139958))
+    features = await async_api.search_zu_at_coords(55.787139958, 37.546440653)
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005008:11446"
 
 
 @pytest.mark.asyncio(scope="session")
 async def test_search_oks_at_point(async_api: AsyncNspd):
-    features = await async_api.search_oks_at_point(Point(37.547790951, 55.786436698))
+    features = await async_api.search_oks_at_coords(55.786436698, 37.547790951)
     assert features is None
-    features = await async_api.search_oks_at_point(Point(37.547785813, 55.786436698))
+    features = await async_api.search_oks_at_coords(55.786436698, 37.547785813)
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005014:1044"
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_with_two_features(async_api: AsyncNspd):
-    resp = await async_api._search({"query": "77:1:3033:1031", "thematicSearchId": 1})
-    assert resp is not None and resp.data is not None
-    features = resp.data.features
-    assert len(features) > 1
-
-    feat = await async_api._search_one(
-        {"query": "77:1:3033:1031", "thematicSearchId": 1}
-    )
+async def test_search_wrong_result(async_api: AsyncNspd):
+    features = await async_api.search("77:1:3033:1031")
+    assert features is not None
+    feat = await async_api.find("77:1:3033:1031")
     assert feat is None
 
 

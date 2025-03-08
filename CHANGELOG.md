@@ -1,5 +1,19 @@
 # Changelog
 
+## Development
+
+### Изменено
+
+- Методы `._search_at_point`
+
+### Добавлено 
+
+- Метод `.search_at_coords(lat, lng, layer_def) для поиска по координатам`
+
+### Удалено
+
+- Дублирующиеся методы `.search_by_model(...)` (теперь `asd`), `.search_by_layers(...)` (теперь `asd`), `.search_by_theme(...)`
+
 ## 0.6.1 - 2025-02-28
 
 ### Исправлено

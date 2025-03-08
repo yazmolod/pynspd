@@ -51,7 +51,6 @@ def retry_on_http_error(func):
                 if isinstance(e, HTTPStatusError):
                     if e.response.status_code == 429:
                         logger.debug("%s too many requests", logger_suffix)
-                        sleep(1)
                     elif e.response.status_code < 500:
                         logger.debug("%s not server error", logger_suffix)
                         raise e
@@ -59,6 +58,7 @@ def retry_on_http_error(func):
                 if attempt > self.retries:
                     logger.debug("%s run out attempts", logger_suffix)
                     raise e
+                sleep(1)
                 logger.debug("%s attempt %d/%d", logger_suffix, attempt, self.retries)
             except RemoteProtocolError:
                 # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
@@ -250,13 +250,13 @@ class Nspd(BaseNspdClient):
             self.search_in_layer(query, layer_def), query
         )
 
-    def find_zu(self, cn: str) -> Optional[Layer36048Feature]:
+    def find_zu(self, query: str) -> Optional[Layer36048Feature]:
         """Найти ЗУ по кадастровому номеру"""
-        return self.find_in_layer(cn, Layer36048Feature)
+        return self._filter_search_by_query(self.search_zu(query), query)
 
-    def find_oks(self, cn: str) -> Optional[Layer36049Feature]:
+    def find_oks(self, query: str) -> Optional[Layer36049Feature]:
         """Найти ОКС по кадастровому номеру"""
-        return self.find_in_layer(cn, Layer36049Feature)
+        return self._filter_search_by_query(self.search_oks(query), query)
 
     @retry_on_http_error
     def _search_in_contour(
@@ -355,9 +355,7 @@ class Nspd(BaseNspdClient):
         tile_bounds = mercantile.bounds(tile)
         i = np.interp(pt.x, [tile_bounds.west, tile_bounds.east], [0, tile_size])
         j = np.interp(pt.y, [tile_bounds.south, tile_bounds.north], [0, tile_size])
-        bbox = ",".join(
-            map(str, mercantile.xy_bounds(tile))
-        )  # bbox в 3857, см. комментарий про CRS
+        bbox = ",".join(map(str, tile_bounds))
         params = {
             "REQUEST": "GetFeatureInfo",
             "SERVICE": "WMS",

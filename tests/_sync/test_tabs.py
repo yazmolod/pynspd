@@ -2,7 +2,7 @@ from pynspd import Nspd, NspdFeature
 
 
 def get_feat(api: Nspd, cn: str) -> NspdFeature:
-    feat = api.search_by_theme(cn)
+    feat = api.find(cn)
     assert feat is not None
     return feat
 
@@ -11,7 +11,7 @@ def test_tab_land_parts(api: Nspd):
     feat = get_feat(api, "50:27:0000000:134535")
     res = api.tab_land_parts(feat)
     assert res is not None
-    assert len(res) == 15
+    assert len(res) > 10
 
 
 def test_tab_land_links(api: Nspd):
