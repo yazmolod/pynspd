@@ -9,7 +9,7 @@ from pynspd import AsyncNspd
 async def test_429_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
     httpx_mock.add_response(status_code=429)
     httpx_mock.add_response(status_code=200)
-    r = await async_api.save_request("get", "/api")
+    r = await async_api.safe_request("get", "/api")
     assert r.status_code == 200
     assert len(httpx_mock.get_requests()) == 2
 
@@ -18,7 +18,7 @@ async def test_429_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
 async def test_400_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
     httpx_mock.add_response(status_code=400)
     with pytest.raises(httpx.HTTPStatusError) as e:
-        await async_api.save_request("get", "/api")
+        await async_api.safe_request("get", "/api")
     assert e.value.response.status_code == 400
 
 
@@ -28,7 +28,7 @@ async def test_500_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
     httpx_mock.add_response(status_code=500)
     httpx_mock.add_response(status_code=500)
     with pytest.raises(httpx.HTTPStatusError) as e:
-        await async_api.save_request("get", "/api")
+        await async_api.safe_request("get", "/api")
     assert e.value.response.status_code == 500
     assert len(httpx_mock.get_requests()) > async_api.retries
 
@@ -37,5 +37,5 @@ async def test_500_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
 async def test_remote_disconnect_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
     httpx_mock.add_exception(httpx.RemoteProtocolError("Unexpected disconnect"))
     httpx_mock.add_response(status_code=200)
-    r = await async_api.save_request("get", "/api")
+    r = await async_api.safe_request("get", "/api")
     assert r.status_code == 200

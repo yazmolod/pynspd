@@ -152,7 +152,7 @@ class Nspd(BaseNspdClient):
         return r
 
     @retry_on_http_error
-    def save_request(
+    def safe_request(
         self,
         method: str,
         url: str,

@@ -47,6 +47,8 @@ plugins:
           show_source: false
           show_bases: false
           show_root_heading: true
+          filters:
+            - "!^_"
 
 nav:
   - О проекте: README.md

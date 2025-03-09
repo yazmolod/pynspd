@@ -30,7 +30,7 @@
     async def main():
         async with AsyncNspd() as nspd:
             q = input("Введите к/н: ")
-            feat = await nspd.search_in_theme(q)
+            feat = await nspd.find(q)
             if feat is None:
                 print("Ничего не найдено!")
                 return

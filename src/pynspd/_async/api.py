@@ -152,7 +152,7 @@ class AsyncNspd(BaseNspdClient):
         return r
 
     @retry_on_http_error
-    async def save_request(
+    async def safe_request(
         self,
         method: str,
         url: str,
