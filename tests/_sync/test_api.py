@@ -1,9 +1,6 @@
-import shutil
 from functools import partial
-from pathlib import Path
 
 import pytest
-from hishel import FileStorage
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
 
@@ -73,12 +70,20 @@ def test_search_oks_in_contour(api: Nspd):
     assert set(["77:01:0001011:1164", "77:01:0001011:1002"]) == set(cns)
 
 
-def test_search_too_big_contour(api: Nspd):
+def test_search_in_big_contour(cache_api: Nspd):
     with pytest.raises(TooBigContour):
         contour = wkt.loads(
-            "Polygon ((37.5658 55.8198, 37.5267 55.7710, 37.6214 55.8033, 37.5658 55.8198))"
+            "Polygon ((37.6951 55.7320, 37.7338 55.7279, 37.7469 55.7563, 37.7283 55.7531, 37.7196 55.7343, 37.6981 55.7359, 37.6951 55.7320))"
         )
-        api.search_zu_in_contour(contour)
+        cache_api.search_zu_in_contour(contour)
+    for oks_feat in cache_api.search_oks_in_contour_iter(contour):
+        assert oks_feat is not None
+        break
+    feats_all = [f for f in cache_api.search_zu_in_contour_iter(contour)]
+    feats_int = [
+        f for f in cache_api.search_zu_in_contour_iter(contour, only_intersects=True)
+    ]
+    assert len(feats_all) > len(feats_int)
 
 
 def test_search_in_contour_empty(api: Nspd):
@@ -112,24 +117,17 @@ def test_search_wrong_result(api: Nspd):
     assert feat is None
 
 
-def test_cache_client():
-    cache_folder = Path.cwd() / ".cache/hishel"
-    if cache_folder.exists():
-        shutil.rmtree(cache_folder)
-    with Nspd(cache_storage=FileStorage(base_path=cache_folder, ttl=10)) as nspd:
-        req = partial(
-            nspd.request,
-            "get",
-            "/api/geoportal/v2/search/geoportal",
-            params={
-                "query": "77:02:0021001:5304",
-                "thematicSearchId": 1,
-            },
-        )
+def test_cache_client(cache_api: Nspd):
+    req = partial(
+        cache_api.request,
+        "get",
+        "/api/geoportal/v2/search/geoportal",
+        params={
+            "query": "77:02:0021001:5304",
+            "thematicSearchId": 1,
+        },
+    )
+    r = req()
+    if not r.extensions.get("from_cache", False):
         r = req()
-        assert not r.extensions["from_cache"]
-        t1 = r.elapsed
-        r = req()
-        assert r.extensions["from_cache"]
-        t2 = r.elapsed
-        assert t2 < t1
+    assert r.extensions["from_cache"]

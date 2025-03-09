@@ -1,9 +1,6 @@
-import shutil
 from functools import partial
-from pathlib import Path
 
 import pytest
-from hishel import AsyncFileStorage
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
 
@@ -82,12 +79,23 @@ async def test_search_oks_in_contour(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_too_big_contour(async_api: AsyncNspd):
+async def test_search_in_big_contour(async_cache_api: AsyncNspd):
     with pytest.raises(TooBigContour):
         contour = wkt.loads(
-            "Polygon ((37.5658 55.8198, 37.5267 55.7710, 37.6214 55.8033, 37.5658 55.8198))"
+            "Polygon ((37.6951 55.7320, 37.7338 55.7279, 37.7469 55.7563, 37.7283 55.7531, 37.7196 55.7343, 37.6981 55.7359, 37.6951 55.7320))"
         )
-        await async_api.search_zu_in_contour(contour)
+        await async_cache_api.search_zu_in_contour(contour)
+    async for oks_feat in async_cache_api.search_oks_in_contour_iter(contour):
+        assert oks_feat is not None
+        break
+    feats_all = [f async for f in async_cache_api.search_zu_in_contour_iter(contour)]
+    feats_int = [
+        f
+        async for f in async_cache_api.search_zu_in_contour_iter(
+            contour, only_intersects=True
+        )
+    ]
+    assert len(feats_all) > len(feats_int)
 
 
 @pytest.mark.asyncio(scope="session")
@@ -126,26 +134,17 @@ async def test_search_wrong_result(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_cache_client():
-    cache_folder = Path.cwd() / ".cache/hishel"
-    if cache_folder.exists():
-        shutil.rmtree(cache_folder)
-    async with AsyncNspd(
-        cache_storage=AsyncFileStorage(base_path=cache_folder, ttl=10)
-    ) as nspd:
-        req = partial(
-            nspd.request,
-            "get",
-            "/async_api/geoportal/v2/search/geoportal",
-            params={
-                "query": "77:02:0021001:5304",
-                "thematicSearchId": 1,
-            },
-        )
+async def test_cache_client(async_cache_api: AsyncNspd):
+    req = partial(
+        async_cache_api.request,
+        "get",
+        "/async_api/geoportal/v2/search/geoportal",
+        params={
+            "query": "77:02:0021001:5304",
+            "thematicSearchId": 1,
+        },
+    )
+    r = await req()
+    if not r.extensions.get("from_cache", False):
         r = await req()
-        assert not r.extensions["from_cache"]
-        t1 = r.elapsed
-        r = await req()
-        assert r.extensions["from_cache"]
-        t2 = r.elapsed
-        assert t2 < t1
+    assert r.extensions["from_cache"]

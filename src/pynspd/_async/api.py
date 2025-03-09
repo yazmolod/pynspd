@@ -567,13 +567,13 @@ class AsyncNspd(BaseNspdClient):
         self, lat: float, lng: float
     ) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в координатах"""
-        return await self.search_zu_at_point(Point(lng, lat))
+        return await self.search_at_coords(lat, lng, Layer36048Feature)
 
     async def search_oks_at_coords(
         self, lat: float, lng: float
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в координатах"""
-        return await self.search_oks_at_point(Point(lng, lat))
+        return await self.search_at_coords(lat, lng, Layer36049Feature)
 
     async def search_zu_in_contour(
         self, countour: Union[Polygon, MultiPolygon]
@@ -590,6 +590,7 @@ class AsyncNspd(BaseNspdClient):
     async def search_zu_in_contour_iter(
         self,
         countour: Union[Polygon, MultiPolygon],
+        *,
         only_intersects: bool = False,
     ) -> AsyncGenerator[Layer36048Feature, None]:
         """Поиск ЗУ в контуре"""
@@ -601,6 +602,7 @@ class AsyncNspd(BaseNspdClient):
     async def search_oks_in_contour_iter(
         self,
         countour: Union[Polygon, MultiPolygon],
+        *,
         only_intersects: bool = False,
     ) -> AsyncGenerator[Layer36049Feature, None]:
         """Поиск ОКС в контуре"""

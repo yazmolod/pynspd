@@ -22,6 +22,7 @@ SUBS = [
     (r'@pytest.mark.asyncio\(scope="session"\)', ""),
     ("@pytest_asyncio", "@pytest"),
     ("async_api", "api"),
+    ("async_cache_api", "cache_api"),
     ("Асинхронный клиент", "Клиент"),
     (r"AsyncGenerator\[Feat, None\]:", "Generator[Feat, None, None]:"),
     ("AsyncGenerator", "Generator"),
