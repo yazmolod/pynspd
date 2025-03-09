@@ -17,6 +17,7 @@ from httpx import (
 )
 from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
+from typing_extensions import deprecated
 
 from pynspd.client import (
     SSL_CONTEXT,
@@ -502,3 +503,29 @@ class Nspd(BaseNspdClient):
         Получение данных с вкладки \"Объекты\"
         """
         return self._tab_groups_request(feat, "objectsList")
+
+    @deprecated("Will be removed in 0.8.0; use `.find(...)` instead`")
+    def search_in_theme(
+        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
+    ) -> Optional[NspdFeature]:
+        return self.find(query, theme_id)
+
+    @deprecated("Will be removed in 0.8.0; use `.find_in_layer(...)` instead`")
+    def search_in_layer_by_model(
+        self, query: str, layer_def: Type[Feat]
+    ) -> Optional[Feat]:
+        return self.find_in_layer(query, layer_def)
+
+    @deprecated("Will be removed in 0.8.0; use `.search_at_point(...)` instead`")
+    def search_at_point_by_model(
+        self, pt: Point, layer_def: Type[Feat]
+    ) -> Optional[list[Feat]]:
+        return self.search_at_point(pt, layer_def)
+
+    @deprecated("Will be removed in 0.8.0; use `.search_in_contour(...)` instead`")
+    def search_in_contour_by_model(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        layer_def: Type[Feat],
+    ) -> Optional[list[Feat]]:
+        return self.search_in_contour(countour, layer_def)
