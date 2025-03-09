@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Annotated, Generic, Optional, Type, TypeVar, overload
+from typing import Annotated, ClassVar, Generic, Optional, Type, TypeVar, overload
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -44,6 +44,15 @@ class NspdProperties(CamelModel, Generic[OptProps]):
             model = NspdProperties[option_def]
         return model.model_validate(self.model_dump(by_alias=True))
 
+    def get_title(self) -> Optional[str]:
+        """Попытка найти заголовок карточки в свойствах"""
+        possible_titles = (self.options.title_key, "cad_num", "cad_number")
+        props = self.options.model_dump(by_alias=True)
+        for title in possible_titles:
+            if title is not None and title in props:
+                return props[title]
+        return None
+
 
 class OptionProperties(BaseModel):
     """Базовый класс для валидации поля `property.options` в GeoJSON-объекте из НСПД"""
@@ -52,6 +61,9 @@ class OptionProperties(BaseModel):
         extra="allow",
         use_attribute_docstrings=True,
     )
+
+    title_key: ClassVar[Optional[str]] = None
+    """Имя поля, которое является заголовком для карточки"""
 
     # TODO: определять объекты без геометрии отдельной схемой
     no_coords: Annotated[bool, Field(alias="geocoderObject")] = False

@@ -9,6 +9,7 @@ from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
 class Options36992(OptionProperties):
+    title_key = "brd_nmb"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -32,6 +33,7 @@ class Options36992(OptionProperties):
 
 
 class Options38030(OptionProperties):
+    title_key = "name"
     obj_kind_value: Optional[str] = None
     """Тип"""
     name: Optional[str] = None
@@ -61,6 +63,7 @@ class Options38030(OptionProperties):
 
 
 class Options36368(OptionProperties):
+    title_key = "cad_num"
     land_record_type: Optional[str] = None
     """Вид объекта недвижимости"""
     land_record_subtype: Optional[str] = None
@@ -94,6 +97,7 @@ class Options36368(OptionProperties):
 
 
 class Options36369(OptionProperties):
+    title_key = "cad_num"
     build_record_type_value: Optional[str] = None
     """Вид объекта недвижимости"""
     build_record_registration_date: Optional[date] = None
@@ -137,6 +141,7 @@ class Options36369(OptionProperties):
 
 
 class Options37148(OptionProperties):
+    title_key = "brd_nmb"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -160,6 +165,7 @@ class Options37148(OptionProperties):
 
 
 class Options36381(OptionProperties):
+    title_key = "cad_num"
     obj_kind_value: Optional[str] = None
     """Тип"""
     name: Optional[str] = None
@@ -189,6 +195,7 @@ class Options36381(OptionProperties):
 
 
 class Options36382(OptionProperties):
+    title_key = "cad_num"
     obj_kind_value: Optional[str] = None
     """Тип"""
     name: Optional[str] = None
@@ -218,6 +225,7 @@ class Options36382(OptionProperties):
 
 
 class Options38943(OptionProperties):
+    title_key = "address"
     id: Optional[str] = None
     """ID"""
     doc_guid: Optional[str] = None
@@ -247,6 +255,7 @@ class Options38943(OptionProperties):
 
 
 class Options36383(OptionProperties):
+    title_key = "cad_number"
     object_type_value: Optional[str] = None
     """Вид объекта недвижимости"""
     registration_date: Optional[date] = None
@@ -300,6 +309,7 @@ class Options36383(OptionProperties):
 
 
 class Options36384(OptionProperties):
+    title_key = "cad_num"
     object_under_construction_record_record_type_value: Optional[str] = None
     """Вид объекта недвижимости"""
     registration_date: Optional[date] = None
@@ -341,6 +351,7 @@ class Options36384(OptionProperties):
 
 
 class Options38942(OptionProperties):
+    title_key = "brd_nmb"
     content_restrict_encumbrances: Optional[str] = None
     """Ограничения"""
     doc: Optional[str] = None
@@ -356,6 +367,7 @@ class Options38942(OptionProperties):
 
 
 class Options445347(OptionProperties):
+    title_key = "type"
     cn: Optional[str] = None
     """Кадастровый или условный номер"""
     kvartal_cn: Optional[str] = None
@@ -416,6 +428,7 @@ class Options38944(OptionProperties):
 
 
 class Options37158(OptionProperties):
+    title_key = "nominal_number"
     nominal_number: Optional[str] = None
     """Условный номер образуемого земельного участка"""
     area: Optional[str] = None
@@ -437,6 +450,7 @@ class Options37158(OptionProperties):
 
 
 class Options38967(OptionProperties):
+    title_key = "process_ty_title"
     process_ty: Optional[str] = None
     """Тип"""
     reg_num: Optional[str] = None
@@ -460,6 +474,7 @@ class Options38967(OptionProperties):
 
 
 class Options39228(OptionProperties):
+    title_key = "Учётный номер КК"
     terr_name: Optional[str] = None
     """Наименование территории"""
 
@@ -468,11 +483,13 @@ class Options38979(OptionProperties): ...
 
 
 class Options38981(OptionProperties):
+    title_key = "Кадастровый номер"
     auc_thrf: Optional[str] = None
     """Ссылка на аукцион"""
 
 
 class Options36940(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     type_zone: Optional[str] = None
@@ -502,6 +519,7 @@ class Options36940(OptionProperties):
 
 
 class Options36941(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -529,6 +547,7 @@ class Options36941(OptionProperties):
 
 
 class Options36942(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -554,6 +573,7 @@ class Options36942(OptionProperties):
 
 
 class Options36943(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -577,6 +597,7 @@ class Options36943(OptionProperties):
 
 
 class Options36945(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -602,6 +623,7 @@ class Options36945(OptionProperties):
 
 
 class Options36946(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     type_zone: Optional[str] = None
@@ -633,6 +655,7 @@ class Options36946(OptionProperties):
 
 
 class Options36947(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -658,6 +681,7 @@ class Options36947(OptionProperties):
 
 
 class Options38996(OptionProperties):
+    title_key = "name"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -681,6 +705,7 @@ class Options38996(OptionProperties):
 
 
 class Options445397(OptionProperties):
+    title_key = "type"
     cn: Optional[str] = None
     """Кадастровый или условный номер"""
     kvartal_cn: Optional[str] = None
@@ -756,6 +781,7 @@ class Options445397(OptionProperties):
 
 
 class Options38998(OptionProperties):
+    title_key = "brd_nmb"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -763,6 +789,7 @@ class Options38998(OptionProperties):
 
 
 class Options38999(OptionProperties):
+    title_key = "brd_nmb"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -784,6 +811,7 @@ class Options38999(OptionProperties):
 
 
 class Options39000(OptionProperties):
+    title_key = "brd_nmb"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -805,6 +833,7 @@ class Options39000(OptionProperties):
 
 
 class Options36948(OptionProperties):
+    title_key = "name_by_doc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[date] = None
@@ -832,6 +861,7 @@ class Options36948(OptionProperties):
 
 
 class Options36829(OptionProperties):
+    title_key = "name"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -855,6 +885,7 @@ class Options36829(OptionProperties):
 
 
 class Options36830(OptionProperties):
+    title_key = "name"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -878,6 +909,7 @@ class Options36830(OptionProperties):
 
 
 class Options36832(OptionProperties):
+    title_key = "name"
     type: Optional[str] = None
     """Вид"""
     brd_nmb: Optional[str] = None
@@ -901,6 +933,7 @@ class Options36832(OptionProperties):
 
 
 class Options445547(OptionProperties):
+    title_key = "id"
     name: Optional[str] = None
     """Наименование объекта туристского интереса"""
     cn: Optional[str] = None
@@ -928,6 +961,7 @@ class Options445547(OptionProperties):
 
 
 class Options39663(OptionProperties):
+    title_key = "cad_number"
     type: Optional[str] = None
     """Вид объекта недвижимости"""
     registration_date: Optional[str] = None
@@ -951,6 +985,7 @@ class Options39663(OptionProperties):
 
 
 class Options39664(OptionProperties):
+    title_key = "name"
     type: Optional[str] = None
     """Вид объекта недвижимости"""
     registration_date: Optional[str] = None
@@ -972,6 +1007,7 @@ class Options39664(OptionProperties):
 
 
 class Options36991(OptionProperties):
+    title_key = "loc"
     type_boundary_value: Optional[str] = None
     """Вид"""
     registration_date: Optional[str] = None

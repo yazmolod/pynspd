@@ -1,5 +1,6 @@
 import asyncio
 from functools import partial
+from typing import Optional
 
 from jinja2 import Template
 
@@ -34,12 +35,15 @@ from pynspd.schemas.base_feature import BaseFeature
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
-{% for category_id, fields in layers_fields.items() %}
-class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...{% endif %}
+{% for category_id, (title_key, fields) in layers_fields.items() %}
+class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...
+    {% else %}
+    {% if title_key %}title_key = "{{ title_key }}"{% endif %}
     {%- for field in fields %}
     {{ field.key_value }}: Optional[{{field.key_type}}] = None
     \"\"\"{{field.key_name}}{% if field.postfix != None %} ({{ field.postfix }}){% endif %}\"\"\"
     {%- endfor %}
+    {% endif %}
 {% endfor %}
 
 
@@ -105,11 +109,15 @@ async def get_layer_tree() -> LayersTree:
     return tree
 
 
-async def get_category_card(category_id: int) -> tuple[int, list[CardField]]:
+async def get_category_card(
+    category_id: int,
+) -> tuple[int, tuple[Optional[str], list[CardField]]]:
     r = await request(
         "get", f"/api/geoportal/v1/geom-card-display-settings/{category_id}"
     )
     card = Card.model_validate(r.json())
+    title_key = card.title.key_value
+
     fields = []
     for field in card.card:
         if field.key_value == "-":
@@ -121,7 +129,7 @@ async def get_category_card(category_id: int) -> tuple[int, list[CardField]]:
         if " " in field.key_value:
             continue
         fields.append(field)
-    return category_id, fields
+    return category_id, (title_key, fields)
 
 
 async def get_layers_fields(layers: list[LayerNode]) -> dict[int, list[CardField]]:

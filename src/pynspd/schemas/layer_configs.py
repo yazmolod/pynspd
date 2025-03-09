@@ -1,6 +1,11 @@
 from typing import Any, Literal, Optional
 
-from pydantic import ConfigDict, field_serializer, field_validator, model_validator
+from pydantic import (
+    ConfigDict,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
 
 from pynspd.schemas._common import CamelModel
 
@@ -44,8 +49,29 @@ class LayerNode(CamelModel):
 
 
 class Card(CamelModel):
-    title: Any
+    title: "TitleField"
     card: list["CardField"]
+
+    @model_validator(mode="before")
+    @classmethod
+    def _unpack_title(cls, data: Any):
+        title = data["title"]
+        assert len(title) == 1
+        data["title"] = title[0]
+        return data
+
+
+class TitleField(CamelModel):
+    prefix: str
+    key_value: Optional[str]
+    default_value: str
+
+    @field_validator("key_value", mode="after")
+    @classmethod
+    def _key_value_validator(cls, v: str):
+        if not v.startswith("properties.options."):
+            return None
+        return v.replace("properties.options.", "")
 
 
 class CardField(CamelModel):
@@ -67,7 +93,7 @@ class CardField(CamelModel):
             self.key_type = "Union[str, float]"
         return self
 
-    @field_validator("key_value", mode="before")
+    @field_validator("key_value", mode="after")
     @classmethod
     def _key_value_validator(cls, v: str):
         assert v.startswith("properties.options.")
