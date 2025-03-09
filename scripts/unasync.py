@@ -23,6 +23,8 @@ SUBS = [
     ("@pytest_asyncio", "@pytest"),
     ("async_api", "api"),
     ("Асинхронный клиент", "Клиент"),
+    (r"AsyncGenerator\[Feat, None\]:", "Generator[Feat, None, None]:"),
+    ("AsyncGenerator", "Generator"),
 ]
 COMPILED_SUBS = [
     (re.compile(r"(^|\b)" + regex + r"($|\b)"), repl) for regex, repl in SUBS

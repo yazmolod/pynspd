@@ -1,7 +1,8 @@
 import json
 from asyncio import sleep
 from functools import wraps
-from typing import Any, Literal, Optional, Type, Union
+from hashlib import md5
+from typing import Any, AsyncGenerator, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -16,7 +17,7 @@ from httpx import (
     TimeoutException,
 )
 from httpx._types import ProxyTypes, QueryParamTypes
-from shapely import MultiPolygon, Point, Polygon, to_geojson
+from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 from typing_extensions import deprecated
 
 from pynspd.client import (
@@ -73,7 +74,7 @@ class AsyncNspd(BaseNspdClient):
 
     ```python
     async with pynspd.AsyncNspd() as nspd:
-        feat = await nspd.search_zu("77:05:0001005:19")
+        feat = await nspd.find_zu("77:05:0001005:19")
     ```
 
     Args:
@@ -161,6 +162,10 @@ class AsyncNspd(BaseNspdClient):
         """Базовый запрос к api НСПД с обработкой ошибок"""
         return await self.request(method, url, params, json)
 
+    ####################
+    ### QUERY SEARCH ###
+    ####################
+
     @retry_on_http_error
     async def _search(self, params: dict[str, Any]) -> Optional[list[NspdFeature]]:
         """Базовый поисковый запрос на НСПД"""
@@ -215,14 +220,6 @@ class AsyncNspd(BaseNspdClient):
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
-    async def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ по кадастровому номеру"""
-        return await self.search_in_layer(cn, Layer36048Feature)
-
-    async def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС по кадастровому номеру"""
-        return await self.search_in_layer(cn, Layer36049Feature)
-
     async def find(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
     ) -> Optional[NspdFeature]:
@@ -253,13 +250,9 @@ class AsyncNspd(BaseNspdClient):
             await self.search_in_layer(query, layer_def), query
         )
 
-    async def find_zu(self, query: str) -> Optional[Layer36048Feature]:
-        """Найти ЗУ по кадастровому номеру"""
-        return self._filter_search_by_query(await self.search_zu(query), query)
-
-    async def find_oks(self, query: str) -> Optional[Layer36049Feature]:
-        """Найти ОКС по кадастровому номеру"""
-        return self._filter_search_by_query(await self.search_oks(query), query)
+    ######################
+    ### POLYGON SEARCH ###
+    ######################
 
     @retry_on_http_error
     async def _search_in_contour(
@@ -308,11 +301,14 @@ class AsyncNspd(BaseNspdClient):
         countour: Union[Polygon, MultiPolygon],
         layer_def: Type[Feat],
     ) -> Optional[list[Feat]]:
-        """Поиск объектов в контуре по определению слоя
+        """Поиск объектов слоя в контуре
 
         Args:
             countour: Геометрический объект с контуром
             layer_def: Модель слоя
+
+        Raises:
+            TooBigContour: Слишком много объектов в контуре
 
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
@@ -322,31 +318,76 @@ class AsyncNspd(BaseNspdClient):
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
-    async def search_zu_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в контуре
+    async def _iter_search_in_box(
+        self,
+        xmin: float,
+        ymin: float,
+        xmax: float,
+        ymax: float,
+        layer_def: Type[Feat],
+    ) -> AsyncGenerator[Feat, None]:
+        """Рекурсивный поиск объектов в границах"""
+
+        def split_extent(xmin: float, ymin: float, xmax: float, ymax: float):
+            midx = (xmax + xmin) / 2
+            midy = (ymax + ymin) / 2
+            yield xmin, ymin, midx, midy
+            yield midx, midy, xmax, ymax
+            yield midx, ymin, xmax, midy
+            yield xmin, midy, midx, ymax
+
+        try:
+            feats = await self.search_in_contour(box(xmin, ymin, xmax, ymax), layer_def)
+            if feats is None:
+                return
+            for f in feats:
+                yield f
+        except TooBigContour:
+            for sp_xmin, sp_ymin, sp_xmax, sp_ymax in split_extent(
+                xmin, ymin, xmax, ymax
+            ):
+                async for f in self._iter_search_in_box(
+                    sp_xmin, sp_ymin, sp_xmax, sp_ymax, layer_def
+                ):
+                    yield f
+
+    async def search_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        layer_def: Type[Feat],
+        *,
+        only_intersects: bool = False,
+    ) -> AsyncGenerator[Feat, None]:
+        """Поиск объектов в указанных границах.
+
+        Внимание: количество запросов кратно зависит от площади поиска.
+        Если вы хотите вручную обрабатывать ошибку `TooBigContour`,
+        используйте метод `search_in_contour(...)`
 
         Args:
             countour: Геометрический объект с контуром
+            layer_def: Модель слоя
+            only_intersects:
+                Возвращать только те объекты,
+                которые пересекаются с изначальным контуром. По умолчанию False
 
         Returns:
-            Список объектов, пересекающихся с контуром, если найден хоть один
+            Генератор объектов слоя в указанной области
         """
-        return await self.search_in_contour(countour, Layer36048Feature)
+        cache = set()
+        xmin, ymin, xmax, ymax = countour.bounds
+        async for feat in self._iter_search_in_box(xmin, ymin, xmax, ymax, layer_def):
+            cache_id = md5(feat.model_dump_json().encode()).hexdigest()
+            if cache_id in cache:
+                continue
+            cache.add(cache_id)
+            if only_intersects and not countour.intersects(feat.geometry.to_shape()):
+                continue
+            yield feat
 
-    async def search_oks_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в контуре
-
-        Args:
-            countour: Геометрический объект с контуром
-
-        Returns:
-            Список объектов, пересекающихся с контуром, если найден хоть один
-        """
-        return await self.search_in_contour(countour, Layer36049Feature)
+    ####################
+    ### POINT SEARCH ###
+    ####################
 
     @retry_on_http_error
     async def _search_at_point(
@@ -401,14 +442,6 @@ class AsyncNspd(BaseNspdClient):
         raw_features = await self._search_at_point(pt, layer_def.layer_meta.layer_id)
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
-    async def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в точке"""
-        return await self.search_at_point(pt, Layer36048Feature)
-
-    async def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в точке"""
-        return await self.search_at_point(pt, Layer36049Feature)
-
     async def search_at_coords(
         self, lat: float, lng: float, layer_def: Type[Feat]
     ) -> Optional[list[Feat]]:
@@ -424,17 +457,9 @@ class AsyncNspd(BaseNspdClient):
         """
         return await self.search_at_point(Point(lng, lat), layer_def)
 
-    async def search_zu_at_coords(
-        self, lat: float, lng: float
-    ) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в координатах"""
-        return await self.search_zu_at_point(Point(lng, lat))
-
-    async def search_oks_at_coords(
-        self, lat: float, lng: float
-    ) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в координатах"""
-        return await self.search_oks_at_point(Point(lng, lat))
+    ####################
+    ### TAB REQUESTS ###
+    ####################
 
     @retry_on_http_error
     async def _tab_request(
@@ -509,6 +534,84 @@ class AsyncNspd(BaseNspdClient):
         Получение данных с вкладки \"Объекты\"
         """
         return await self._tab_groups_request(feat, "objectsList")
+
+    #################
+    ### SHORTCUTS ###
+    #################
+
+    async def find_zu(self, query: str) -> Optional[Layer36048Feature]:
+        """Найти ЗУ по кадастровому номеру"""
+        return self._filter_search_by_query(await self.search_zu(query), query)
+
+    async def find_oks(self, query: str) -> Optional[Layer36049Feature]:
+        """Найти ОКС по кадастровому номеру"""
+        return self._filter_search_by_query(await self.search_oks(query), query)
+
+    async def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в точке"""
+        return await self.search_at_point(pt, Layer36048Feature)
+
+    async def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в точке"""
+        return await self.search_at_point(pt, Layer36049Feature)
+
+    async def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ по кадастровому номеру"""
+        return await self.search_in_layer(cn, Layer36048Feature)
+
+    async def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС по кадастровому номеру"""
+        return await self.search_in_layer(cn, Layer36049Feature)
+
+    async def search_zu_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в координатах"""
+        return await self.search_zu_at_point(Point(lng, lat))
+
+    async def search_oks_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в координатах"""
+        return await self.search_oks_at_point(Point(lng, lat))
+
+    async def search_zu_in_contour(
+        self, countour: Union[Polygon, MultiPolygon]
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в контуре"""
+        return await self.search_in_contour(countour, Layer36048Feature)
+
+    async def search_oks_in_contour(
+        self, countour: Union[Polygon, MultiPolygon]
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в контуре"""
+        return await self.search_in_contour(countour, Layer36049Feature)
+
+    async def search_zu_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        only_intersects: bool = False,
+    ) -> AsyncGenerator[Layer36048Feature, None]:
+        """Поиск ЗУ в контуре"""
+        async for f in self.search_in_contour_iter(
+            countour, Layer36048Feature, only_intersects=only_intersects
+        ):
+            yield f
+
+    async def search_oks_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        only_intersects: bool = False,
+    ) -> AsyncGenerator[Layer36049Feature, None]:
+        """Поиск ОКС в контуре"""
+        async for f in self.search_in_contour_iter(
+            countour, Layer36049Feature, only_intersects=only_intersects
+        ):
+            yield f
+
+    ####################
+    ### DEPRECATIONS ###
+    ####################
 
     @deprecated("Will be removed in 0.8.0; use `.find(...)` instead`")
     async def search_in_theme(

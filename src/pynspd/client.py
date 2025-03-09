@@ -48,7 +48,7 @@ class BaseNspdClient:
     def _cast_features_to_layer_defs(
         raw_features: Optional[list[NspdFeature]], layer_def: Type[Feat]
     ) -> Optional[list[Feat]]:
-        """Аналог `_cast_feature_to_layer_def` для списка фичей"""
+        """Приводит массив фичей к определенному типу"""
         if raw_features is None:
             return None
         features = [i.cast(layer_def) for i in raw_features]

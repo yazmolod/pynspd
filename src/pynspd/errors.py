@@ -10,7 +10,10 @@ class TooBigContour(Exception):
     """Контур слишком большой, сервер не может ответить"""
 
     def __init__(self):
-        super().__init__("Попробуйте уменьшить площадь поиска")
+        super().__init__(
+            "Попробуйте уменьшить площадь поиска "
+            "или воспользоваться методом `.search_in_contour_iter(...)`"
+        )
 
 
 class AmbiguousSearchError(Exception):
