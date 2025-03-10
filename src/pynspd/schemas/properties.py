@@ -74,12 +74,13 @@ class OptionProperties(BaseModel):
     @classmethod
     def valid_date(cls, values: dict) -> dict:
         for k, v in values.items():
-            if (
-                k in cls.model_fields
-                and "datetime.date" in str(cls.model_fields[k].annotation)
-                and re.match(r"\d+\.\d+\.\d+", v)
+            if k in cls.model_fields and "datetime.date" in str(
+                cls.model_fields[k].annotation
             ):
-                values[k] = datetime.strptime(v, "%d.%m.%Y")
+                if re.match(r"\d+\.\d+\.\d+", v):
+                    values[k] = datetime.strptime(v, "%d.%m.%Y")
+                elif v == "":
+                    values[k] = None
         return values
 
     @classmethod
