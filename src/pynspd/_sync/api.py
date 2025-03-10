@@ -586,7 +586,7 @@ class Nspd(BaseNspdClient):
         countour: Union[Polygon, MultiPolygon],
         *,
         only_intersects: bool = False,
-    ) -> Generator[Layer36048Feature, None]:
+    ) -> Generator[Layer36048Feature, None, None]:
         """Поиск ЗУ в контуре"""
         for f in self.search_in_contour_iter(
             countour, Layer36048Feature, only_intersects=only_intersects
@@ -598,7 +598,7 @@ class Nspd(BaseNspdClient):
         countour: Union[Polygon, MultiPolygon],
         *,
         only_intersects: bool = False,
-    ) -> Generator[Layer36049Feature, None]:
+    ) -> Generator[Layer36049Feature, None, None]:
         """Поиск ОКС в контуре"""
         for f in self.search_in_contour_iter(
             countour, Layer36049Feature, only_intersects=only_intersects

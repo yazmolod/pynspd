@@ -25,6 +25,14 @@ SUBS = [
     ("async_cache_api", "cache_api"),
     ("Асинхронный клиент", "Клиент"),
     (r"AsyncGenerator\[Feat, None\]:", "Generator[Feat, None, None]:"),
+    (
+        r"AsyncGenerator\[Layer36048Feature, None\]:",
+        "Generator[Layer36048Feature, None, None]:",
+    ),
+    (
+        r"AsyncGenerator\[Layer36049Feature, None\]:",
+        "Generator[Layer36049Feature, None, None]:",
+    ),
     ("AsyncGenerator", "Generator"),
 ]
 COMPILED_SUBS = [
