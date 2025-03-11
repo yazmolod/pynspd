@@ -30,6 +30,7 @@ class NspdProperties(CamelModel, Generic[OptProps]):
     interaction_id: Optional[int] = None
     label: Optional[str] = None
     subcategory: Optional[int] = None
+    score: Optional[int] = None
 
     @overload
     def cast(self, option_def: None = None) -> "NspdProperties[OptionProperties]": ...
@@ -102,7 +103,7 @@ class OptionProperties(BaseModel):
 
 
 class SystemInfoProperties(CamelModel):
-    inserted: datetime
-    inserted_by: str
-    updated: datetime
-    updated_by: str
+    inserted: Optional[datetime]
+    inserted_by: Optional[str]
+    updated: Optional[datetime]
+    updated_by: Optional[str]
