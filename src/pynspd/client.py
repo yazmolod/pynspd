@@ -3,6 +3,9 @@ import ssl
 from typing import Any, Generator, Optional, Type
 
 import httpx
+from hishel import Controller
+from hishel._utils import generate_key
+from httpcore import Request
 
 from pynspd.errors import AmbiguousSearchError, UnknownLayer
 from pynspd.schemas import NspdFeature
@@ -25,11 +28,17 @@ def get_client_args(timeout: Optional[int]) -> dict:
     )
 
 
-def get_controller_args() -> dict:
-    return dict(
-        force_cache=True,
-        cacheable_status_codes=[200, 204, 404, 301, 308],
-    )
+def _cache_key_generator(request: Request, body: Optional[bytes]) -> str:
+    body = body or b""
+    key = generate_key(request, body)
+    return f"pynspd-{key}"
+
+
+NSPD_CACHE_CONTROLLER = Controller(
+    force_cache=True,
+    cacheable_status_codes=[200, 204, 404, 301, 308],
+    key_generator=_cache_key_generator,
+)
 
 
 class BaseNspdClient:

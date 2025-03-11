@@ -62,6 +62,9 @@ docs = [
     "mkdocs-material>=9.6.2",
     "mkdocstrings[python]>=0.28.1",
 ]
+cache-test = [
+    "redis>=5.2.1",
+]
 
 [tool.mypy]
 enable_incomplete_feature = "NewGenericSyntax"

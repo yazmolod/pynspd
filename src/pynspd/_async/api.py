@@ -6,7 +6,7 @@ from typing import Any, AsyncGenerator, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
-from hishel import AsyncBaseStorage, AsyncCacheTransport, Controller
+from hishel import AsyncBaseStorage, AsyncCacheTransport
 from httpx import (
     AsyncBaseTransport,
     AsyncClient,
@@ -21,10 +21,10 @@ from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 from typing_extensions import deprecated
 
 from pynspd.client import (
+    NSPD_CACHE_CONTROLLER,
     SSL_CONTEXT,
     BaseNspdClient,
     get_client_args,
-    get_controller_args,
 )
 from pynspd.errors import TooBigContour
 from pynspd.logger import logger
@@ -121,10 +121,10 @@ class AsyncNspd(BaseNspdClient):
             verify=SSL_CONTEXT, retries=retries, proxy=proxy
         )
         if cache_storage is not None:
-            cache_args = get_controller_args()
-            controller = Controller(**cache_args)
             transport = AsyncCacheTransport(
-                transport=transport, storage=cache_storage, controller=controller
+                transport=transport,
+                storage=cache_storage,
+                controller=NSPD_CACHE_CONTROLLER,
             )
         return AsyncClient(**client_args, transport=transport)
 
