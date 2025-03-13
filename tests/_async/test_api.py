@@ -38,8 +38,8 @@ async def test_find_in_layer_non_exists(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_zu(async_api: AsyncNspd):
-    feat = await async_api.find_zu("77:05:0001005:19")
+async def test_search_landplots(async_api: AsyncNspd):
+    feat = await async_api.find_landplot("77:05:0001005:19")
     assert feat is not None
     assert feat.properties.options.land_record_type == "Земельный участок"
     assert isinstance(feat.geometry.to_shape(), Polygon)
@@ -47,19 +47,19 @@ async def test_search_zu(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_oks(async_api: AsyncNspd):
-    feat = await async_api.find_oks("77:03:0001001:3030")
+async def test_search_buildings(async_api: AsyncNspd):
+    feat = await async_api.find_building("77:03:0001001:3030")
     assert feat is not None
     assert feat.properties.options.build_record_type_value == "Здание"
     assert isinstance(feat.geometry.to_shape(), Polygon)
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_zu_in_contour(async_api: AsyncNspd):
+async def test_search_landplots_in_contour(async_api: AsyncNspd):
     contour = wkt.loads(
         "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"
     )
-    features = await async_api.search_zu_in_contour(contour)
+    features = await async_api.search_landplots_in_contour(contour)
     assert features is not None
     assert all([isinstance(i, Layer36048Feature) for i in features])
     cns = [i.properties.options.cad_num for i in features]
@@ -67,11 +67,11 @@ async def test_search_zu_in_contour(async_api: AsyncNspd):
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_oks_in_contour(async_api: AsyncNspd):
+async def test_search_buildings_in_contour(async_api: AsyncNspd):
     contour = wkt.loads(
         "Polygon ((37.62381 55.75345, 37.62577 55.75390, 37.62448 55.75278, 37.62381 55.75345))"
     )
-    features = await async_api.search_oks_in_contour(contour)
+    features = await async_api.search_buildings_in_contour(contour)
     assert features is not None
     assert all([isinstance(i, Layer36049Feature) for i in features])
     cns = [i.properties.options.cad_num for i in features]
@@ -84,14 +84,16 @@ async def test_search_in_big_contour(async_cache_api: AsyncNspd):
         contour = wkt.loads(
             "Polygon ((37.6951 55.7320, 37.7338 55.7279, 37.7469 55.7563, 37.7283 55.7531, 37.7196 55.7343, 37.6981 55.7359, 37.6951 55.7320))"
         )
-        await async_cache_api.search_zu_in_contour(contour)
-    async for oks_feat in async_cache_api.search_oks_in_contour_iter(contour):
+        await async_cache_api.search_landplots_in_contour(contour)
+    async for oks_feat in async_cache_api.search_buildings_in_contour_iter(contour):
         assert oks_feat is not None
         break
-    feats_all = [f async for f in async_cache_api.search_zu_in_contour_iter(contour)]
+    feats_all = [
+        f async for f in async_cache_api.search_landplots_in_contour_iter(contour)
+    ]
     feats_int = [
         f
-        async for f in async_cache_api.search_zu_in_contour_iter(
+        async for f in async_cache_api.search_landplots_in_contour_iter(
             contour, only_intersects=True
         )
     ]
@@ -103,24 +105,24 @@ async def test_search_in_contour_empty(async_api: AsyncNspd):
     contour = wkt.loads(
         "Polygon ((37.63215 55.75588, 37.63214 55.75557, 37.63271 55.75570, 37.63215 55.75588))"
     )
-    features = await async_api.search_zu_in_contour(contour)
+    features = await async_api.search_landplots_in_contour(contour)
     assert features is None
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_zu_at_coords(async_api: AsyncNspd):
-    features = await async_api.search_zu_at_coords(55.78729561, 37.54658156)
+async def test_search_landplots_at_coords(async_api: AsyncNspd):
+    features = await async_api.search_landplots_at_coords(55.78729561, 37.54658156)
     assert features is None
-    features = await async_api.search_zu_at_coords(55.787139958, 37.546440653)
+    features = await async_api.search_landplots_at_coords(55.787139958, 37.546440653)
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005008:11446"
 
 
 @pytest.mark.asyncio(scope="session")
-async def test_search_oks_at_point(async_api: AsyncNspd):
-    features = await async_api.search_oks_at_coords(55.786436698, 37.547790951)
+async def test_search_buildings_at_point(async_api: AsyncNspd):
+    features = await async_api.search_buildings_at_coords(55.786436698, 37.547790951)
     assert features is None
-    features = await async_api.search_oks_at_coords(55.786436698, 37.547785813)
+    features = await async_api.search_buildings_at_coords(55.786436698, 37.547785813)
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005014:1044"
 

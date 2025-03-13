@@ -533,55 +533,55 @@ class Nspd(BaseNspdClient):
     ### SHORTCUTS ###
     #################
 
-    def find_zu(self, query: str) -> Optional[Layer36048Feature]:
+    def find_landplot(self, query: str) -> Optional[Layer36048Feature]:
         """Найти ЗУ по кадастровому номеру"""
-        return self._filter_search_by_query(self.search_zu(query), query)
+        return self._filter_search_by_query(self.search_landplots(query), query)
 
-    def find_oks(self, query: str) -> Optional[Layer36049Feature]:
+    def find_building(self, query: str) -> Optional[Layer36049Feature]:
         """Найти ОКС по кадастровому номеру"""
-        return self._filter_search_by_query(self.search_oks(query), query)
+        return self._filter_search_by_query(self.search_buildings(query), query)
 
-    def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
+    def search_landplots_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в точке"""
         return self.search_at_point(pt, Layer36048Feature)
 
-    def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
+    def search_buildings_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в точке"""
         return self.search_at_point(pt, Layer36049Feature)
 
-    def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
+    def search_landplots(self, cn: str) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ по кадастровому номеру"""
         return self.search_in_layer(cn, Layer36048Feature)
 
-    def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
+    def search_buildings(self, cn: str) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС по кадастровому номеру"""
         return self.search_in_layer(cn, Layer36049Feature)
 
-    def search_zu_at_coords(
+    def search_landplots_at_coords(
         self, lat: float, lng: float
     ) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в координатах"""
         return self.search_at_coords(lat, lng, Layer36048Feature)
 
-    def search_oks_at_coords(
+    def search_buildings_at_coords(
         self, lat: float, lng: float
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в координатах"""
         return self.search_at_coords(lat, lng, Layer36049Feature)
 
-    def search_zu_in_contour(
+    def search_landplots_in_contour(
         self, countour: Union[Polygon, MultiPolygon]
     ) -> Optional[list[Layer36048Feature]]:
         """Поиск ЗУ в контуре"""
         return self.search_in_contour(countour, Layer36048Feature)
 
-    def search_oks_in_contour(
+    def search_buildings_in_contour(
         self, countour: Union[Polygon, MultiPolygon]
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в контуре"""
         return self.search_in_contour(countour, Layer36049Feature)
 
-    def search_zu_in_contour_iter(
+    def search_landplots_in_contour_iter(
         self,
         countour: Union[Polygon, MultiPolygon],
         *,
@@ -593,7 +593,7 @@ class Nspd(BaseNspdClient):
         ):
             yield f
 
-    def search_oks_in_contour_iter(
+    def search_buildings_in_contour_iter(
         self,
         countour: Union[Polygon, MultiPolygon],
         *,
@@ -634,3 +634,103 @@ class Nspd(BaseNspdClient):
         layer_def: Type[Feat],
     ) -> Optional[list[Feat]]:
         return self.search_in_contour(countour, layer_def)
+
+    @deprecated("Will be removed in 0.8.0; use `.find_landplot(...)` instead`")
+    def find_zu(self, query: str) -> Optional[Layer36048Feature]:
+        """Найти ЗУ по кадастровому номеру"""
+        return self._filter_search_by_query(self.search_zu(query), query)
+
+    @deprecated("Will be removed in 0.8.0; use `.find_building(...)` instead`")
+    def find_oks(self, query: str) -> Optional[Layer36049Feature]:
+        """Найти ОКС по кадастровому номеру"""
+        return self._filter_search_by_query(self.search_oks(query), query)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_landplots_at_point(...)` instead`"
+    )
+    def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в точке"""
+        return self.search_at_point(pt, Layer36048Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_buildings_at_point(...)` instead`"
+    )
+    def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в точке"""
+        return self.search_at_point(pt, Layer36049Feature)
+
+    @deprecated("Will be removed in 0.8.0; use `.search_landplots(...)` instead`")
+    def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ по кадастровому номеру"""
+        return self.search_in_layer(cn, Layer36048Feature)
+
+    @deprecated("Will be removed in 0.8.0; use `.search_buildings(...)` instead`")
+    def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС по кадастровому номеру"""
+        return self.search_in_layer(cn, Layer36049Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_landplots_at_coords(...)` instead`"
+    )
+    def search_zu_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в координатах"""
+        return self.search_at_coords(lat, lng, Layer36048Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_buildings_at_coords(...)` instead`"
+    )
+    def search_oks_at_coords(
+        self, lat: float, lng: float
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в координатах"""
+        return self.search_at_coords(lat, lng, Layer36049Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_landplots_in_contour(...)` instead`"
+    )
+    def search_zu_in_contour(
+        self, countour: Union[Polygon, MultiPolygon]
+    ) -> Optional[list[Layer36048Feature]]:
+        """Поиск ЗУ в контуре"""
+        return self.search_in_contour(countour, Layer36048Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_buildings_in_contour(...)` instead`"
+    )
+    def search_oks_in_contour(
+        self, countour: Union[Polygon, MultiPolygon]
+    ) -> Optional[list[Layer36049Feature]]:
+        """Поиск ОКС в контуре"""
+        return self.search_in_contour(countour, Layer36049Feature)
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_landplots_in_contour_iter(...)` instead`"
+    )
+    def search_zu_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        *,
+        only_intersects: bool = False,
+    ) -> Generator[Layer36048Feature, None, None]:
+        """Поиск ЗУ в контуре"""
+        for f in self.search_in_contour_iter(
+            countour, Layer36048Feature, only_intersects=only_intersects
+        ):
+            yield f
+
+    @deprecated(
+        "Will be removed in 0.8.0; use `.search_buildings_in_contour_iter(...)` instead`"
+    )
+    def search_oks_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        *,
+        only_intersects: bool = False,
+    ) -> Generator[Layer36049Feature, None, None]:
+        """Поиск ОКС в контуре"""
+        for f in self.search_in_contour_iter(
+            countour, Layer36049Feature, only_intersects=only_intersects
+        ):
+            yield f
