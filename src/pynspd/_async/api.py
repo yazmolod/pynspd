@@ -1,4 +1,5 @@
 import json
+import re
 from asyncio import sleep
 from functools import wraps
 from hashlib import md5
@@ -502,7 +503,10 @@ class AsyncNspd(BaseNspdClient):
         if resp is None:
             return None
         item = NspdTabGroupResponse.model_validate(resp).object
-        data = {i.title: i.value for i in item}
+        data = {}
+        for i in item:
+            title = re.sub(r"[\s:]+$", "", i.title)
+            data[title] = i.value
         if len(data) == 0:
             return None
         return data

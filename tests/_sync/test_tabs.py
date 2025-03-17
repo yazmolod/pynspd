@@ -64,3 +64,10 @@ def test_empty_tab(api: Nspd):
     feat = get_feat(api, "50:27:0000000:134535")
     res = api.tab_composition_land(feat)
     assert res is None
+
+
+def test_tab_objects_key_format(api: Nspd):
+    feat = get_feat(api, "50:21:0110501:792")
+    res = api.tab_objects_list(feat)
+    assert res is not None
+    assert "Объект недвижимости" in res

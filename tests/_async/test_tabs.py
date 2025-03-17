@@ -74,3 +74,11 @@ async def test_empty_tab(async_api: AsyncNspd):
     feat = await get_feat(async_api, "50:27:0000000:134535")
     res = await async_api.tab_composition_land(feat)
     assert res is None
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_tab_objects_key_format(async_api: AsyncNspd):
+    feat = await get_feat(async_api, "50:21:0110501:792")
+    res = await async_api.tab_objects_list(feat)
+    assert res is not None
+    assert "Объект недвижимости" in res
