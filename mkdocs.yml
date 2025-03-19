@@ -8,18 +8,21 @@ theme:
 
   features:
     - content.code.copy
+    - search.suggest
+    - search.highlight
+    - search.share
 
   palette:
-  - scheme: default
-    primary: "light blue"
-    toggle:
-      icon: material/lightbulb
-      name: Switch to dark mode
-  - scheme: slate
-    primary: "light blue"
-    toggle:
-      icon: material/lightbulb-outline
-      name: Switch to light mode
+    - scheme: default
+      primary: "light blue"
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - scheme: slate
+      primary: "light blue"
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
 
 
 markdown_extensions:
@@ -31,6 +34,7 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.caret
   - admonition
   - pymdownx.details
   - tables
@@ -39,17 +43,20 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
+
 plugins: 
-- mkdocstrings:
-    default_handler: python
-    handlers:
-      python:
-        options:
-          show_source: false
-          show_bases: false
-          show_root_heading: true
-          filters:
-            - "!^_"
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_bases: false
+            show_root_heading: true
+            filters:
+              - "!^_"
+
 
 nav:
   - О проекте: README.md
@@ -65,5 +72,6 @@ nav:
       - pynspd.NspdFeature: api/feature.md
       - pynspd.schemas.options.NspdProperties: api/properties.md
       - pynspd.schemas.options.NspdOptions: api/options.md
+      - pynspd.types: api/types.md
       - pynspd.errors: api/errors.md
   - Как поддержать проект: contributing.md

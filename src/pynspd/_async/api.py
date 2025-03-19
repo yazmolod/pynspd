@@ -73,6 +73,7 @@ def retry_on_http_error(func):
 class AsyncNspd(BaseNspdClient):
     """Асинхронный клиент для НСПД
 
+    Example:
     ```python
     async with pynspd.AsyncNspd() as nspd:
         feat = await nspd.find_zu("77:05:0001005:19")
@@ -90,7 +91,7 @@ class AsyncNspd(BaseNspdClient):
         cache_storage:
             Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
             Если установлен, то при повторном запросе результат будет
-            извлекаться из хранилища кэша, что сильно увеличивает произвожительность
+            извлекаться из хранилища кэша, что сильно увеличивает производительность
             и снижает риск ошибки 429 - Too many requests. По умолчанию None.
     """
 
