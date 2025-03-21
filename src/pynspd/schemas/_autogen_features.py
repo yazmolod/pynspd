@@ -453,8 +453,6 @@ class Options38967(OptionProperties):
     title_key = "process_ty_title"
     process_ty: Optional[str] = None
     """Тип"""
-    reg_num: Optional[str] = None
-    """Номер"""
     cad_distr: Optional[float] = None
     """Кадастровый округ"""
     district: Optional[str] = None
@@ -462,13 +460,11 @@ class Options38967(OptionProperties):
     index_map: Optional[str] = None
     """Индекс"""
     process_ty_title: Optional[str] = None
-    """Вид и степень развития негативного процесса га."""
+    """Вид и степень развития негативного процесса"""
     shape_area: Optional[Union[str, float]] = None
-    """Площадь проявления негативного процесса % к площади работ"""
+    """Площадь проявления негативного процесса, га"""
     zone_proya: Optional[str] = None
     """Зона проявления"""
-    soil_type: Optional[str] = None
-    """Тип почвы"""
     recommend: Optional[str] = None
     """Рекомендации по использованию земель"""
 
