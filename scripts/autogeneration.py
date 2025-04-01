@@ -1,4 +1,6 @@
 import asyncio
+import re
+import warnings
 from functools import partial
 from typing import Optional
 
@@ -6,6 +8,8 @@ from jinja2 import Template
 
 from pynspd import AsyncNspd
 from pynspd._async.api import retry_on_http_error
+from pynspd.schemas import _autogen_features as cached_feature_configs
+from pynspd.schemas.base_feature import BaseFeature
 from pynspd.schemas.layer_configs import Card, CardField, LayerNode, LayersTree
 
 CLIENT = AsyncNspd()
@@ -101,11 +105,33 @@ def generate_files(layers: list[LayerNode], layers_fields: dict[int, Card]):
                 to_file.write("\n\n")
 
 
+def get_cached_geometry_types() -> dict[int, str]:
+    data = {}
+    for i in dir(cached_feature_configs):
+        if not re.match(r"Layer\d+Feature", i):
+            continue
+        cl: BaseFeature = getattr(cached_feature_configs, i)
+        data[cl.layer_meta.layer_id] = LayerNode._geometry_type_serializer(
+            cl.layer_meta.geometry_type
+        )
+    return data
+
+
 async def get_layer_tree() -> LayersTree:
     r = await request(
         "get", "/api/geoportal/v1/layers-theme-tree", params={"themeId": 1}
     )
-    tree = LayersTree.model_validate(r.json())
+    data = r.json()
+    # 01.04.2025 - исчезла geometryType, берем из предыдущих значений
+    cached_geometry_types = get_cached_geometry_types()
+    for layer in data["layers"]:
+        if "geometryType" in layer:
+            continue
+        warnings.warn(
+            "Not found geometry type in tree; cached used instead", stacklevel=2
+        )
+        layer["geometryType"] = cached_geometry_types[layer["layerId"]]
+    tree = LayersTree.model_validate(data)
     return tree
 
 
