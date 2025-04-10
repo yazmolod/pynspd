@@ -61,7 +61,7 @@ with Nspd() as nspd:
 Для доступа к дополнительным аттрибутам делаем запрос по вкладке:
 
 ```python
-    print(await nspd.tab_objects_list(feat))
+    print(nspd.tab_objects_list(feat))
     #> {'Объект недвижимости: ': ['77:05:0001005:1012']}
 ```
 
