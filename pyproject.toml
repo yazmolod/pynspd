@@ -33,6 +33,15 @@ Repository = "https://github.com/yazmolod/pynspd"
 Issues = "https://github.com/yazmolod/pynspd/issues"
 Changelog = "https://github.com/yazmolod/pynspd/releases"
 
+[project.optional-dependencies]
+pynspd = [
+    "geopandas>=1.0.1",
+    "typer>=0.15.2",
+]
+
+[project.scripts]
+pynspd = "src.pynspd.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

@@ -1511,6 +1511,12 @@ dependencies = [
     { name = "shapely" },
 ]
 
+[package.optional-dependencies]
+pynspd = [
+    { name = "geopandas" },
+    { name = "typer" },
+]
+
 [package.dev-dependencies]
 cache-test = [
     { name = "redis" },
@@ -1544,6 +1550,7 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "geojson-pydantic", specifier = ">=1.2.0" },
+    { name = "geopandas", marker = "extra == 'pynspd'", specifier = ">=1.0.1" },
     { name = "hishel", specifier = ">=0.1.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mercantile", specifier = ">=1.2.1" },
@@ -1551,7 +1558,9 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.4" },
     { name = "pyproj", specifier = ">=3.7" },
     { name = "shapely", specifier = ">=2.0.6" },
+    { name = "typer", marker = "extra == 'pynspd'", specifier = ">=0.15.2" },
 ]
+provides-extras = ["pynspd"]
 
 [package.metadata.requires-dev]
 cache-test = [{ name = "redis", specifier = ">=5.2.1" }]
@@ -2200,6 +2209,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/08/e9/eb59303bac7aca949c4a4b0fa03a9b270be165d303a84cf2733d35a840ce/trove_classifiers-2025.3.3.18.tar.gz", hash = "sha256:3ffcfa90a428adfde1a5d90e3aa1b87fe474c5dbdbf5ccbca74ed69ba83c5ca7", size = 16239 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/bf/44195f3d9c3c4fe4cccf1c261c80d50781b9e8a0a6febf084c09c66740ff/trove_classifiers-2025.3.3.18-py3-none-any.whl", hash = "sha256:215630da61cf8757c373f81b602fc1283ec5a691cf12c5f9f96f11d6ad5fc7f2", size = 13629 },
+]
+
+[[package]]
+name = "typer"
+version = "0.15.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "rich" },
+    { name = "shellingham" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8b/6f/3991f0f1c7fcb2df31aef28e0594d8d54b05393a0e4e34c65e475c2a5d41/typer-0.15.2.tar.gz", hash = "sha256:ab2fab47533a813c49fe1f16b1a370fd5819099c00b119e0633df65f22144ba5", size = 100711 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7f/fc/5b29fea8cee020515ca82cc68e3b8e1e34bb19a3535ad854cac9257b414c/typer-0.15.2-py3-none-any.whl", hash = "sha256:46a499c6107d645a9c13f7ee46c5d5096cae6f5fc57dd11eccbbb9ae3e44ddfc", size = 45061 },
 ]
 
 [[package]]
