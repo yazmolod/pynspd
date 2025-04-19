@@ -273,6 +273,12 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Граница лесопарка"]
+    ) -> Type[auto.Layer843763Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Береговые линии (границы водных объектов) (полигональный)"]
     ) -> Type[auto.Layer36469Feature]: ...
 
