@@ -449,6 +449,29 @@ class Options37158(OptionProperties):
     """орган власти, организация выдавшие документ"""
 
 
+class Options278838(OptionProperties):
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[date] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    name_by_doc: Optional[str] = None
+    """Наименование зоны"""
+    legal_act_document_name: Optional[str] = None
+    """документ"""
+    legal_act_document_number: Optional[str] = None
+    """номер"""
+    legal_act_document_date: Optional[str] = None
+    """дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
 class Options38967(OptionProperties):
     title_key = "process_ty_title"
     process_ty: Optional[str] = None
@@ -1637,6 +1660,25 @@ class Layer36314Feature(
             "layerName": "Лесничества (ЕГРН)",
             "layerVisibleByDefault": False,
             "categoryId": 36945,
+        }
+    )
+
+
+class Layer843763Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options278838]]
+):
+    """Граница лесопарка"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Граница лесопарка",
+            "layerTreeId": 22395,
+            "layerId": 843763,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Граница лесопарка (ЕГРН)",
+            "layerVisibleByDefault": False,
+            "categoryId": 278838,
         }
     )
 

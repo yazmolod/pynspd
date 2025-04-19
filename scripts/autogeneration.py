@@ -130,7 +130,7 @@ async def get_layer_tree() -> LayersTree:
         warnings.warn(
             "Not found geometry type in tree; cached used instead", stacklevel=2
         )
-        layer["geometryType"] = cached_geometry_types[layer["layerId"]]
+        layer["geometryType"] = cached_geometry_types.get(layer["layerId"], "POLYGON")
     tree = LayersTree.model_validate(data)
     return tree
 
