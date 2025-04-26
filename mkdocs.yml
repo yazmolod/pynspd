@@ -72,6 +72,6 @@ nav:
       - pynspd.NspdFeature: api/feature.md
       - pynspd.schemas.options.NspdProperties: api/properties.md
       - pynspd.schemas.options.NspdOptions: api/options.md
-      - pynspd.types: api/types.md
+      - pynspd.map_types: api/types.md
       - pynspd.errors: api/errors.md
   - Как поддержать проект: contributing.md

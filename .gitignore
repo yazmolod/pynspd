@@ -19,3 +19,4 @@ playground.ipynb
 .coveralls.yml
 .vscode/
 .cache/
+.hishel.sqlite

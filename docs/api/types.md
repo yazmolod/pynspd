@@ -1,1 +1,1 @@
-::: pynspd.types.enums.ThemeId
+::: pynspd.map_types.enums.ThemeId

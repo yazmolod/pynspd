@@ -29,6 +29,7 @@ from pynspd.client import (
 )
 from pynspd.errors import TooBigContour
 from pynspd.logger import logger
+from pynspd.map_types.enums import ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import (
@@ -36,7 +37,6 @@ from pynspd.schemas.responses import (
     NspdTabResponse,
     SearchResponse,
 )
-from pynspd.types.enums import ThemeId
 
 
 def retry_on_http_error(func):

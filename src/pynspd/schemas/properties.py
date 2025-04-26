@@ -78,10 +78,10 @@ class OptionProperties(BaseModel):
             if k in cls.model_fields and "datetime.date" in str(
                 cls.model_fields[k].annotation
             ):
-                if re.match(r"\d+\.\d+\.\d+", v):
-                    values[k] = datetime.strptime(v, "%d.%m.%Y")
-                elif v == "":
+                if v == "" or v is None:
                     values[k] = None
+                elif isinstance(v, str) and re.match(r"\d+\.\d+\.\d+", v):
+                    values[k] = datetime.strptime(v, "%d.%m.%Y")
         return values
 
     @classmethod
