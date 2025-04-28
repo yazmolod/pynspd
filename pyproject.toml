@@ -34,8 +34,9 @@ Issues = "https://github.com/yazmolod/pynspd/issues"
 Changelog = "https://github.com/yazmolod/pynspd/releases"
 
 [project.optional-dependencies]
-pynspd = [
+cli = [
     "geopandas>=1.0.1",
+    "openpyxl>=3.1.5",
     "typer>=0.15.2",
 ]
 
