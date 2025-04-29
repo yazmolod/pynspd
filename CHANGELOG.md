@@ -1,9 +1,10 @@
 # Changelog
 
-# Development
+## 1.0.0 - 2025-04-29
 
 ### Добавлено
 
+- Утилита для работы в командной строке ([CLI](https://yazmolod.github.io/pynspd/advanced/cli/))
 - Метод `.get_tab_data(feat, tab_name)` для получения данных из вкладки по ее имени
 
 ### Изменено
