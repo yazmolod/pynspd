@@ -2,7 +2,7 @@ import json
 import re
 from asyncio import sleep
 from functools import wraps
-from typing import Any, AsyncGenerator, Literal, Optional, Type, Union
+from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -533,27 +533,3 @@ class AsyncNspd(BaseNspdClient):
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в контуре"""
         return await self.search_in_contour(countour, Layer36049Feature)
-
-    async def search_landplots_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> AsyncGenerator[Layer36048Feature, None]:
-        """Поиск ЗУ в контуре"""
-        async for f in self.search_in_contour_iter(
-            countour, Layer36048Feature, only_intersects=only_intersects
-        ):
-            yield f
-
-    async def search_buildings_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> AsyncGenerator[Layer36049Feature, None]:
-        """Поиск ОКС в контуре"""
-        async for f in self.search_in_contour_iter(
-            countour, Layer36049Feature, only_intersects=only_intersects
-        ):
-            yield f

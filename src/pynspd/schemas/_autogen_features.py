@@ -484,7 +484,7 @@ class Options38967(OptionProperties):
     """Индекс"""
     process_ty_title: Optional[str] = None
     """Вид и степень развития негативного процесса"""
-    shape_area: Optional[Union[str, float]] = None
+    shape_area: Optional[float] = None
     """Площадь проявления негативного процесса, га"""
     zone_proya: Optional[str] = None
     """Зона проявления"""

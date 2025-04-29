@@ -2,7 +2,7 @@ import json
 import re
 from functools import wraps
 from time import sleep
-from typing import Any, Generator, Literal, Optional, Type, Union
+from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -299,9 +299,6 @@ class Nspd(BaseNspdClient):
             countour: Геометрический объект с контуром
             layer_def: Модель слоя
 
-        Raises:
-            TooBigContour: Слишком много объектов в контуре
-
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
@@ -526,27 +523,3 @@ class Nspd(BaseNspdClient):
     ) -> Optional[list[Layer36049Feature]]:
         """Поиск ОКС в контуре"""
         return self.search_in_contour(countour, Layer36049Feature)
-
-    def search_landplots_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> Generator[Layer36048Feature, None, None]:
-        """Поиск ЗУ в контуре"""
-        for f in self.search_in_contour_iter(
-            countour, Layer36048Feature, only_intersects=only_intersects
-        ):
-            yield f
-
-    def search_buildings_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> Generator[Layer36049Feature, None, None]:
-        """Поиск ОКС в контуре"""
-        for f in self.search_in_contour_iter(
-            countour, Layer36049Feature, only_intersects=only_intersects
-        ):
-            yield f
