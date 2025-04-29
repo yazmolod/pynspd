@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 
 class ThemeId(Enum):
@@ -21,3 +22,13 @@ class ThemeId(Enum):
 
     COMPLEXES_OF_OBJECTS = 15
     """Комплексы объектов"""
+
+
+TabTitle = Literal[
+    "Части ЗУ",
+    "Связанные ЗУ",
+    "Виды разрешенного использования",
+    "Состав ЕЗП",
+    "Части ОКС",
+    "Объекты",
+]

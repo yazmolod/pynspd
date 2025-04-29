@@ -29,7 +29,7 @@ from pynspd.client import (
 )
 from pynspd.errors import TooBigContour
 from pynspd.logger import logger
-from pynspd.map_types.enums import ThemeId
+from pynspd.map_types.enums import TabTitle, ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
 from pynspd.schemas.feature import Feat
 from pynspd.schemas.responses import (
@@ -533,6 +533,22 @@ class Nspd(BaseNspdClient):
         Получение данных с вкладки \"Объекты\"
         """
         return self._tab_groups_request(feat, "objectsList")
+
+    def get_tab_data(self, feat: NspdFeature, tab_name: TabTitle):
+        """Получение данных с указанной вкладки"""
+        match tab_name:
+            case "Части ЗУ":
+                return self.tab_land_parts(feat)
+            case "Связанные ЗУ":
+                return self.tab_land_links(feat)
+            case "Виды разрешенного использования":
+                return self.tab_permission_type(feat)
+            case "Состав ЕЗП":
+                return self.tab_composition_land(feat)
+            case "Части ОКС":
+                return self.tab_build_parts(feat)
+            case "Объекты":
+                return self.tab_objects_list(feat)
 
     #################
     ### SHORTCUTS ###
