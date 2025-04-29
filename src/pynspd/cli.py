@@ -52,7 +52,7 @@ CacheOption = Annotated[
         "--cache",
         "-c",
         help="Включить кэширование. Рекомендуется для больших запросов",
-        rich_help_panel="Общее",
+        rich_help_panel="General Options",
     ),
 ]
 OutputOption = Annotated[
@@ -64,7 +64,7 @@ OutputOption = Annotated[
             "Файл, в который будет сохранен результат поиска. "
             "Поддерживаются гео- (.gpkg, .geojson и пр.) и табличные форматы (.xlsx, .csv)"
         ),
-        rich_help_panel="Общее",
+        rich_help_panel="General Options",
     ),
 ]
 
@@ -74,18 +74,18 @@ LocalizeOption = Annotated[
         "--localize",
         "-l",
         help="Использовать названия колонок с сайта, а не из оригинальные",
-        rich_help_panel="Общее",
+        rich_help_panel="General Options",
     ),
 ]
 
-# TabOption = Annotated[
-#     Optional[TabTitle],
-#     typer.Option(
-#         "--tab",
-#         "-t",
-#         help="Использовать названия колонок с сайта, а не из оригинальные",
-#     ),
-# ]
+TabObjectsOption = Annotated[
+    bool,
+    typer.Option(
+        "--tab-objects",
+        help='Получить данные со вкладки "Объекты" для найденных объектов',
+        rich_help_panel="General Options",
+    ),
+]
 
 
 def define_cns(input_: str) -> list[str]:
@@ -146,8 +146,8 @@ def define_layer_def(layer_name: str) -> Type[BaseFeature]:
     """Определение типа слоя"""
     try:
         return NspdFeature.by_title(layer_name)
-    except UnknownLayer:
-        raise typer.BadParameter(f"{layer_name} не является слоем НСПД")
+    except UnknownLayer as e:
+        raise typer.BadParameter(f"{layer_name} не является слоем НСПД") from e
 
 
 def _progress_iter(items: Sequence[T]) -> Generator[T, None, None]:
@@ -175,12 +175,20 @@ def _get_features_from_list(
     client: Nspd, cns: list[str]
 ) -> Optional[list[NspdFeature]]:
     features = []
+    missing = []
     for cn in _progress_iter(cns):
         feat = client.find(cn)
         if feat is None:
-            print(f"{cn} не найден")
+            missing.append(cn)
             continue
         features.append(feat)
+    if missing:
+        print(
+            f":warning-emoji: [orange3] Не найдены {len(missing)} из {len(cns)} объектов:"
+        )
+        for m in missing:
+            print(f"[orange3]   - {m}")
+        print()
     if len(features) == 0:
         return None
     return features
@@ -194,14 +202,31 @@ def _get_features_from_geom(
     layer_def: Type[BaseFeature],
 ) -> Optional[list[BaseFeature]]:
     features = []
+    missing_count = 0
     for geom in _progress_iter(geoms):
         feats = method(geom, layer_def)
         if feats is None:
-            print(f"В {geom} ничего не найдено")
+            missing_count += 1
             continue
         features += feats
+    if missing_count:
+        print(
+            f":warning-emoji: [orange3] Ничего не найдено в {missing_count} из {len(geoms)} локаций"
+        )
+        print()
     if len(features) == 0:
         return None
+    return features
+
+
+def _get_tab_object(client: Nspd, features: list[NspdFeature]) -> list[NspdFeature]:
+    """Получение данных из вкладки"""
+    for feat in _progress_iter(features):
+        data = client.tab_objects_list(feat)
+        if data is None:
+            continue
+        assert feat.properties.options.model_extra is not None
+        feat.properties.options.model_extra["tab"] = data
     return features
 
 
@@ -210,11 +235,13 @@ def prepare_features(features: list[NspdFeature], localize: bool) -> gpd.GeoData
     for feat in features:
         if isinstance(feat, NspdFeature):
             feat = feat.cast()
+        assert feat.properties.options.model_extra is not None
+        props: dict[str, Any] = feat.properties.options.model_extra.pop("tab", {})
         if localize:
-            props = feat.properties.options.model_dump_human_readable()
+            props.update(feat.properties.options.model_dump_human_readable())
             props["Категория"] = feat.properties.category_name
         else:
-            props = feat.properties.options.model_dump()
+            props.update(feat.properties.options.model_dump())
             props["category"] = feat.properties.category_name
         props["geometry"] = feat.geometry.to_shape()
         prepared_features.append(props)
@@ -225,11 +252,11 @@ def process_output(
     features: Optional[list[NspdFeature]], output: Optional[Path], localize: bool
 ) -> None:
     if features is None:
-        print("Ничего не найдено")
+        print("[red]Ничего не найдено")
         raise typer.Abort()
     gdf = prepare_features(features, localize)
     if output is None:
-        print(gdf)
+        print(gdf.T)
         return
     elif output.suffix == ".xlsx":
         gdf.to_excel(output, index=False)
@@ -275,6 +302,7 @@ def geo(
     cache: CacheOption = None,
     output: OutputOption = None,
     localize: LocalizeOption = False,
+    add_tab_object: TabObjectsOption = False,
 ) -> None:
     """Поиск объектов по геоданным"""
     geoms = define_geoms(input)
@@ -286,6 +314,8 @@ def geo(
             features = _get_features_from_geom(
                 client.search_in_contour, geoms, layer_def
             )
+        if features and add_tab_object:
+            _get_tab_object(client, features)
     process_output(features, output, localize)
 
 
@@ -300,11 +330,14 @@ def find(
     cache: CacheOption = None,
     output: OutputOption = None,
     localize: LocalizeOption = False,
+    add_tab_object: TabObjectsOption = False,
 ) -> None:
     """Поиск объектов по списку к/н"""
     cns = define_cns(input)
     with Nspd(cache_storage=define_cache_storage(cache)) as client:
         features = _get_features_from_list(client, cns)
+        if features and add_tab_object:
+            features = _get_tab_object(client, features)
     process_output(features, output, localize)
 
 

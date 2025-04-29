@@ -105,3 +105,14 @@ def test_bad_layer_name():
     result = runner.invoke(app, ["geo", "./tests/data/poly.gpkg", "Hello World"])
     assert result.exit_code == 2
     assert "не является слоем НСПД" in result.stdout
+
+
+def test_tab_output():
+    result = runner.invoke(app, ["find", "77:07:0006001:1020", "--tab-objects"])
+    assert result.exit_code == 0
+    assert "Помещения (количество)" in result.stdout
+    result = runner.invoke(
+        app, ["geo", "Point (37.5106798 55.729467)", "--tab-objects"]
+    )
+    assert result.exit_code == 0
+    assert "Объект недвижимости" in result.stdout
