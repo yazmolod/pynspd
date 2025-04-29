@@ -41,7 +41,7 @@ cli = [
 ]
 
 [project.scripts]
-pynspd = "src.pynspd.cli:main"
+pynspd = "pynspd.cli:main"
 
 [build-system]
 requires = ["hatchling"]
