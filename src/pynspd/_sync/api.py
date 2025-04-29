@@ -1,7 +1,6 @@
 import json
 import re
 from functools import wraps
-from hashlib import md5
 from time import sleep
 from typing import Any, Generator, Literal, Optional, Type, Union
 
@@ -18,8 +17,7 @@ from httpx import (
     TimeoutException,
 )
 from httpx._types import ProxyTypes, QueryParamTypes
-from shapely import MultiPolygon, Point, Polygon, box, to_geojson
-from typing_extensions import deprecated
+from shapely import MultiPolygon, Point, Polygon, to_geojson
 
 from pynspd.client import (
     NSPD_CACHE_CONTROLLER,
@@ -27,7 +25,6 @@ from pynspd.client import (
     BaseNspdClient,
     get_client_args,
 )
-from pynspd.errors import TooBigContour
 from pynspd.logger import logger
 from pynspd.map_types.enums import TabTitle, ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -283,17 +280,12 @@ class Nspd(BaseNspdClient):
                 ],
             },
         }
-        try:
-            response = self.request(
-                "post",
-                "/api/geoportal/v1/intersects",
-                params={"typeIntersect": "fullObject"},
-                json=payload,
-            )
-        except HTTPStatusError as e:
-            if e.response.status_code == 500 and e.response.json()["code"] == 400004:
-                raise TooBigContour from e
-            raise e
+        response = self.request(
+            "post",
+            "/api/geoportal/v1/intersects",
+            params={"typeIntersect": "fullObject"},
+            json=payload,
+        )
         return self._validate_feature_collection_response(response)
 
     def search_in_contour(
@@ -317,73 +309,6 @@ class Nspd(BaseNspdClient):
             countour, layer_def.layer_meta.category_id
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
-
-    def _iter_search_in_box(
-        self,
-        xmin: float,
-        ymin: float,
-        xmax: float,
-        ymax: float,
-        layer_def: Type[Feat],
-    ) -> Generator[Feat, None, None]:
-        """Рекурсивный поиск объектов в границах"""
-
-        def split_extent(xmin: float, ymin: float, xmax: float, ymax: float):
-            midx = (xmax + xmin) / 2
-            midy = (ymax + ymin) / 2
-            yield xmin, ymin, midx, midy
-            yield midx, midy, xmax, ymax
-            yield midx, ymin, xmax, midy
-            yield xmin, midy, midx, ymax
-
-        try:
-            feats = self.search_in_contour(box(xmin, ymin, xmax, ymax), layer_def)
-            if feats is None:
-                return
-            for f in feats:
-                yield f
-        except TooBigContour:
-            for sp_xmin, sp_ymin, sp_xmax, sp_ymax in split_extent(
-                xmin, ymin, xmax, ymax
-            ):
-                for f in self._iter_search_in_box(
-                    sp_xmin, sp_ymin, sp_xmax, sp_ymax, layer_def
-                ):
-                    yield f
-
-    def search_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        layer_def: Type[Feat],
-        *,
-        only_intersects: bool = False,
-    ) -> Generator[Feat, None, None]:
-        """Поиск объектов в указанных границах.
-
-        Внимание: количество запросов кратно зависит от площади поиска.
-        Если вы хотите вручную обрабатывать ошибку `TooBigContour`,
-        используйте метод `search_in_contour(...)`
-
-        Args:
-            countour: Геометрический объект с контуром
-            layer_def: Модель слоя
-            only_intersects:
-                Возвращать только те объекты,
-                которые пересекаются с изначальным контуром. По умолчанию False
-
-        Returns:
-            Генератор объектов слоя в указанной области
-        """
-        cache = set()
-        xmin, ymin, xmax, ymax = countour.bounds
-        for feat in self._iter_search_in_box(xmin, ymin, xmax, ymax, layer_def):
-            cache_id = md5(feat.model_dump_json().encode()).hexdigest()
-            if cache_id in cache:
-                continue
-            cache.add(cache_id)
-            if only_intersects and not countour.intersects(feat.geometry.to_shape()):
-                continue
-            yield feat
 
     ####################
     ### POINT SEARCH ###
@@ -615,136 +540,6 @@ class Nspd(BaseNspdClient):
             yield f
 
     def search_buildings_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> Generator[Layer36049Feature, None, None]:
-        """Поиск ОКС в контуре"""
-        for f in self.search_in_contour_iter(
-            countour, Layer36049Feature, only_intersects=only_intersects
-        ):
-            yield f
-
-    ####################
-    ### DEPRECATIONS ###
-    ####################
-
-    @deprecated("Will be removed in 0.8.0; use `.find(...)` instead`")
-    def search_in_theme(
-        self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
-    ) -> Optional[NspdFeature]:
-        return self.find(query, theme_id)
-
-    @deprecated("Will be removed in 0.8.0; use `.find_in_layer(...)` instead`")
-    def search_in_layer_by_model(
-        self, query: str, layer_def: Type[Feat]
-    ) -> Optional[Feat]:
-        return self.find_in_layer(query, layer_def)
-
-    @deprecated("Will be removed in 0.8.0; use `.search_at_point(...)` instead`")
-    def search_at_point_by_model(
-        self, pt: Point, layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
-        return self.search_at_point(pt, layer_def)
-
-    @deprecated("Will be removed in 0.8.0; use `.search_in_contour(...)` instead`")
-    def search_in_contour_by_model(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        layer_def: Type[Feat],
-    ) -> Optional[list[Feat]]:
-        return self.search_in_contour(countour, layer_def)
-
-    @deprecated("Will be removed in 0.8.0; use `.find_landplot(...)` instead`")
-    def find_zu(self, query: str) -> Optional[Layer36048Feature]:
-        """Найти ЗУ по кадастровому номеру"""
-        return self._filter_search_by_query(self.search_zu(query), query)
-
-    @deprecated("Will be removed in 0.8.0; use `.find_building(...)` instead`")
-    def find_oks(self, query: str) -> Optional[Layer36049Feature]:
-        """Найти ОКС по кадастровому номеру"""
-        return self._filter_search_by_query(self.search_oks(query), query)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_landplots_at_point(...)` instead`"
-    )
-    def search_zu_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в точке"""
-        return self.search_at_point(pt, Layer36048Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_buildings_at_point(...)` instead`"
-    )
-    def search_oks_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в точке"""
-        return self.search_at_point(pt, Layer36049Feature)
-
-    @deprecated("Will be removed in 0.8.0; use `.search_landplots(...)` instead`")
-    def search_zu(self, cn: str) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ по кадастровому номеру"""
-        return self.search_in_layer(cn, Layer36048Feature)
-
-    @deprecated("Will be removed in 0.8.0; use `.search_buildings(...)` instead`")
-    def search_oks(self, cn: str) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС по кадастровому номеру"""
-        return self.search_in_layer(cn, Layer36049Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_landplots_at_coords(...)` instead`"
-    )
-    def search_zu_at_coords(
-        self, lat: float, lng: float
-    ) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в координатах"""
-        return self.search_at_coords(lat, lng, Layer36048Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_buildings_at_coords(...)` instead`"
-    )
-    def search_oks_at_coords(
-        self, lat: float, lng: float
-    ) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в координатах"""
-        return self.search_at_coords(lat, lng, Layer36049Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_landplots_in_contour(...)` instead`"
-    )
-    def search_zu_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36048Feature]]:
-        """Поиск ЗУ в контуре"""
-        return self.search_in_contour(countour, Layer36048Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_buildings_in_contour(...)` instead`"
-    )
-    def search_oks_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36049Feature]]:
-        """Поиск ОКС в контуре"""
-        return self.search_in_contour(countour, Layer36049Feature)
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_landplots_in_contour_iter(...)` instead`"
-    )
-    def search_zu_in_contour_iter(
-        self,
-        countour: Union[Polygon, MultiPolygon],
-        *,
-        only_intersects: bool = False,
-    ) -> Generator[Layer36048Feature, None, None]:
-        """Поиск ЗУ в контуре"""
-        for f in self.search_in_contour_iter(
-            countour, Layer36048Feature, only_intersects=only_intersects
-        ):
-            yield f
-
-    @deprecated(
-        "Will be removed in 0.8.0; use `.search_buildings_in_contour_iter(...)` instead`"
-    )
-    def search_oks_in_contour_iter(
         self,
         countour: Union[Polygon, MultiPolygon],
         *,

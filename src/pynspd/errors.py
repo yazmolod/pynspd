@@ -1,22 +1,16 @@
-class UnknownBadSearchResponse(Exception):
+class PynspdError(Exception):
+    """Базовый класс библиотеки"""
+
+
+class UnknownBadSearchResponse(PynspdError):
     """Неожиданный ответ при поиске"""
 
 
-class UnknownLayer(Exception):
+class UnknownLayer(PynspdError):
     """Не найдено определение слоя (по имени, категории и тд)"""
 
 
-class TooBigContour(Exception):
-    """Контур слишком большой, сервер не может ответить"""
-
-    def __init__(self):
-        super().__init__(
-            "Попробуйте уменьшить площадь поиска "
-            "или воспользоваться методом `.search_in_contour_iter(...)`"
-        )
-
-
-class AmbiguousSearchError(Exception):
+class AmbiguousSearchError(PynspdError):
     """Поисковой запрос выдал неоднозначный результат"""
 
     def __init__(self, query: str):

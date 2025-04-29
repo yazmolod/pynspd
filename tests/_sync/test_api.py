@@ -1,11 +1,9 @@
 from functools import partial
 
-import pytest
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
 
 from pynspd import Nspd, NspdFeature
-from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
@@ -68,25 +66,6 @@ def test_search_buildings_in_contour(api: Nspd):
     assert all([isinstance(i, Layer36049Feature) for i in features])
     cns = [i.properties.options.cad_num for i in features]
     assert set(["77:01:0001011:1164", "77:01:0001011:1002"]) == set(cns)
-
-
-def test_search_in_big_contour(cache_api: Nspd):
-    with pytest.raises(TooBigContour):
-        contour = wkt.loads(
-            "Polygon ((37.6951 55.7320, 37.7338 55.7279, 37.7469 55.7563, 37.7283 55.7531, 37.7196 55.7343, 37.6981 55.7359, 37.6951 55.7320))"
-        )
-        cache_api.search_landplots_in_contour(contour)
-    for oks_feat in cache_api.search_buildings_in_contour_iter(contour):
-        assert oks_feat is not None
-        break
-    feats_all = [f for f in cache_api.search_landplots_in_contour_iter(contour)]
-    feats_int = [
-        f
-        for f in cache_api.search_landplots_in_contour_iter(
-            contour, only_intersects=True
-        )
-    ]
-    assert len(feats_all) > len(feats_int)
 
 
 def test_search_in_contour_empty(api: Nspd):
