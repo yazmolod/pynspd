@@ -62,7 +62,7 @@ OutputOption = Annotated[
         "-o",
         help=(
             "Файл, в который будет сохранен результат поиска. "
-            "Поддерживаются гео- (.gpkg, .geojson и пр.) и табличные форматы (.xlsx, .csv, .html)"
+            "Поддерживаются гео- (.gpkg, .geojson и пр.) и табличные форматы (.xlsx, .csv)"
         ),
         rich_help_panel="Общее",
     ),
@@ -147,7 +147,7 @@ def define_layer_def(layer_name: str) -> Type[BaseFeature]:
     try:
         return NspdFeature.by_title(layer_name)
     except UnknownLayer:
-        raise typer.BadParameter(f"{layer_name} не является слоем с НСПД")
+        raise typer.BadParameter(f"{layer_name} не является слоем НСПД")
 
 
 def _progress_iter(items: Sequence[T]) -> Generator[T, None, None]:
@@ -235,8 +235,6 @@ def process_output(
         gdf.to_excel(output, index=False)
     elif output.suffix == ".csv":
         gdf.to_csv(output, index=False)
-    elif output.suffix == ".html":
-        gdf.to_html(output, index=False)
     else:
         gdf.to_file(output)
     print(f"[green]Найдено {len(gdf)} объектов, сохранено в файл {output.resolve()}[/]")
