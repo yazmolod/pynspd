@@ -78,9 +78,9 @@ with Nspd() as nspd:
 
 ## Работа из консоли (CLI):
 
-Рекомендуется установка через утилиту [uv](https://docs.astral.sh/uv/) для доступа из консоли:
+Установка:
 ``` shell
-$ uv tool install pynspd
+$ pip install pynspd[cli]
 $ pynspd --version
 1.0.0
 ```
