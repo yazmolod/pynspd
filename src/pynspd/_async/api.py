@@ -301,9 +301,6 @@ class AsyncNspd(BaseNspdClient):
             countour: Геометрический объект с контуром
             layer_def: Модель слоя
 
-        Raises:
-            TooBigContour: Слишком много объектов в контуре
-
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """

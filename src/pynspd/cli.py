@@ -27,10 +27,14 @@ from rich.progress import (
 )
 from shapely import GEOSException, MultiPolygon, Point, Polygon, from_wkt
 
-from pynspd import Nspd, NspdFeature, UnknownLayer
+from pynspd import Nspd, NspdFeature, UnknownLayer, __version__
 from pynspd.schemas import BaseFeature
 
-app = typer.Typer(pretty_exceptions_show_locals=False, no_args_is_help=True)
+app = typer.Typer(
+    pretty_exceptions_show_locals=False,
+    no_args_is_help=True,
+    help="Утилита командной строки для поиска на НСПД",
+)
 CN_PATTERN = re.compile(r"\d+:\d+:\d+:\d+")
 
 
@@ -47,7 +51,8 @@ CacheOption = Annotated[
     typer.Option(
         "--cache",
         "-c",
-        help="Включить кэширование",
+        help="Включить кэширование. Рекомендуется для больших запросов",
+        rich_help_panel="Общее",
     ),
 ]
 OutputOption = Annotated[
@@ -55,7 +60,11 @@ OutputOption = Annotated[
     typer.Option(
         "--output",
         "-o",
-        help="Файл, в который будет сохранен результат поиска",
+        help=(
+            "Файл, в который будет сохранен результат поиска. "
+            "Поддерживаются гео- (.gpkg, .geojson и пр.) и табличные форматы (.xlsx, .csv, .html)"
+        ),
+        rich_help_panel="Общее",
     ),
 ]
 
@@ -65,8 +74,18 @@ LocalizeOption = Annotated[
         "--localize",
         "-l",
         help="Использовать названия колонок с сайта, а не из оригинальные",
+        rich_help_panel="Общее",
     ),
 ]
+
+# TabOption = Annotated[
+#     Optional[TabTitle],
+#     typer.Option(
+#         "--tab",
+#         "-t",
+#         help="Использовать названия колонок с сайта, а не из оригинальные",
+#     ),
+# ]
 
 
 def define_cns(input_: str) -> list[str]:
@@ -112,9 +131,9 @@ def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon
     return geometry
 
 
-def define_cache_storage(cache_type: Optional[CacheType]) -> Optional[BaseStorage]:
+def define_cache_storage(type_: Optional[CacheType]) -> Optional[BaseStorage]:
     """Опредение типа кэш-хранилища"""
-    match cache_type:
+    match type_:
         case CacheType.FILE:
             return FileStorage()
         case CacheType.SQLITE:
@@ -211,6 +230,7 @@ def process_output(
     gdf = prepare_features(features, localize)
     if output is None:
         print(gdf)
+        return
     elif output.suffix == ".xlsx":
         gdf.to_excel(output, index=False)
     elif output.suffix == ".csv":
@@ -222,11 +242,33 @@ def process_output(
     print(f"[green]Найдено {len(gdf)} объектов, сохранено в файл {output.resolve()}[/]")
 
 
+def version_callback(version: bool = False) -> None:
+    if version:
+        print(__version__)
+        raise typer.Exit()
+
+
+@app.callback()
+def common(
+    version: Annotated[
+        bool,
+        typer.Option(
+            "-v",
+            "--version",
+            help="Show current version",
+            is_eager=True,
+            callback=version_callback,
+        ),
+    ] = False,
+):
+    pass
+
+
 @app.command(no_args_is_help=True)
 def geo(
     input: Annotated[
         str,
-        typer.Argument(help="Путь к файлу с геоданными или WKT"),
+        typer.Argument(help="Путь к файлу с геоданными или WKT", show_default=False),
     ],
     layer_name: Annotated[
         str,
@@ -253,7 +295,9 @@ def geo(
 def find(
     input: Annotated[
         str,
-        typer.Argument(help="Список искомых к/н. Может быть текстовым файлом"),
+        typer.Argument(
+            help="Список искомых к/н. Может быть текстовым файлом", show_default=False
+        ),
     ],
     cache: CacheOption = None,
     output: OutputOption = None,

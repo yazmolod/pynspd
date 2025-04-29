@@ -76,6 +76,27 @@ with Nspd() as nspd:
 
 С более детальным описанием библиотеки можно ознакомиться в [руководстве пользователя](https://yazmolod.github.io/pynspd/userguide/).
 
+## Работа из консоли (CLI):
+
+Рекомендуется установка через утилиту [uv](https://docs.astral.sh/uv/) для доступа из консоли:
+``` shell
+$ uv tool install pynspd
+$ pynspd --version
+1.0.0
+```
+
+Для поиска по к/н:
+``` shell
+$ pynspd find "77:05:0001005:19"
+```
+
+Для поиска по геометрии:
+``` shell
+$ pynspd geo "Point (37.562 55.605)" 
+```
+
+Подробный обзор можно найти в [этой статье](https://yazmolod.github.io/pynspd/advanced/cli/).
+
 ## Поддержка проекта
 
 Самый простой способ - это оставить ⭐ проекту на [GitHub](https://github.com/yazmolod/pynspd) и отправить его своим коллегам. 

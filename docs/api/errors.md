@@ -1,5 +1,3 @@
-::: pynspd.UnknownLayer
+::: pynspd.errors.UnknownLayer
 
-::: pynspd.TooBigContour
-
-::: pynspd.AmbiguousSearchError
+::: pynspd.errors.AmbiguousSearchError

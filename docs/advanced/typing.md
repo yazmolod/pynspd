@@ -1,5 +1,5 @@
-Если вы не знакомы с таким понятием в python, как *"type annotation"*, 
-то рекомендуем ознакомиться с основами [в этом уроке из документации FastAPI](https://fastapi.tiangolo.com/it/python-types/#add-types).
+Если вы не знакомы с таким понятием в python, как *"type hints"* (или *"type annotation"*), 
+то рекомендуем ознакомиться с ними [в этом уроке из документации FastAPI](https://fastapi.tiangolo.com/it/python-types).
 
 В этой же статье мы покроем те области, которые связаны непосредственно с `pynspd`.
 
