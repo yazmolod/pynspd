@@ -106,24 +106,33 @@ def define_cns(input_: str) -> list[str]:
 def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon]:
     """Проверка гео-файла и получение геометрии из него"""
     maybe_file = Path(input_)
-    if maybe_file.exists():
+    coords_pattern = re.compile(r"(\d{2,3}\.\d+),? *(\d{2,3}\.\d+)")
+    if maybe_file.suffix == ".txt":
+        pts_text = maybe_file.read_text("utf-8")
+    else:
+        pts_text = input_
+    pts_text = pts_text.strip()
+    if coords_pattern.match(pts_text):
+        coords = [list(map(float, i)) for i in coords_pattern.findall(pts_text)]
+        pts = [Point(*i[::-1]) for i in coords]
+        geoseries = gpd.GeoSeries(pts, crs=4326)
+    elif maybe_file.exists():
         try:
-            gdf = gpd.read_file(input_)
+            geoseries = gpd.read_file(input_).geometry
         except DataSourceError as e:
             raise typer.BadParameter(
                 f"{input_} не является поддерживаемым файлом"
             ) from e
-
     else:
         try:
             wkt_geom = from_wkt(input_)
-            gdf = gpd.GeoDataFrame([{"geometry": wkt_geom}], crs=4326)
+            geoseries = gpd.GeoSeries([wkt_geom], crs=4326)
         except GEOSException as e:
             raise typer.BadParameter(
                 f"Файл {input_} не существует или не является валидным WKT"
             ) from e
-    geom_types = gdf.geom_type.unique().tolist()
-    geometry = gdf.geometry.tolist()
+    geom_types = geoseries.geom_type.unique().tolist()
+    geometry = geoseries.tolist()
     if len(geom_types) > 1:
         raise typer.BadParameter("Не поддерживаются файла со смешанной геометрией")
     if geom_types[0] not in ("Point", "Polygon", "MultiPolygon"):
@@ -293,7 +302,10 @@ def common(
 def geo(
     input: Annotated[
         str,
-        typer.Argument(help="Путь к файлу с геоданными или WKT", show_default=False),
+        typer.Argument(
+            help="Путь к файлу с геоданными, координаты точек или WKT",
+            show_default=False,
+        ),
     ],
     layer_name: Annotated[
         str,

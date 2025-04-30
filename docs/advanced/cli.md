@@ -106,8 +106,12 @@ $ pynspd geo
 $ pynspd geo my_geo.geojson
 ```
 
-- Строка геоданных формата [WKT](https://ru.wikipedia.org/wiki/WKT). 
-Требования к геометрии аналогичны предыдущему варианту
+- Координаты точки (lat, lng). Может быть несколько; могут содержаться в файле `.txt`:
+``` shell
+$ pynspd geo "55.605, 37.562"
+```
+
+- Строка геоданных формата [WKT](https://ru.wikipedia.org/wiki/WKT):
 ``` shell
 $ pynspd geo "Point (37.562 55.605)"
 ```
