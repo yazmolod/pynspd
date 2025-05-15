@@ -1,5 +1,7 @@
 import json
+import os
 import re
+import warnings
 from asyncio import sleep
 from functools import wraps
 from typing import Any, Literal, Optional, Type, Union
@@ -24,7 +26,6 @@ from pynspd.client import (
     NSPD_CACHE_CONTROLLER,
     SSL_CONTEXT,
     BaseNspdClient,
-    get_client_args,
 )
 from pynspd.errors import BlockedIP
 from pynspd.logger import logger
@@ -44,7 +45,7 @@ def retry_on_http_error(func):
     @wraps(func)
     async def wrapper(self: "AsyncNspd", *args, **kwargs):
         attempt = 0
-        while attempt <= self.retries:
+        while attempt <= self._retries:
             logger_suffix = f'Wrapped method "{func.__name__}" -'
             try:
                 logger.debug("%s start request", logger_suffix)
@@ -57,11 +58,11 @@ def retry_on_http_error(func):
                         logger.debug("%s not server error", logger_suffix)
                         raise e
                 attempt += 1
-                if attempt > self.retries:
+                if attempt > self._retries:
                     logger.debug("%s run out attempts", logger_suffix)
                     raise e
                 await sleep(1)
-                logger.debug("%s attempt %d/%d", logger_suffix, attempt, self.retries)
+                logger.debug("%s attempt %d/%d", logger_suffix, attempt, self._retries)
             except RemoteProtocolError:
                 # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
                 logger.debug("%s server disconnect", logger_suffix)
@@ -89,9 +90,15 @@ class AsyncNspd(BaseNspdClient):
             Использовать прокси для запросов. По умолчанию None.
         cache_storage:
             Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
+
             Если установлен, то при повторном запросе результат будет
             извлекаться из хранилища кэша, что сильно увеличивает производительность
-            и снижает риск ошибки 429 - Too many requests. По умолчанию None.
+            и снижает риск ошибки 429 (Too many requests). По умолчанию None.
+        client_dns_resolve:
+            Использовать в запросах IP адрес НСПД вместо доменного имени.
+            Рекомендуется включить, если используемый прокси
+            не может сам разрешать доменные имена.
+            По умолчанию False.
     """
 
     def __init__(
@@ -101,33 +108,58 @@ class AsyncNspd(BaseNspdClient):
         retries: int = 10,
         proxy: Optional[ProxyTypes] = None,
         cache_storage: Optional[AsyncBaseStorage] = None,
+        client_dns_resolve: bool = False,
     ):
-        super().__init__(retries=retries)
-        self._client = self._build_client(
-            timeout=timeout,
-            retries=retries,
-            proxy=proxy,
-            cache_storage=cache_storage,
+        self._timeout = int(os.getenv("PYNSPD_CLIENT_TIMEOUT", 0)) or timeout
+        self._retries = int(os.getenv("PYNSPD_CLIENT_RETRIES") or retries)
+        self._proxy = os.getenv("PYNSPD_CLIENT_PROXY") or proxy
+        self._client_dns_resolve = (
+            os.getenv("PYNSPD_CLIENT_DNS_RESOLVE", "").lower() in ("1", "true")
+            or client_dns_resolve
         )
+        self._cache_storage = cache_storage
 
-    @staticmethod
-    def _build_client(
-        timeout: Optional[int],
-        retries: int,
-        proxy: Optional[ProxyTypes],
-        cache_storage: Optional[AsyncBaseStorage],
-    ) -> AsyncClient:
-        client_args = get_client_args(timeout)
+        self._client = self._build_client()
+
+    def _build_client(self) -> AsyncClient:
         transport: AsyncBaseTransport = AsyncHTTPTransport(
-            verify=SSL_CONTEXT, retries=retries, proxy=proxy
+            verify=SSL_CONTEXT, retries=self._retries, proxy=self._proxy
         )
-        if cache_storage is not None:
+        if self._cache_storage is not None:
             transport = AsyncCacheTransport(
                 transport=transport,
-                storage=cache_storage,
+                storage=self._cache_storage,
                 controller=NSPD_CACHE_CONTROLLER,
             )
-        return AsyncClient(**client_args, transport=transport)
+
+        base_url = (
+            "https://nspd.gov.ru"
+            if not self._client_dns_resolve
+            else "https://2.63.246.76"
+        )
+        return AsyncClient(
+            base_url=base_url,
+            timeout=self._timeout,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
+                "Referer": "https://nspd.gov.ru",
+                "Host": "nspd.gov.ru",
+            },
+            transport=transport,
+        )
+
+    async def _rebuild_client(self):
+        assert not self._client_dns_resolve
+        assert self._client.base_url == "https://nspd.gov.ru"
+        warnings.warn(
+            "Текущий прокси не может сам разрешать доменные имена, "
+            "рекомендуется использовать client_dns_resolve=True, "
+            "чтобы клиент заранее подставлял IP-адреса и уменьшал нагрузку на соединение",
+            stacklevel=7,
+        )
+        await self._client.aclose()
+        self._client_dns_resolve = True
+        self._client = self._build_client()
 
     async def __aenter__(self):
         return self
@@ -157,10 +189,9 @@ class AsyncNspd(BaseNspdClient):
             if (
                 "Connection not allowed by ruleset" in msg
                 or "503 Target host denied" in msg
-            ):
+            ) and not self._client_dns_resolve:
                 logger.debug("Proxy can't resolve dns; change to ip mode")
-                assert self._client.base_url == "https://nspd.gov.ru"
-                self._client.base_url = "https://2.63.246.76"
+                self._rebuild_client()
                 return await self.request(method, url, params, json)
             raise e
         if r.status_code == 403:

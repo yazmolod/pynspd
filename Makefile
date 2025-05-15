@@ -13,7 +13,7 @@ autogen:
 	uv run scripts/autogeneration.py && make lint
 
 tests:
-	uv run coverage run -m pytest
+	uv run coverage run -m pytest tests
 
 coverage:
 	uv run coveralls && uv run coverage html && start "" "htmlcov\index.html"

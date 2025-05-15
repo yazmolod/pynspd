@@ -16,18 +16,6 @@ SSL_CONTEXT = ssl._create_unverified_context()
 SSL_CONTEXT.set_ciphers("ALL:@SECLEVEL=1")
 
 
-def get_client_args(timeout: Optional[int]) -> dict:
-    return dict(
-        base_url="https://nspd.gov.ru",
-        timeout=timeout,
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
-            "Referer": "https://nspd.gov.ru",
-            "Host": "nspd.gov.ru",
-        },
-    )
-
-
 def _cache_key_generator(request: Request, body: Optional[bytes]) -> str:
     body = body or b""
     key = generate_key(request, body)
@@ -43,9 +31,6 @@ NSPD_CACHE_CONTROLLER = Controller(
 
 class BaseNspdClient:
     """Базовый класс, не зависящий от sync/async контекста"""
-
-    def __init__(self, retries: int):
-        self.retries = retries
 
     @staticmethod
     def iter_cn(input_str: str) -> Generator[str, None, None]:
