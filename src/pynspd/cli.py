@@ -27,7 +27,8 @@ from rich.progress import (
 )
 from shapely import GEOSException, MultiPolygon, Point, Polygon, from_wkt
 
-from pynspd import Nspd, NspdFeature, UnknownLayer, __version__
+from pynspd import Nspd, NspdFeature, __version__
+from pynspd.errors import UnknownLayer
 from pynspd.schemas import BaseFeature
 
 app = typer.Typer(

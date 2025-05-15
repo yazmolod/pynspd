@@ -39,6 +39,9 @@ cli = [
     "openpyxl>=3.1.5",
     "typer>=0.15.2",
 ]
+socks = [
+    "socksio>=1.0.0",
+]
 
 [project.scripts]
 pynspd = "pynspd.cli:main"

@@ -12,6 +12,7 @@ from httpx import (
     AsyncClient,
     AsyncHTTPTransport,
     HTTPStatusError,
+    ProxyError,
     RemoteProtocolError,
     Response,
     TimeoutException,
@@ -25,6 +26,7 @@ from pynspd.client import (
     BaseNspdClient,
     get_client_args,
 )
+from pynspd.errors import BlockedIP
 from pynspd.logger import logger
 from pynspd.map_types.enums import TabTitle, ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -146,7 +148,23 @@ class AsyncNspd(BaseNspdClient):
     ) -> Response:
         """Базовый запрос к API НСПД"""
         logger.debug("Request %s", url)
-        r = await self._client.request(method, url, params=params, json=json)
+        try:
+            r = await self._client.request(method, url, params=params, json=json)
+        except ProxyError as e:
+            # Прокси не поддерживает DNS-resolve, необходимо использовать IP-адрес
+            # https://github.com/encode/httpx/issues/203#issuecomment-1017726203
+            msg = str(e)
+            if (
+                "Connection not allowed by ruleset" in msg
+                or "503 Target host denied" in msg
+            ):
+                logger.debug("Proxy can't resolve dns; change to ip mode")
+                assert self._client.base_url == "https://nspd.gov.ru"
+                self._client.base_url = "https://2.63.246.76"
+                return await self.request(method, url, params, json)
+            raise e
+        if r.status_code == 403:
+            raise BlockedIP
         r.raise_for_status()
         return r
 

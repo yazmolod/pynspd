@@ -1,6 +1,7 @@
 import pytest
 
-from pynspd import Nspd, ThemeId, UnknownLayer
+from pynspd import Nspd, ThemeId
+from pynspd.errors import UnknownLayer
 from pynspd.schemas import Layer36049Feature, Options36369, Options36383
 from pynspd.schemas.base_feature import BaseFeature
 
