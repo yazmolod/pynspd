@@ -13,6 +13,8 @@ from httpx import (
     AsyncBaseTransport,
     AsyncClient,
     AsyncHTTPTransport,
+    ConnectError,
+    HTTPError,
     HTTPStatusError,
     ProxyError,
     RemoteProtocolError,
@@ -44,28 +46,45 @@ def retry_on_http_error(func):
 
     @wraps(func)
     async def wrapper(self: "AsyncNspd", *args, **kwargs):
-        attempt = 0
-        while attempt <= self._retries:
-            logger_suffix = f'Wrapped method "{func.__name__}" -'
+        attempt = -1
+        last_error: Optional[Exception] = None
+        while True:
+            attempt += 1
+            logger_suffix = f'Wrapped method "{func.__name__}", retry {attempt} -'
+            if attempt > self._retries:
+                logger.debug("%s run out attempts", logger_suffix)
+                if last_error is None:
+                    last_error = Exception(
+                        f"Too many retries ({attempt}/{self._retries})"
+                    )
+                raise last_error
             try:
                 logger.debug("%s start request", logger_suffix)
                 return await func(self, *args, **kwargs)
-            except (TimeoutException, HTTPStatusError) as e:
-                if isinstance(e, HTTPStatusError):
+            except HTTPError as e:
+                last_error = e
+                if isinstance(e, RemoteProtocolError):
+                    logger.debug("%s remote protocol error", logger_suffix)
+                elif isinstance(e, ConnectError):
+                    logger.debug("%s connection error", logger_suffix)
+                elif isinstance(e, HTTPStatusError):
                     if e.response.status_code == 429:
                         logger.debug("%s too many requests", logger_suffix)
+                        await sleep(1)
                     elif e.response.status_code < 500:
                         logger.debug("%s not server error", logger_suffix)
                         raise e
-                attempt += 1
-                if attempt > self._retries:
-                    logger.debug("%s run out attempts", logger_suffix)
+                elif isinstance(e, TimeoutException):
+                    logger.debug("%s timeout", logger_suffix)
+                    await sleep(1)
+                else:
+                    logger.exception("%s unexpected exception", logger_suffix)
                     raise e
-                await sleep(1)
-                logger.debug("%s attempt %d/%d", logger_suffix, attempt, self._retries)
-            except RemoteProtocolError:
-                # Запрос иногда рандомно обрывается сервером, проходит при повторном запросе
-                logger.debug("%s server disconnect", logger_suffix)
+            except BlockedIP as e:
+                last_error = e
+                if not self._retry_on_blocked_ip:
+                    raise e
+                logger.debug("%s blocked IP, retrying", logger_suffix)
 
     return wrapper
 
@@ -94,11 +113,15 @@ class AsyncNspd(BaseNspdClient):
             Если установлен, то при повторном запросе результат будет
             извлекаться из хранилища кэша, что сильно увеличивает производительность
             и снижает риск ошибки 429 (Too many requests). По умолчанию None.
-        client_dns_resolve:
+        dns_resolve:
             Использовать в запросах IP адрес НСПД вместо доменного имени.
             Рекомендуется включить, если используемый прокси
             не может сам разрешать доменные имена.
             По умолчанию False.
+        retry_on_blocked_ip:
+            При получении ошибки 403 (доступ заблокирован для вашего IP),
+            продолжать попытки запроса до исчерпания retries.
+            Рекомендуется использовать только для rotating proxy. По умолчанию False.
     """
 
     def __init__(
@@ -108,14 +131,18 @@ class AsyncNspd(BaseNspdClient):
         retries: int = 10,
         proxy: Optional[ProxyTypes] = None,
         cache_storage: Optional[AsyncBaseStorage] = None,
-        client_dns_resolve: bool = False,
+        dns_resolve: bool = False,
+        retry_on_blocked_ip: bool = False,
     ):
-        self._timeout = int(os.getenv("PYNSPD_CLIENT_TIMEOUT", 0)) or timeout
-        self._retries = int(os.getenv("PYNSPD_CLIENT_RETRIES") or retries)
-        self._proxy = os.getenv("PYNSPD_CLIENT_PROXY") or proxy
-        self._client_dns_resolve = (
-            os.getenv("PYNSPD_CLIENT_DNS_RESOLVE", "").lower() in ("1", "true")
-            or client_dns_resolve
+        self._timeout = int(os.getenv("PYNSPD_TIMEOUT", "0")) or timeout
+        self._retries = int(os.getenv("PYNSPD_RETRIES") or retries)
+        self._proxy = os.getenv("PYNSPD_PROXY") or proxy
+        self._dns_resolve = (
+            os.getenv("PYNSPD_DNS_RESOLVE", "").lower() in ("1", "true") or dns_resolve
+        )
+        self._retry_on_blocked_ip = (
+            os.getenv("PYNSPD_RETRY_ON_BLOCKED_IP", "").lower() in ("1", "true")
+            or retry_on_blocked_ip
         )
         self._cache_storage = cache_storage
 
@@ -133,9 +160,7 @@ class AsyncNspd(BaseNspdClient):
             )
 
         base_url = (
-            "https://nspd.gov.ru"
-            if not self._client_dns_resolve
-            else "https://2.63.246.76"
+            "https://nspd.gov.ru" if not self._dns_resolve else "https://2.63.246.76"
         )
         return AsyncClient(
             base_url=base_url,
@@ -149,7 +174,7 @@ class AsyncNspd(BaseNspdClient):
         )
 
     async def _rebuild_client(self):
-        assert not self._client_dns_resolve
+        assert not self._dns_resolve
         assert self._client.base_url == "https://nspd.gov.ru"
         warnings.warn(
             "Текущий прокси не может сам разрешать доменные имена, "
@@ -158,7 +183,7 @@ class AsyncNspd(BaseNspdClient):
             stacklevel=7,
         )
         await self._client.aclose()
-        self._client_dns_resolve = True
+        self._dns_resolve = True
         self._client = self._build_client()
 
     async def __aenter__(self):
@@ -189,9 +214,9 @@ class AsyncNspd(BaseNspdClient):
             if (
                 "Connection not allowed by ruleset" in msg
                 or "503 Target host denied" in msg
-            ) and not self._client_dns_resolve:
+            ) and not self._dns_resolve:
                 logger.debug("Proxy can't resolve dns; change to ip mode")
-                self._rebuild_client()
+                await self._rebuild_client()
                 return await self.request(method, url, params, json)
             raise e
         if r.status_code == 403:

@@ -21,13 +21,13 @@ def test_400_error(httpx_mock: HTTPXMock, api: Nspd):
 
 
 def test_500_error(httpx_mock: HTTPXMock, api: Nspd):
-    api.retries = 1
+    api._retries = 1
     httpx_mock.add_response(status_code=500)
     httpx_mock.add_response(status_code=500)
     with pytest.raises(httpx.HTTPStatusError) as e:
         api.safe_request("get", "/api")
     assert e.value.response.status_code == 500
-    assert len(httpx_mock.get_requests()) > api.retries
+    assert len(httpx_mock.get_requests()) > api._retries
 
 
 def test_remote_disconnect_error(httpx_mock: HTTPXMock, api: Nspd):

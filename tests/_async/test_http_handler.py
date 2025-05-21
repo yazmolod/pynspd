@@ -24,13 +24,13 @@ async def test_400_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
 
 @pytest.mark.asyncio(scope="session")
 async def test_500_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
-    async_api.retries = 1
+    async_api._retries = 1
     httpx_mock.add_response(status_code=500)
     httpx_mock.add_response(status_code=500)
     with pytest.raises(httpx.HTTPStatusError) as e:
         await async_api.safe_request("get", "/api")
     assert e.value.response.status_code == 500
-    assert len(httpx_mock.get_requests()) > async_api.retries
+    assert len(httpx_mock.get_requests()) > async_api._retries
 
 
 @pytest.mark.asyncio(scope="session")

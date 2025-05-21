@@ -8,7 +8,7 @@ from hishel import AsyncFileStorage, FileStorage
 from pynspd import AsyncNspd, Nspd
 
 cache_folder = Path(__file__).parent / ".cache/hishel"
-dotenv.load_dotenv("../.env")
+dotenv.load_dotenv()
 
 
 @pytest.fixture(scope="session")
