@@ -1,6 +1,8 @@
+import os
 import re
 import ssl
-from typing import Any, Generator, Optional, Type
+import warnings
+from typing import Any, Generator, Optional, Type, TypeVar
 
 import httpx
 from hishel import Controller
@@ -10,6 +12,9 @@ from httpcore import Request
 from pynspd.errors import AmbiguousSearchError, UnknownLayer
 from pynspd.schemas import NspdFeature
 from pynspd.schemas.feature import Feat
+
+T = TypeVar("T")
+
 
 # Нет гарантий, что установлены сертификаты Минцифры, поэтому принудительно отключает проверку ssl
 SSL_CONTEXT = ssl._create_unverified_context()
@@ -111,3 +116,32 @@ class BaseNspdClient:
             ) and is_known_category(f):
                 filtered_features.append(f)
         return filtered_features
+
+    @staticmethod
+    def _str_var(var_name: str, v: T):
+        env_var = f"PYNSPD_{var_name.upper()}"
+        if os.getenv(env_var) is None:
+            return v
+        if v is not None:
+            warnings.warn(
+                f"Игнорируется аргумент '{var_name}', "
+                f"так как установлена переменная окружения {env_var}",
+                stacklevel=4,
+            )
+        return os.environ[env_var]
+
+    @classmethod
+    def _int_var(cls, var_name: str, v: T):
+        d = cls._str_var(var_name, v)
+        if d is None:
+            return None
+        return int(d)
+
+    @classmethod
+    def _bool_var(cls, var_name: str, v: T):
+        d = cls._str_var(var_name, v)
+        if isinstance(d, bool):
+            return d
+        if d.lower() in ("true", "1"):
+            return True
+        return False

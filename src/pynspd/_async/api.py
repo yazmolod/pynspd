@@ -1,5 +1,4 @@
 import json
-import os
 import re
 import warnings
 from asyncio import sleep
@@ -134,15 +133,12 @@ class AsyncNspd(BaseNspdClient):
         dns_resolve: bool = False,
         retry_on_blocked_ip: bool = False,
     ):
-        self._timeout = int(os.getenv("PYNSPD_TIMEOUT", "0")) or timeout
-        self._retries = int(os.getenv("PYNSPD_RETRIES") or retries)
-        self._proxy = os.getenv("PYNSPD_PROXY") or proxy
-        self._dns_resolve = (
-            os.getenv("PYNSPD_DNS_RESOLVE", "").lower() in ("1", "true") or dns_resolve
-        )
-        self._retry_on_blocked_ip = (
-            os.getenv("PYNSPD_RETRY_ON_BLOCKED_IP", "").lower() in ("1", "true")
-            or retry_on_blocked_ip
+        self._timeout = self._int_var("timeout", timeout)
+        self._retries = self._int_var("retries", retries)
+        self._proxy = self._str_var("proxy", proxy)
+        self._dns_resolve = self._bool_var("dns_resolve", dns_resolve)
+        self._retry_on_blocked_ip = self._bool_var(
+            "retry_on_blocked_ip", retry_on_blocked_ip
         )
         self._cache_storage = cache_storage
 
