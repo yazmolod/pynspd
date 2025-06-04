@@ -1,4 +1,4 @@
-# PyNSPD
+# pynspd
 
 <p align="center">
   <em> Python-библиотека для работы с <a href="https://nspd.gov.ru" target="_blank">НСПД - Национальной системой пространственных данных</a> (ex-ПКК)</em>

@@ -1,5 +1,4 @@
 import re
-from enum import Enum
 from pathlib import Path
 from typing import (
     Annotated,
@@ -14,7 +13,6 @@ from typing import (
 
 import geopandas as gpd
 import typer
-from hishel import BaseStorage, FileStorage, SQLiteStorage
 from pyogrio.errors import DataSourceError
 from rich import print
 from rich.progress import (
@@ -42,20 +40,6 @@ CN_PATTERN = re.compile(r"\d+:\d+:\d+:\d+")
 T = TypeVar("T")
 
 
-class CacheType(str, Enum):
-    FILE = "file"
-    SQLITE = "sqlite"
-
-
-CacheOption = Annotated[
-    Optional[CacheType],
-    typer.Option(
-        "--cache",
-        "-c",
-        help="Включить кэширование. Рекомендуется для больших запросов",
-        rich_help_panel="General Options",
-    ),
-]
 OutputOption = Annotated[
     Optional[Path],
     typer.Option(
@@ -139,17 +123,6 @@ def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon
     if geom_types[0] not in ("Point", "Polygon", "MultiPolygon"):
         raise typer.BadParameter(f"Не поддерживаемый тип геометрии - {geom_types[0]}")
     return geometry
-
-
-def define_cache_storage(type_: Optional[CacheType]) -> Optional[BaseStorage]:
-    """Опредение типа кэш-хранилища"""
-    match type_:
-        case CacheType.FILE:
-            return FileStorage()
-        case CacheType.SQLITE:
-            return SQLiteStorage()
-        case _:
-            return None
 
 
 def define_layer_def(layer_name: str) -> Type[BaseFeature]:
@@ -312,7 +285,6 @@ def geo(
         str,
         typer.Argument(help="Имя слоя с НСПД, в котором нужно производить поиск"),
     ] = "Земельные участки из ЕГРН",
-    cache: CacheOption = None,
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
@@ -320,7 +292,7 @@ def geo(
     """Поиск объектов по геоданным"""
     geoms = define_geoms(input)
     layer_def = define_layer_def(layer_name)
-    with Nspd(cache_storage=define_cache_storage(cache)) as client:
+    with Nspd() as client:
         if isinstance(geoms[0], Point):
             features = _get_features_from_geom(client.search_at_point, geoms, layer_def)
         else:
@@ -340,14 +312,13 @@ def find(
             help="Список искомых к/н. Может быть текстовым файлом", show_default=False
         ),
     ],
-    cache: CacheOption = None,
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
 ) -> None:
     """Поиск объектов по списку к/н"""
     cns = define_cns(input)
-    with Nspd(cache_storage=define_cache_storage(cache)) as client:
+    with Nspd() as client:
         features = _get_features_from_list(client, cns)
         if features and add_tab_object:
             features = _get_tab_object(client, features)

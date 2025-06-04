@@ -1,4 +1,4 @@
-site_name: PyNSPD
+site_name: pysnpd
 site_url: https://yazmolod.github.io/pynspd
 repo_url: https://github.com/yazmolod/pynspd
 
@@ -64,8 +64,7 @@ nav:
   - О проекте: README.md
   - Руководство пользователя: userguide.md
   - Расширенное руководство:
-    - Какой клиент выбрать?: advanced/sync_vs_async.md
-    - Настройка кэширования: advanced/caching.md
+    - Настройка клиента: advanced/client.md
     - Типизация ответов: advanced/typing.md
     - Работа из консоли (CLI): advanced/cli.md
   - API Reference: 
