@@ -1,5 +1,3 @@
-from functools import partial
-
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
 
@@ -97,19 +95,3 @@ def test_search_wrong_result(api: Nspd):
     assert features is not None
     feat = api.find("77:1:3033:1031")
     assert feat is None
-
-
-def test_cache_client(cache_api: Nspd):
-    req = partial(
-        cache_api.request,
-        "get",
-        "/api/geoportal/v2/search/geoportal",
-        params={
-            "query": "77:02:0021001:5304",
-            "thematicSearchId": 1,
-        },
-    )
-    r = req()
-    if not r.extensions.get("from_cache", False):
-        r = req()
-    assert r.extensions["from_cache"]

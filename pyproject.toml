@@ -46,7 +46,7 @@ redis = [
     "redis==6.0.0",
 ]
 sqlite = [
-    "aiosqlite>=0.21.0",
+    "anysqlite>=0.0.5",
 ]
 
 [project.scripts]

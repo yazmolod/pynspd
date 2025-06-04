@@ -30,6 +30,15 @@ from httpx import (
 from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, to_geojson
 
+try:
+    import sqlite3
+except ImportError:
+    sqlite3 = None  # type: ignore
+try:
+    import redis
+except ImportError:
+    redis = None  # type: ignore
+
 from pynspd.client import (
     NSPD_CACHE_CONTROLLER,
     SSL_CONTEXT,
@@ -87,10 +96,10 @@ def retry_on_http_error(func):
                     logger.exception("%s unexpected exception", logger_suffix)
                     raise e
             except BlockedIP as e:
+                logger.debug("%s blocked IP, retrying", logger_suffix)
                 last_error = e
                 if not self._retry_on_blocked_ip:
                     raise e
-                logger.debug("%s blocked IP, retrying", logger_suffix)
 
     return wrapper
 
@@ -146,7 +155,7 @@ class Nspd(BaseNspdClient):
         client_proxy: Optional[ProxyTypes] = None,
         client_dns_resolve: Optional[bool] = None,
         cache_storage: Optional[BaseStorage] = None,
-        cache_folder_path: Optional[str] = None,
+        cache_folder_path: Optional[Union[str, Path]] = None,
         cache_sqlite_url: Optional[str] = None,
         cache_redis_url: Optional[str] = None,
         cache_ttl: Optional[int] = None,
@@ -201,9 +210,7 @@ class Nspd(BaseNspdClient):
                 base_path=Path(self._cache_folder_path), ttl=self._cache_ttl
             )
         elif self._cache_sqlite_url is not None:
-            try:
-                import sqlite3
-            except ImportError:
+            if sqlite3 is None:
                 raise RuntimeError(
                     "Не установлены необходимые модули для кэширования этого типа. "
                     "Убедитесь, что вы установили `pynspd` с расширением `sqlite`.\n"
@@ -212,9 +219,7 @@ class Nspd(BaseNspdClient):
             conn = sqlite3.connect(self._cache_sqlite_url, check_same_thread=False)
             return SQLiteStorage(connection=conn, ttl=self._cache_ttl)
         elif self._cache_redis_url is not None:
-            try:
-                import redis
-            except ImportError:
+            if redis is None:
                 raise RuntimeError(
                     "Не установлены необходимые модули для кэширования этого типа. "
                     "Убедитесь, что вы установили `pynspd` с расширением `redis`.\n"

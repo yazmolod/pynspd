@@ -20,3 +20,4 @@ playground.ipynb
 .vscode/
 .cache/
 .hishel.sqlite
+.test.cache.sqlite

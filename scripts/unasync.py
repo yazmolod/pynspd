@@ -19,12 +19,12 @@ SUBS = [
     ("AsyncFileStorage", "FileStorage"),
     ("AsyncRedisStorage", "RedisStorage"),
     ("AsyncSQLiteStorage", "SQLiteStorage"),
+    ("AsyncInMemoryStorage", "InMemoryStorage"),
     ("AsyncNspd", "Nspd"),
     ("aclose", "close"),
     (r'@pytest.mark.asyncio\(scope="session"\)', ""),
     ("@pytest_asyncio", "@pytest"),
     ("async_api", "api"),
-    ("async_cache_api", "cache_api"),
     ("Асинхронный клиент", "Клиент"),
     (r"AsyncGenerator\[Feat, None\]:", "Generator[Feat, None, None]:"),
     (
@@ -36,7 +36,7 @@ SUBS = [
         "Generator[Layer36049Feature, None, None]:",
     ),
     ("AsyncGenerator", "Generator"),
-    ("aiosqlite", "sqlite3"),
+    ("anysqlite", "sqlite3"),
     ("redis.asyncio as redis", "redis"),
 ]
 COMPILED_SUBS = [

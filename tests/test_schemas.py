@@ -7,7 +7,7 @@ from pynspd.schemas.base_feature import BaseFeature
 
 
 def find(cn: str):
-    with Nspd(retries=10) as api:
+    with Nspd() as api:
         feat = api.find(cn)
         assert feat is not None
         return feat

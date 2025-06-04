@@ -1,5 +1,3 @@
-from functools import partial
-
 import pytest
 from shapely import wkt
 from shapely.geometry import MultiPolygon, Polygon
@@ -110,20 +108,3 @@ async def test_search_wrong_result(async_api: AsyncNspd):
     assert features is not None
     feat = await async_api.find("77:1:3033:1031")
     assert feat is None
-
-
-@pytest.mark.asyncio(scope="session")
-async def test_cache_client(async_cache_api: AsyncNspd):
-    req = partial(
-        async_cache_api.request,
-        "get",
-        "/async_api/geoportal/v2/search/geoportal",
-        params={
-            "query": "77:02:0021001:5304",
-            "thematicSearchId": 1,
-        },
-    )
-    r = await req()
-    if not r.extensions.get("from_cache", False):
-        r = await req()
-    assert r.extensions["from_cache"]

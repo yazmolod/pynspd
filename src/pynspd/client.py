@@ -145,6 +145,6 @@ class BaseNspdClient:
         d = cls._str_var(var_name, var, trust_env)
         if isinstance(d, bool):
             return d
-        if d.lower() in ("true", "1"):
+        if isinstance(d, str) and d.lower() in ("true", "1"):
             return True
         return False
