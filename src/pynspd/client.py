@@ -118,28 +118,31 @@ class BaseNspdClient:
         return filtered_features
 
     @staticmethod
-    def _str_var(var_name: str, v: T):
-        env_var = f"PYNSPD_{var_name.upper()}"
-        if os.getenv(env_var) is None:
-            return v
-        if v is not None:
-            warnings.warn(
-                f"Игнорируется аргумент '{var_name}', "
-                f"так как установлена переменная окружения {env_var}",
-                stacklevel=4,
-            )
-        return os.environ[env_var]
+    def _str_var(var_name: str, var: T, trust_env: bool):
+        if not trust_env:
+            return var
+        env_var_name = f"PYNSPD_{var_name.upper()}"
+        env_var = os.getenv(env_var_name)
+        if env_var is not None:
+            if var is not None:
+                warnings.warn(
+                    f"Используется переменная окружения {env_var_name}, "
+                    f"аргумент '{var_name}' проигнорирован",
+                    stacklevel=4,
+                )
+            return env_var
+        return var
 
     @classmethod
-    def _int_var(cls, var_name: str, v: T):
-        d = cls._str_var(var_name, v)
+    def _int_var(cls, var_name: str, var: T, trust_env: bool):
+        d = cls._str_var(var_name, var, trust_env)
         if d is None:
             return None
         return int(d)
 
     @classmethod
-    def _bool_var(cls, var_name: str, v: T):
-        d = cls._str_var(var_name, v)
+    def _bool_var(cls, var_name: str, var: T, trust_env: bool):
+        d = cls._str_var(var_name, var, trust_env)
         if isinstance(d, bool):
             return d
         if d.lower() in ("true", "1"):

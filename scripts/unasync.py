@@ -17,6 +17,8 @@ SUBS = [
     ("AsyncCacheTransport", "CacheTransport"),
     ("AsyncBaseStorage", "BaseStorage"),
     ("AsyncFileStorage", "FileStorage"),
+    ("AsyncRedisStorage", "RedisStorage"),
+    ("AsyncSQLiteStorage", "SQLiteStorage"),
     ("AsyncNspd", "Nspd"),
     ("aclose", "close"),
     (r'@pytest.mark.asyncio\(scope="session"\)', ""),
@@ -34,6 +36,8 @@ SUBS = [
         "Generator[Layer36049Feature, None, None]:",
     ),
     ("AsyncGenerator", "Generator"),
+    ("aiosqlite", "sqlite3"),
+    ("redis.asyncio as redis", "redis"),
 ]
 COMPILED_SUBS = [
     (re.compile(r"(^|\b)" + regex + r"($|\b)"), repl) for regex, repl in SUBS

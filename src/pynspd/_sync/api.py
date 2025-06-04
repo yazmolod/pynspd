@@ -2,12 +2,19 @@ import json
 import re
 import warnings
 from functools import wraps
+from pathlib import Path
 from time import sleep
 from typing import Any, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
-from hishel import BaseStorage, CacheTransport
+from hishel import (
+    BaseStorage,
+    CacheTransport,
+    FileStorage,
+    RedisStorage,
+    SQLiteStorage,
+)
 from httpx import (
     BaseTransport,
     Client,
@@ -98,56 +105,131 @@ class Nspd(BaseNspdClient):
     ```
 
     Args:
-        timeout:
+        client_timeout:
             Время ожидания ответа.
             Если не установлен - есть вероятность бесконечного ожидания. По умолчанию None.
-        retries:
+        client_retries:
             Количество попыток при неудачном запросе
             (таймаут, неожиданный обрыв соединения, 5хх ошибки). По умолчанию 10.
-        proxy:
-            Использовать прокси для запросов. По умолчанию None.
-        cache_storage:
-            Настройка хранения кэша (см. https://hishel.com/advanced/storages/).
-
-            Если установлен, то при повторном запросе результат будет
-            извлекаться из хранилища кэша, что сильно увеличивает производительность
-            и снижает риск ошибки 429 (Too many requests). По умолчанию None.
-        dns_resolve:
+        client_retry_on_blocked_ip:
+            При получении ошибки 403 (доступ заблокирован для вашего IP),
+            продолжать попытки запроса до исчерпания retries.
+            Рекомендуется использовать только c rotating proxy. По умолчанию False.
+        client_proxy:
+            Адрес для проксирования запросов. По умолчанию None.
+        client_dns_resolve:
             Использовать в запросах IP адрес НСПД вместо доменного имени.
             Рекомендуется включить, если используемый прокси
             не может сам разрешать доменные имена.
             По умолчанию False.
-        retry_on_blocked_ip:
-            При получении ошибки 403 (доступ заблокирован для вашего IP),
-            продолжать попытки запроса до исчерпания retries.
-            Рекомендуется использовать только для rotating proxy. По умолчанию False.
+        cache_folder_path:
+            Путь для файлового хранилища кэша. По умолчанию None.
+        cache_sqlite_url:
+            Строка подключения для sqlite-хранилища кэша. По умолчанию None.
+        cache_redis_url:
+            Строка подключения для redis-хранилища кэша. По умолчанию None.
+        cache_ttl:
+            Количество времени (в секундах) сколько будет храниться кэш. По умолчанию None.
+        cache_storage:
+            Ручная настройка объекта хранилища кэша (см. https://hishel.com/advanced/storages/).
+        trust_env:
+            Использовать переменные окружения для инициализации.
+            По умолчанию True.
     """
 
     def __init__(
         self,
         *,
-        timeout: Optional[int] = None,
-        retries: int = 10,
-        proxy: Optional[ProxyTypes] = None,
+        client_timeout: Optional[int] = None,
+        client_retries: Optional[int] = None,
+        client_retry_on_blocked_ip: Optional[bool] = None,
+        client_proxy: Optional[ProxyTypes] = None,
+        client_dns_resolve: Optional[bool] = None,
         cache_storage: Optional[BaseStorage] = None,
-        dns_resolve: bool = False,
-        retry_on_blocked_ip: bool = False,
+        cache_folder_path: Optional[str] = None,
+        cache_sqlite_url: Optional[str] = None,
+        cache_redis_url: Optional[str] = None,
+        cache_ttl: Optional[int] = None,
+        trust_env: bool = True,
     ):
-        self._timeout = self._int_var("timeout", timeout)
-        self._retries = self._int_var("retries", retries)
-        self._proxy = self._str_var("proxy", proxy)
-        self._dns_resolve = self._bool_var("dns_resolve", dns_resolve)
-        self._retry_on_blocked_ip = self._bool_var(
-            "retry_on_blocked_ip", retry_on_blocked_ip
+        self._timeout = self._int_var("client_timeout", client_timeout, trust_env)
+        self._retries = self._int_var("client_retries", client_retries, trust_env) or 10
+        self._retry_on_blocked_ip = (
+            self._bool_var(
+                "client_retry_on_blocked_ip", client_retry_on_blocked_ip, trust_env
+            )
+            or False
         )
-        self._cache_storage = cache_storage
+        self._proxy = self._str_var("client_proxy", client_proxy, trust_env)
+        self._dns_resolve = (
+            self._bool_var("client_dns_resolve", client_dns_resolve, trust_env) or False
+        )
 
-        self._client = self._build_client()
+        self._cache_folder_path = self._str_var(
+            "cache_folder_path", cache_folder_path, trust_env
+        )
+        self._cache_sqlite_url = self._str_var(
+            "cache_sqlite_url", cache_sqlite_url, trust_env
+        )
+        self._cache_redis_url = self._str_var(
+            "cache_redis_url", cache_redis_url, trust_env
+        )
+        self._cache_ttl = self._int_var("cache_ttl", cache_ttl, trust_env)
+        self._cache_storage = cache_storage
+        if (
+            sum(
+                [
+                    int(bool(i))
+                    for i in (
+                        self._cache_folder_path,
+                        self._cache_sqlite_url,
+                        self._cache_redis_url,
+                        self._cache_ttl,
+                        self._cache_storage,
+                    )
+                ]
+            )
+            > 1
+        ):
+            raise ValueError("Допустимо выбрать только один вариант хранилища кэша")
+
+        self._client: Optional[Client] = None
+
+    def _build_cache_storage(self) -> Optional[BaseStorage]:
+        if self._cache_folder_path is not None:
+            return FileStorage(
+                base_path=Path(self._cache_folder_path), ttl=self._cache_ttl
+            )
+        elif self._cache_sqlite_url is not None:
+            try:
+                import sqlite3
+            except ImportError:
+                raise RuntimeError(
+                    "Не установлены необходимые модули для кэширования этого типа. "
+                    "Убедитесь, что вы установили `pynspd` с расширением `sqlite`.\n"
+                    "```pip install pynspd[sqlite]```"
+                )
+            conn = sqlite3.connect(self._cache_sqlite_url, check_same_thread=False)
+            return SQLiteStorage(connection=conn, ttl=self._cache_ttl)
+        elif self._cache_redis_url is not None:
+            try:
+                import redis
+            except ImportError:
+                raise RuntimeError(
+                    "Не установлены необходимые модули для кэширования этого типа. "
+                    "Убедитесь, что вы установили `pynspd` с расширением `redis`.\n"
+                    "```pip install pynspd[redis]```"
+                )
+            client = redis.Redis.from_url(self._cache_redis_url)
+            return RedisStorage(client=client, ttl=self._cache_ttl)
+        return None
 
     def _build_client(self) -> Client:
         transport: BaseTransport = HTTPTransport(
             verify=SSL_CONTEXT, retries=self._retries, proxy=self._proxy
         )
+        if self._cache_storage is None:
+            self._cache_storage = self._build_cache_storage()
         if self._cache_storage is not None:
             transport = CacheTransport(
                 transport=transport,
@@ -169,8 +251,9 @@ class Nspd(BaseNspdClient):
             transport=transport,
         )
 
-    def _rebuild_client(self):
+    def _rebuild_client_with_dns_resolve(self):
         assert not self._dns_resolve
+        assert self._client is not None
         assert self._client.base_url == "https://nspd.gov.ru"
         warnings.warn(
             "Текущий прокси не может сам разрешать доменные имена, "
@@ -190,7 +273,8 @@ class Nspd(BaseNspdClient):
 
     def close(self):
         """Завершение сессии"""
-        self._client.close()
+        if self._client is not None:
+            self._client.close()
 
     def request(
         self,
@@ -201,6 +285,8 @@ class Nspd(BaseNspdClient):
     ) -> Response:
         """Базовый запрос к API НСПД"""
         logger.debug("Request %s", url)
+        if self._client is None:
+            self._client = self._build_client()
         try:
             r = self._client.request(method, url, params=params, json=json)
         except ProxyError as e:
@@ -212,7 +298,7 @@ class Nspd(BaseNspdClient):
                 or "503 Target host denied" in msg
             ) and not self._dns_resolve:
                 logger.debug("Proxy can't resolve dns; change to ip mode")
-                self._rebuild_client()
+                self._rebuild_client_with_dns_resolve()
                 return self.request(method, url, params, json)
             raise e
         if r.status_code == 403:
