@@ -30,8 +30,6 @@ def test_cn_list_file(output_file: Path):
             "find",
             "-o",
             output_file.name,
-            "-c",
-            "file",
             "-l",
             "./tests/data/cn_list.txt",
         ],
@@ -42,7 +40,7 @@ def test_cn_list_file(output_file: Path):
 @pytest.mark.parametrize("output_file", [".csv"], indirect=True)
 def test_geo_file(output_file: Path):
     result = runner.invoke(
-        app, ["geo", "-o", output_file.name, "-c", "sqlite", "./tests/data/poly.gpkg"]
+        app, ["geo", "-o", output_file.name, "./tests/data/poly.gpkg"]
     )
     assert result.exit_code == 0
 
@@ -50,7 +48,7 @@ def test_geo_file(output_file: Path):
 @pytest.mark.parametrize("output_file", [".gpkg"], indirect=True)
 def test_geo_text(output_file: Path):
     result = runner.invoke(
-        app, ["geo", "-o", output_file.name, "-c", "sqlite", "Point (37.562 55.605)"]
+        app, ["geo", "-o", output_file.name, "Point (37.562 55.605)"]
     )
     assert result.exit_code == 0
 
@@ -63,8 +61,6 @@ def test_geo_coords(output_file: Path):
             "geo",
             "-o",
             output_file.name,
-            "-c",
-            "sqlite",
             "   53.193168, 50.106273 53.193704, 50.105026   ",
         ],
     )
@@ -74,7 +70,7 @@ def test_geo_coords(output_file: Path):
 @pytest.mark.parametrize("output_file", [".geojson"], indirect=True)
 def test_geo_coords_file(output_file: Path):
     result = runner.invoke(
-        app, ["geo", "-o", output_file.name, "-c", "sqlite", "./tests/data/pt_list.txt"]
+        app, ["geo", "-o", output_file.name, "./tests/data/pt_list.txt"]
     )
     assert result.exit_code == 0
 
