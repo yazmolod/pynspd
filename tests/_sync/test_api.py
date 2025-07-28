@@ -95,3 +95,13 @@ def test_search_wrong_result(api: Nspd):
     assert features is not None
     feat = api.find("77:1:3033:1031")
     assert feat is None
+
+
+def test_search_layers(api: Nspd):
+    features = api.search_in_layers(
+        "Обнинск",
+        NspdFeature.by_title("Муниципальные образования (полигональный)"),
+        NspdFeature.by_title("Населённые пункты (полигоны)"),
+    )
+    assert features is not None
+    assert len(features) == 2

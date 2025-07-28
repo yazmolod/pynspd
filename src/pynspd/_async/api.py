@@ -365,14 +365,14 @@ class AsyncNspd(BaseNspdClient):
     async def search_in_layer(
         self, query: str, layer_def: Type[Feat]
     ) -> Optional[list[Feat]]:
-        """Поиск объекта по определению слоя
+        """Поиск по определению слоя
 
         Args:
             query: Поисковой запрос
             layer_def: Определение слоя
 
         Returns:
-            Валидированная модель слоя, если найдено
+            Массив валидированных объектов, если что-то найдено
         """
         raw_features = await self._search(
             params={
@@ -381,6 +381,25 @@ class AsyncNspd(BaseNspdClient):
             }
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
+
+    async def search_in_layers(
+        self, query: str, *layer_defs: Type[Feat]
+    ) -> Optional[list[NspdFeature]]:
+        """Поиск по определениям слоев
+
+        Args:
+            query: Поисковой запрос
+            layer_defs: Определения слоев
+
+        Returns:
+            Массив невалидированных объектов, если что-то найдено
+        """
+        return await self._search(
+            params={
+                "query": query,
+                "layersId": [i.layer_meta.layer_id for i in layer_defs],
+            }
+        )
 
     async def find(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS

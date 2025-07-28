@@ -108,3 +108,14 @@ async def test_search_wrong_result(async_api: AsyncNspd):
     assert features is not None
     feat = await async_api.find("77:1:3033:1031")
     assert feat is None
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_search_layers(async_api: AsyncNspd):
+    features = await async_api.search_in_layers(
+        "Обнинск",
+        NspdFeature.by_title("Муниципальные образования (полигональный)"),
+        NspdFeature.by_title("Населённые пункты (полигоны)"),
+    )
+    assert features is not None
+    assert len(features) == 2
