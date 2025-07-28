@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from pathlib import Path
 from typing import (
     Annotated,
@@ -254,12 +255,16 @@ def _get_tab_object(client: Nspd, features: list[NspdFeature]) -> list[NspdFeatu
 
 def prepare_features(features: list[NspdFeature], localize: bool) -> gpd.GeoDataFrame:
     prepared_features: list = []
+    unknown_layers = Counter()
     for feat in features:
-        if isinstance(feat, NspdFeature):
-            feat = feat.cast()
         assert feat.properties.options.model_extra is not None
         props: dict[str, Any] = feat.properties.options.model_extra.pop("tab", {})
         if localize:
+            try:
+                feat = feat.cast()
+            except UnknownLayer:
+                unknown_layers[feat.properties.category_name] += 1
+                continue
             props.update(feat.properties.options.model_dump_human_readable())
             props["Категория"] = feat.properties.category_name
         else:
@@ -267,6 +272,10 @@ def prepare_features(features: list[NspdFeature], localize: bool) -> gpd.GeoData
             props["category"] = feat.properties.category_name
         props["geometry"] = feat.geometry.to_shape()
         prepared_features.append(props)
+    for category, count in unknown_layers.items():
+        print(
+            f'[orange3] Было пропущено объектов с неизвестным слоем "{category}" - {count} (невозможно локализировать данные)'
+        )
     return gpd.GeoDataFrame(prepared_features, crs=4326).fillna("")
 
 
@@ -277,15 +286,25 @@ def process_output(
         print("[red]Ничего не найдено")
         raise typer.Abort()
     gdf = prepare_features(features, localize)
-    if output is None:
-        print(gdf.T)
-        return
-    elif output.suffix == ".xlsx":
-        gdf.to_excel(output, index=False)
-    elif output.suffix == ".csv":
-        gdf.to_csv(output, index=False)
-    else:
-        gdf.to_file(output)
+    try:
+        if output is None:
+            print(gdf.T)
+            return
+        elif output.suffix == ".xlsx":
+            gdf.to_excel(output, index=False)
+        elif output.suffix == ".csv":
+            gdf.to_csv(output, index=False)
+        else:
+            gdf.to_file(output)
+    except PermissionError:
+        _ = typer.prompt(
+            f"Файл {output} открыт в другой программе. Закройте его и нажмите любую клавишу",
+            default=True,
+            hide_input=True,
+            prompt_suffix="...",
+            show_default=False,
+        )
+        return process_output(features, output, localize)
     print(f"[green]Найдено {len(gdf)} объектов, сохранено в файл {output.resolve()}[/]")
 
 
@@ -326,7 +345,7 @@ def geo(
     add_tab_object: TabObjectsOption = False,
     _test_layer_name: Annotated[Optional[str], typer.Option(hidden=True)] = None,
 ) -> None:
-    """Поиск объектов по геоданным.
+    """Поиск объектов по геоданным
 
     Может производить поиск по файлам gpkg, geeojson, координатам точек или WKT-строке.
     По умолчанию ищет в слое "Земельные участки из ЕГРН".
@@ -373,7 +392,7 @@ def search(
     add_tab_object: TabObjectsOption = False,
     _test_layer_names: Annotated[Optional[list[str]], typer.Option(hidden=True)] = None,
 ) -> None:
-    """Поиск объектов по тексту.
+    """Поиск объектов по тексту
 
     По умолчанию разбивает запрос на кадастровые номера и ищет в объектах недвижимости.
     """
