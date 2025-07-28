@@ -18,7 +18,7 @@ def output_file(request):
 
 
 def test_cn_list_text():
-    result = runner.invoke(app, ["find", "77:01:0001057:76"])
+    result = runner.invoke(app, ["search", "77:01:0001057:76"])
     assert result.exit_code == 0
 
 
@@ -27,7 +27,7 @@ def test_cn_list_file(output_file: Path):
     result = runner.invoke(
         app,
         [
-            "find",
+            "search",
             "-o",
             output_file.name,
             "-l",
@@ -82,17 +82,17 @@ def test_version():
 
 
 def test_bad_text_input():
-    result = runner.invoke(app, ["find", "./tests/data/missing_file.txt"])
+    result = runner.invoke(app, ["search", "./tests/data/missing_file.txt"])
     assert result.exit_code == 2
-    assert "Файл не найден" in result.stdout
+    assert "Нужно ввести валидные кадастровые номера" in result.stdout
 
-    result = runner.invoke(app, ["find", "./tests/data/empty_list.txt"])
+    result = runner.invoke(app, ["search", "./tests/data/empty_list.txt"])
     assert result.exit_code == 2
     assert "В файле не найдены кадастровые номера" in result.stdout
 
-    result = runner.invoke(app, ["find", "./tests/data/lines.gpkg"])
+    result = runner.invoke(app, ["search", "./tests/data/lines.gpkg"])
     assert result.exit_code == 2
-    assert "Неподдерживаемый формат файла" in result.stdout
+    assert "Невозможно прочитать файл" in result.stdout
 
 
 def test_bad_geom_input():
@@ -110,7 +110,7 @@ def test_bad_geom_input():
 
 
 def test_empty_output():
-    result = runner.invoke(app, ["find", "77:77:77:77"])
+    result = runner.invoke(app, ["search", "-p", "fuzzbuzz"])
     assert result.exit_code == 1
     assert "Ничего не найдено" in result.stdout
 
@@ -122,13 +122,17 @@ def test_empty_output():
 
 
 def test_bad_layer_name():
-    result = runner.invoke(app, ["geo", "./tests/data/poly.gpkg", "Hello World"])
+    result = runner.invoke(
+        app,
+        ["geo", "./tests/data/poly.gpkg", "-c", "---test-layer-name", "Hello World"],
+        catch_exceptions=False,
+    )
     assert result.exit_code == 2
     assert "не является слоем НСПД" in result.stdout
 
 
 def test_tab_output():
-    result = runner.invoke(app, ["find", "77:07:0006001:1020", "--tab-objects"])
+    result = runner.invoke(app, ["search", "77:07:0006001:1020", "--tab-objects"])
     assert result.exit_code == 0
     assert "Помещения (количество)" in result.stdout
     result = runner.invoke(
@@ -136,3 +140,22 @@ def test_tab_output():
     )
     assert result.exit_code == 0
     assert "Объект недвижимости" in result.stdout
+
+
+def test_cities_parse():
+    result = runner.invoke(
+        app,
+        [
+            "search",
+            "-pc",
+            "---test-layer-names",
+            "Муниципальные образования (полигональный)",
+            "---test-layer-names",
+            "Населённые пункты (полигоны)",
+            "Обнинск",
+        ],
+    )
+    assert result.exit_code == 0
+    # два разных субъекта в выводе
+    assert "29415000000" in result.stdout
+    assert "29415000000" in result.stdout

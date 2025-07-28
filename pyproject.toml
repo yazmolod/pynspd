@@ -37,6 +37,7 @@ Changelog = "https://github.com/yazmolod/pynspd/releases"
 cli = [
     "geopandas>=1.0.1",
     "openpyxl>=3.1.5",
+    "questionary>=2.1.0",
     "typer>=0.15.2",
 ]
 socks = [

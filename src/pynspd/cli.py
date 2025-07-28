@@ -9,9 +9,11 @@ from typing import (
     Sequence,
     Type,
     TypeVar,
+    get_args,
 )
 
 import geopandas as gpd
+import questionary
 import typer
 from pyogrio.errors import DataSourceError
 from rich import print
@@ -27,6 +29,7 @@ from shapely import GEOSException, MultiPolygon, Point, Polygon, from_wkt
 
 from pynspd import Nspd, NspdFeature, __version__
 from pynspd.errors import UnknownLayer
+from pynspd.map_types._autogen_layers import LayerTitle
 from pynspd.schemas import BaseFeature
 
 app = typer.Typer(
@@ -72,20 +75,51 @@ TabObjectsOption = Annotated[
     ),
 ]
 
+PlainOption = Annotated[
+    bool,
+    typer.Option(
+        "--plain",
+        "-p",
+        help="Не конвертировать входные данные в список к/н",
+        rich_help_panel="General Options",
+    ),
+]
 
-def define_cns(input_: str) -> list[str]:
+ChooseLayersOption = Annotated[
+    bool,
+    typer.Option(
+        "--choose-layer",
+        "-c",
+        help="Выбрать слои из списка вместо слоя по умолчанию",
+        rich_help_panel="General Options",
+    ),
+]
+
+
+def define_queries(input_: str, plain_query: bool) -> list[str]:
     """Поиск массива к/н в исходной строке или текстовом файле"""
-    if CN_PATTERN.match(input_):
-        return list(Nspd.iter_cn(input_))
     maybe_file = Path(input_)
-    if not maybe_file.exists():
-        raise typer.BadParameter("Файл не найден")
-    if maybe_file.suffix in (".txt",):
-        cns = list(Nspd.iter_cn(maybe_file.read_text("utf-8")))
+    if maybe_file.exists():
+        try:
+            with open(maybe_file, encoding="utf-8", mode="r") as file:
+                content = file.read()
+        except UnicodeDecodeError:
+            raise typer.BadParameter(f"Невозможно прочитать файл {input_}")
+        if plain_query:
+            return content.splitlines()
+        cns = list(Nspd.iter_cn(content))
         if len(cns) == 0:
-            raise typer.BadParameter("В файле не найдены кадастровые номера")
+            raise typer.BadParameter(
+                "В файле не найдены кадастровые номера. Используйте флаг --plain / -p для поиска по обычному тексту"
+            )
         return cns
-    raise typer.BadParameter("Неподдерживаемый формат файла")
+    if plain_query:
+        return [input_]
+    if not CN_PATTERN.match(input_):
+        raise typer.BadParameter(
+            "Нужно ввести валидные кадастровые номера или использовать флаг --plain / -p для обычного текста"
+        )
+    return list(Nspd.iter_cn(input_))
 
 
 def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon]:
@@ -155,19 +189,24 @@ def _progress_iter(items: Sequence[T]) -> Generator[T, None, None]:
 
 
 def _get_features_from_list(
-    client: Nspd, cns: list[str]
+    client: Nspd,
+    queries: list[str],
+    layer_defs: Optional[list[Type[BaseFeature]]],
 ) -> Optional[list[NspdFeature]]:
     features = []
     missing = []
-    for cn in _progress_iter(cns):
-        feat = client.find(cn)
-        if feat is None:
-            missing.append(cn)
+    for query in _progress_iter(queries):
+        if layer_defs is None:
+            feats = client.search(query)
+        else:
+            feats = client.search_in_layers(query, *layer_defs)
+        if feats is None:
+            missing.append(query)
             continue
-        features.append(feat)
+        features += feats
     if missing:
         print(
-            f":warning-emoji: [orange3] Не найдены {len(missing)} из {len(cns)} объектов:"
+            f":warning-emoji: [orange3] Не найдены {len(missing)} из {len(queries)} объектов:"
         )
         for m in missing:
             print(f"[orange3]   - {m}")
@@ -281,15 +320,29 @@ def geo(
             show_default=False,
         ),
     ],
-    layer_name: Annotated[
-        str,
-        typer.Argument(help="Имя слоя с НСПД, в котором нужно производить поиск"),
-    ] = "Земельные участки из ЕГРН",
+    choose_layer: ChooseLayersOption = False,
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
+    _test_layer_name: Annotated[Optional[str], typer.Option(hidden=True)] = None,
 ) -> None:
-    """Поиск объектов по геоданным"""
+    """Поиск объектов по геоданным.
+
+    Может производить поиск по файлам gpkg, geeojson, координатам точек или WKT-строке.
+    По умолчанию ищет в слое "Земельные участки из ЕГРН".
+    """
+    if choose_layer:
+        layer_name = (
+            _test_layer_name
+            if _test_layer_name is not None
+            else questionary.select(
+                "Выберите слой: ", choices=get_args(LayerTitle)
+            ).ask()
+        )
+        if layer_name is None:
+            raise typer.Abort()
+    else:
+        layer_name = "Земельные участки из ЕГРН"
     geoms = define_geoms(input)
     layer_def = define_layer_def(layer_name)
     with Nspd() as client:
@@ -305,21 +358,45 @@ def geo(
 
 
 @app.command(no_args_is_help=True)
-def find(
+def search(
     input: Annotated[
         str,
         typer.Argument(
-            help="Список искомых к/н. Может быть текстовым файлом", show_default=False
+            help="Поисковой запрос. Может быть многострочным текстовым файлом",
+            show_default=False,
         ),
     ],
+    choose_layer: ChooseLayersOption = False,
+    plain_query: PlainOption = False,
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
+    _test_layer_names: Annotated[Optional[list[str]], typer.Option(hidden=True)] = None,
 ) -> None:
-    """Поиск объектов по списку к/н"""
-    cns = define_cns(input)
+    """Поиск объектов по тексту.
+
+    По умолчанию разбивает запрос на кадастровые номера и ищет в объектах недвижимости.
+    """
+    if choose_layer:
+        layer_names = (
+            _test_layer_names
+            if _test_layer_names is not None
+            else questionary.checkbox(
+                "Выберите слои: ",
+                choices=get_args(LayerTitle),
+                validate=lambda x: "Не выбрано ни одно значение"
+                if len(x) == 0
+                else True,
+            ).ask()
+        )
+        if layer_names is None:
+            raise typer.Abort()
+        layer_defs = [define_layer_def(layer_name) for layer_name in layer_names]
+    else:
+        layer_defs = None
+    queries = define_queries(input, plain_query)
     with Nspd() as client:
-        features = _get_features_from_list(client, cns)
+        features = _get_features_from_list(client, queries, layer_defs)
         if features and add_tab_object:
             features = _get_tab_object(client, features)
     process_output(features, output, localize)

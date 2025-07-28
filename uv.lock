@@ -1548,6 +1548,7 @@ dependencies = [
 cli = [
     { name = "geopandas" },
     { name = "openpyxl" },
+    { name = "questionary" },
     { name = "typer" },
 ]
 redis = [
@@ -1600,6 +1601,7 @@ requires-dist = [
     { name = "openpyxl", marker = "extra == 'cli'", specifier = ">=3.1.5" },
     { name = "pydantic", specifier = ">=2.10.4" },
     { name = "pyproj", specifier = ">=3.7" },
+    { name = "questionary", marker = "extra == 'cli'", specifier = ">=2.1.0" },
     { name = "redis", marker = "extra == 'redis'", specifier = "==6.0.0" },
     { name = "shapely", specifier = ">=2.0.6" },
     { name = "socksio", marker = "extra == 'socks'", specifier = ">=1.0.0" },
@@ -1934,6 +1936,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/ee/1c/bf8cd66730a866b16db8483286078892b7f6536f8c389fb46e4beba0a970/pyzmq-26.2.0-pp310-pypy310_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:160c7e0a5eb178011e72892f99f918c04a131f36056d10d9c1afb223fc952c2d", size = 794312 },
     { url = "https://files.pythonhosted.org/packages/71/43/91fa4ff25bbfdc914ab6bafa0f03241d69370ef31a761d16bb859f346582/pyzmq-26.2.0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2c4a71d5d6e7b28a47a394c0471b7e77a0661e2d651e7ae91e0cab0a587859ca", size = 752775 },
     { url = "https://files.pythonhosted.org/packages/ec/d2/3b2ab40f455a256cb6672186bea95cd97b459ce4594050132d71e76f0d6f/pyzmq-26.2.0-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:90412f2db8c02a3864cbfc67db0e3dcdbda336acf1c469526d3e869394fe001c", size = 550762 },
+]
+
+[[package]]
+name = "questionary"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "prompt-toolkit" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a8/b8/d16eb579277f3de9e56e5ad25280fab52fc5774117fb70362e8c2e016559/questionary-2.1.0.tar.gz", hash = "sha256:6302cdd645b19667d8f6e6634774e9538bfcd1aad9be287e743d96cacaf95587", size = 26775 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ad/3f/11dd4cd4f39e05128bfd20138faea57bec56f9ffba6185d276e3107ba5b2/questionary-2.1.0-py3-none-any.whl", hash = "sha256:44174d237b68bc828e4878c763a9ad6790ee61990e0ae72927694ead57bab8ec", size = 36747 },
 ]
 
 [[package]]
