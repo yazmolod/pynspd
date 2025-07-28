@@ -126,14 +126,14 @@ def define_queries(input_: str, plain_query: bool) -> list[str]:
 def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon]:
     """Проверка гео-файла и получение геометрии из него"""
     maybe_file = Path(input_)
-    coords_pattern = re.compile(r"(\d{2,3}\.\d+),? *(\d{2,3}\.\d+)")
-    if maybe_file.suffix == ".txt":
+    if maybe_file.exists() and maybe_file.suffix == ".txt":
         pts_text = maybe_file.read_text("utf-8")
     else:
         pts_text = input_
     pts_text = pts_text.strip()
-    if coords_pattern.match(pts_text):
-        coords = [list(map(float, i)) for i in coords_pattern.findall(pts_text)]
+    matches = re.findall(r"(\d{2,3}\.\d+),? *(\d{2,3}\.\d+)", pts_text)
+    if len(matches) > 0:
+        coords = [list(map(float, i)) for i in matches]
         pts = [Point(*i[::-1]) for i in coords]
         geoseries = gpd.GeoSeries(pts, crs=4326)
     elif maybe_file.exists():
