@@ -79,7 +79,7 @@ class CardField(CamelModel):
 
     key_name: str
     key_value: str
-    key_type: Literal["str", "float", "date"]
+    key_type: Literal["str", "float", "datetime"]
     padding: bool
     default_value: str
     show_empty: bool
@@ -105,7 +105,7 @@ class CardField(CamelModel):
         alias_dict = {
             "text": "str",
             "number": "float",
-            "date": "date",
+            "date": "datetime",
             "href": "str",
         }
         return alias_dict[v]
