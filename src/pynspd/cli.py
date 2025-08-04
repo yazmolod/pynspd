@@ -29,7 +29,7 @@ from rich.progress import (
 from shapely import GEOSException, MultiPolygon, Point, Polygon, from_wkt
 
 from pynspd import Nspd, NspdFeature, __version__
-from pynspd.errors import UnknownLayer
+from pynspd.errors import TooBigContour, UnknownLayer
 from pynspd.map_types._autogen_layers import LayerTitle
 from pynspd.schemas import BaseFeature
 
@@ -132,7 +132,7 @@ def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon
         pts_text = input_
     pts_text = pts_text.strip()
     matches = re.findall(r"(\d{2,3}\.\d+),? *(\d{2,3}\.\d+)", pts_text)
-    if len(matches) > 0:
+    if re.match(r"^\d", pts_text) and len(matches) > 0:
         coords = [list(map(float, i)) for i in matches]
         pts = [Point(*i[::-1]) for i in coords]
         geoseries = gpd.GeoSeries(pts, crs=4326)
@@ -347,7 +347,7 @@ def geo(
 ) -> None:
     """Поиск объектов по геоданным
 
-    Может производить поиск по файлам gpkg, geeojson, координатам точек или WKT-строке.
+    Может производить поиск по файлам gpkg, geojson, координатам точек или WKT-строке.
     По умолчанию ищет в слое "Земельные участки из ЕГРН".
     """
     if choose_layer:
@@ -368,9 +368,14 @@ def geo(
         if isinstance(geoms[0], Point):
             features = _get_features_from_geom(client.search_at_point, geoms, layer_def)
         else:
-            features = _get_features_from_geom(
-                client.search_in_contour, geoms, layer_def
-            )
+            try:
+                features = _get_features_from_geom(
+                    client.search_in_contour, geoms, layer_def
+                )
+            except TooBigContour:
+                raise typer.BadParameter(
+                    "НСПД не может ответить из-за слишком большой площади поиска"
+                )
         if features and add_tab_object:
             _get_tab_object(client, features)
     process_output(features, output, localize)
