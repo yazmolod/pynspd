@@ -3,7 +3,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from pynspd import AsyncNspd
-from pynspd.errors import BlockedIP
+from pynspd.errors import BlockedIP, PynspdServerError
 
 
 @pytest.mark.asyncio(scope="session")
@@ -28,7 +28,7 @@ async def test_500_error(httpx_mock: HTTPXMock, async_api: AsyncNspd):
     async_api._retries = 1
     httpx_mock.add_response(status_code=500)
     httpx_mock.add_response(status_code=500)
-    with pytest.raises(httpx.HTTPStatusError) as e:
+    with pytest.raises(PynspdServerError) as e:
         await async_api.safe_request("get", "/api")
     assert e.value.response.status_code == 500
     assert len(httpx_mock.get_requests()) > async_api._retries

@@ -1,8 +1,9 @@
 import pytest
 from shapely import wkt
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import MultiPolygon, Polygon, box
 
 from pynspd import AsyncNspd, NspdFeature
+from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
@@ -119,3 +120,16 @@ async def test_search_layers(async_api: AsyncNspd):
     )
     assert features is not None
     assert len(features) == 2
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_search_in_big_contour(async_api: AsyncNspd):
+    contour = box(36.80, 55.14, 37.39, 55.58)
+    layer_def = NspdFeature.by_title("Земельные участки из ЕГРН")
+    with pytest.raises(TooBigContour):
+        async_api._retries = 0
+        await async_api.search_in_contour(contour, layer_def)
+
+    async for feat in async_api.search_in_contour_iter(contour, layer_def):
+        assert feat is not None
+        break

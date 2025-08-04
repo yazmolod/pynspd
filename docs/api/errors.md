@@ -5,3 +5,5 @@
 ::: pynspd.errors.AmbiguousSearchError
 
 ::: pynspd.errors.BlockedIP
+
+::: pynspd.errors.TooBigContour

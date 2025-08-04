@@ -2,9 +2,10 @@ import json
 import re
 import warnings
 from functools import wraps
+from hashlib import md5
 from pathlib import Path
 from time import sleep
-from typing import Any, Literal, Optional, Type, Union
+from typing import Any, Generator, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
@@ -28,7 +29,7 @@ from httpx import (
     TimeoutException,
 )
 from httpx._types import ProxyTypes, QueryParamTypes
-from shapely import MultiPolygon, Point, Polygon, to_geojson
+from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 
 try:
     import sqlite3
@@ -44,7 +45,7 @@ from pynspd.client import (
     SSL_CONTEXT,
     BaseNspdClient,
 )
-from pynspd.errors import BlockedIP
+from pynspd.errors import BlockedIP, PynspdServerError, TooBigContour
 from pynspd.logger import logger
 from pynspd.map_types.enums import TabTitle, ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -95,6 +96,9 @@ def retry_on_http_error(func):
                 else:
                     logger.exception("%s unexpected exception", logger_suffix)
                     raise e
+            except PynspdServerError as e:
+                logger.debug("%s unknown server error", logger_suffix)
+                last_error = e
             except BlockedIP as e:
                 logger.debug("%s blocked IP, retrying", logger_suffix)
                 last_error = e
@@ -310,6 +314,8 @@ class Nspd(BaseNspdClient):
             raise e
         if r.status_code == 403:
             raise BlockedIP
+        if r.status_code >= 500:
+            raise PynspdServerError(r)
         r.raise_for_status()
         return r
 
@@ -462,13 +468,18 @@ class Nspd(BaseNspdClient):
                 ],
             },
         }
-        response = self.request(
-            "post",
-            "/api/geoportal/v1/intersects",
-            params={"typeIntersect": "fullObject"},
-            json=payload,
-        )
-        return self._validate_feature_collection_response(response)
+        try:
+            response = self.request(
+                "post",
+                "/api/geoportal/v1/intersects",
+                params={"typeIntersect": "fullObject"},
+                json=payload,
+            )
+            return self._validate_feature_collection_response(response)
+        except PynspdServerError as e:
+            if '"code":400004' in e.response.text:
+                raise TooBigContour from e
+            raise e
 
     def search_in_contour(
         self,
@@ -481,6 +492,9 @@ class Nspd(BaseNspdClient):
             countour: Геометрический объект с контуром
             layer_def: Модель слоя
 
+        Raises:
+            TooBigContour: НСПД не может обработать такой контур
+
         Returns:
             Список объектов, пересекающихся с контуром, если найден хоть один
         """
@@ -488,6 +502,83 @@ class Nspd(BaseNspdClient):
             countour, layer_def.layer_meta.category_id
         )
         return self._cast_features_to_layer_defs(raw_features, layer_def)
+
+    def _iter_search_in_box(
+        self,
+        xmin: float,
+        ymin: float,
+        xmax: float,
+        ymax: float,
+        layer_def: Type[Feat],
+    ) -> Generator[Feat, None, None]:
+        """Рекурсивный поиск объектов в границах"""
+
+        def split_extent(xmin: float, ymin: float, xmax: float, ymax: float):
+            midx = (xmax + xmin) / 2
+            midy = (ymax + ymin) / 2
+            yield xmin, ymin, midx, midy
+            yield midx, midy, xmax, ymax
+            yield midx, ymin, xmax, midy
+            yield xmin, midy, midx, ymax
+
+        try:
+            logger_prefix = "Search [%.2f, %.2f, %.2f, %.2f]: " % (
+                xmin,
+                ymin,
+                xmax,
+                ymax,
+            )
+            logger.debug(logger_prefix + "start")
+            feats = self.search_in_contour(box(xmin, ymin, xmax, ymax), layer_def)
+            if feats is None:
+                logger.debug(logger_prefix + "empty")
+                return
+            logger.debug(logger_prefix + "success")
+            for f in feats:
+                yield f
+        except TooBigContour:
+            logger.debug(logger_prefix + "failed, split tiles")
+            for sp_xmin, sp_ymin, sp_xmax, sp_ymax in split_extent(
+                xmin, ymin, xmax, ymax
+            ):
+                for f in self._iter_search_in_box(
+                    sp_xmin, sp_ymin, sp_xmax, sp_ymax, layer_def
+                ):
+                    yield f
+
+    def search_in_contour_iter(
+        self,
+        countour: Union[Polygon, MultiPolygon],
+        layer_def: Type[Feat],
+        *,
+        only_intersects: bool = False,
+    ) -> Generator[Feat, None, None]:
+        """Поиск объектов в указанных границах.
+
+        Внимание: количество запросов кратно зависит от площади поиска.
+        Если вы хотите вручную обрабатывать ошибку `TooBigContour`,
+        используйте метод `search_in_contour(...)`
+
+        Args:
+            countour: Геометрический объект с контуром
+            layer_def: Модель слоя
+            only_intersects:
+                Возвращать только те объекты,
+                которые пересекаются с изначальным контуром. По умолчанию False
+
+        Returns:
+            Генератор объектов слоя в указанной области
+        """
+        cache = set()
+        xmin, ymin, xmax, ymax = countour.bounds
+        for feat in self._iter_search_in_box(xmin, ymin, xmax, ymax, layer_def):
+            cache_id = md5(feat.model_dump_json().encode()).hexdigest()
+            if cache_id in cache:
+                continue
+            cache.add(cache_id)
+            if only_intersects and not countour.intersects(feat.geometry.to_shape()):
+                continue
+            yield feat
 
     ####################
     ### POINT SEARCH ###

@@ -1,5 +1,25 @@
+from typing import Optional
+
+import httpx
+
+
 class PynspdError(Exception):
     """Базовый класс библиотеки"""
+
+
+class PynspdServerError(PynspdError):
+    """Ошибки сервера НСПД"""
+
+    def __init__(self, response: httpx.Response, msg: Optional[str] = None):
+        self.response = response
+        if msg is None:
+            msg = f"Status code: {response.status_code}; Details: "
+            try:
+                details: str = response.json()["message"]
+                msg += details
+            except (KeyError, ValueError):
+                msg += "not found"
+        super().__init__(msg)
 
 
 class UnknownLayer(PynspdError):
@@ -23,3 +43,13 @@ class BlockedIP(PynspdError):
             "Воспользуйтесь прокси в клиенте или смените его"
         )
         super().__init__(msg)
+
+
+class TooBigContour(PynspdError):
+    """Контур слишком большой, сервер не может ответить"""
+
+    def __init__(self):
+        super().__init__(
+            "Попробуйте уменьшить площадь поиска "
+            "или воспользоваться методом `.search_in_contour_iter(...)`",
+        )

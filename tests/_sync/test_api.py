@@ -1,7 +1,9 @@
+import pytest
 from shapely import wkt
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import MultiPolygon, Polygon, box
 
 from pynspd import Nspd, NspdFeature
+from pynspd.errors import TooBigContour
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, Layer37578Feature
 
 
@@ -105,3 +107,15 @@ def test_search_layers(api: Nspd):
     )
     assert features is not None
     assert len(features) == 2
+
+
+def test_search_in_big_contour(api: Nspd):
+    contour = box(36.80, 55.14, 37.39, 55.58)
+    layer_def = NspdFeature.by_title("Земельные участки из ЕГРН")
+    with pytest.raises(TooBigContour):
+        api._retries = 0
+        api.search_in_contour(contour, layer_def)
+
+    for feat in api.search_in_contour_iter(contour, layer_def):
+        assert feat is not None
+        break
