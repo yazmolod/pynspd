@@ -162,7 +162,9 @@ class Nspd(BaseNspdClient):
         trust_env: bool = True,
     ):
         self._timeout = self._int_var("client_timeout", client_timeout, trust_env)
-        self._retries = self._int_var("client_retries", client_retries, trust_env) or 10
+        self._retries = self._int_var("client_retries", client_retries, trust_env)
+        if self._retries is None:
+            self._retries = 10
         self._retry_on_blocked_ip = (
             self._bool_var(
                 "client_retry_on_blocked_ip", client_retry_on_blocked_ip, trust_env
