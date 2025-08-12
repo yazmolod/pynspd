@@ -37,6 +37,13 @@ NSPD_CACHE_CONTROLLER = Controller(
 class BaseNspdClient:
     """Базовый класс, не зависящий от sync/async контекста"""
 
+    DNS_HOST = "nspd.gov.ru"
+    DNS_URL = "https://" + DNS_HOST
+
+    IP_HOST = "2.63.246.75"
+    # random pool?
+    # IP_HOST = "2.63.246.76"
+
     @staticmethod
     def iter_cn(input_str: str) -> Generator[str, None, None]:
         """Извлечение кадастровых номеров из строки"""

@@ -9,6 +9,7 @@ from typing import Any, AsyncGenerator, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
+import ua_generator
 from hishel import (
     AsyncBaseStorage,
     AsyncCacheTransport,
@@ -22,7 +23,6 @@ from httpx import (
     AsyncHTTPTransport,
     ConnectError,
     HTTPError,
-    HTTPStatusError,
     ProxyError,
     RemoteProtocolError,
     Response,
@@ -40,12 +40,12 @@ try:
 except ImportError:
     redis = None  # type: ignore
 
+import pynspd.errors as err
 from pynspd.client import (
     NSPD_CACHE_CONTROLLER,
     SSL_CONTEXT,
     BaseNspdClient,
 )
-from pynspd.errors import BlockedIP, PynspdServerError, TooBigContour
 from pynspd.logger import logger
 from pynspd.map_types.enums import TabTitle, ThemeId
 from pynspd.schemas import Layer36048Feature, Layer36049Feature, NspdFeature
@@ -83,27 +83,24 @@ def retry_on_http_error(func):
                     logger.debug("%s remote protocol error", logger_suffix)
                 elif isinstance(e, ConnectError):
                     logger.debug("%s connection error", logger_suffix)
-                elif isinstance(e, HTTPStatusError):
-                    if e.response.status_code == 429:
-                        logger.debug("%s too many requests", logger_suffix)
-                        await sleep(1)
-                    elif e.response.status_code < 500:
-                        logger.debug("%s not server error", logger_suffix)
-                        raise e
                 elif isinstance(e, TimeoutException):
                     logger.debug("%s timeout", logger_suffix)
                     await sleep(1)
                 else:
                     logger.exception("%s unexpected exception", logger_suffix)
                     raise e
-            except PynspdServerError as e:
+            except err.PynspdServerError as e:
                 logger.debug("%s unknown server error", logger_suffix)
                 last_error = e
-            except BlockedIP as e:
+            except err.BlockedIP as e:
                 logger.debug("%s blocked IP, retrying", logger_suffix)
                 last_error = e
                 if not self._retry_on_blocked_ip:
                     raise e
+            except err.TooManyRequests as e:
+                logger.debug("%s too many requests", logger_suffix)
+                last_error = e
+                await sleep(1)
 
     return wrapper
 
@@ -209,6 +206,7 @@ class AsyncNspd(BaseNspdClient):
             raise ValueError("Допустимо выбрать только один вариант хранилища кэша")
 
         self._client: Optional[AsyncClient] = None
+        self._last_response: Optional[Response] = None
 
     async def _build_cache_storage(self) -> Optional[AsyncBaseStorage]:
         if self._cache_folder_path is not None:
@@ -250,16 +248,14 @@ class AsyncNspd(BaseNspdClient):
                 controller=NSPD_CACHE_CONTROLLER,
             )
 
-        base_url = (
-            "https://nspd.gov.ru" if not self._dns_resolve else "https://2.63.246.76"
-        )
+        host = self.DNS_HOST if not self._dns_resolve else self.IP_HOST
         return AsyncClient(
-            base_url=base_url,
+            base_url="https://" + host,
             timeout=self._timeout,
             headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
-                "Referer": "https://nspd.gov.ru",
-                "Host": "nspd.gov.ru",
+                "User-Agent": ua_generator.generate().text,
+                "Referer": self.DNS_URL,
+                "Host": self.DNS_HOST,
             },
             transport=transport,
         )
@@ -267,7 +263,7 @@ class AsyncNspd(BaseNspdClient):
     async def _rebuild_client_with_dns_resolve(self):
         assert not self._dns_resolve
         assert self._client is not None
-        assert self._client.base_url == "https://nspd.gov.ru"
+        assert self._client.base_url == self.DNS_URL
         warnings.warn(
             "Текущий прокси не может сам разрешать доменные имена, "
             "рекомендуется использовать client_dns_resolve=True, "
@@ -314,11 +310,18 @@ class AsyncNspd(BaseNspdClient):
                 await self._rebuild_client_with_dns_resolve()
                 return await self.request(method, url, params, json)
             raise e
-        if r.status_code == 403:
-            raise BlockedIP
-        if r.status_code >= 500:
-            raise PynspdServerError(r)
-        r.raise_for_status()
+        self._last_response = r
+        code = r.status_code
+        if code == 403:
+            raise err.BlockedIP(r)
+        if code == 404:
+            raise err.NotFound(r)
+        if code == 429:
+            raise err.TooManyRequests(r)
+        if code >= 500:
+            raise err.PynspdServerError(r)
+        if not str(code).startswith("2"):
+            raise err.PynspdResponseError(r)
         return r
 
     @retry_on_http_error
@@ -344,10 +347,8 @@ class AsyncNspd(BaseNspdClient):
                 "get", "/api/geoportal/v2/search/geoportal", params=params
             )
             return SearchResponse.model_validate(r.json()).data.features
-        except HTTPStatusError as e:
-            if e.response.status_code == 404:
-                return None
-            raise e
+        except err.NotFound:
+            return None
 
     async def search(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
@@ -480,9 +481,9 @@ class AsyncNspd(BaseNspdClient):
                 json=payload,
             )
             return self._validate_feature_collection_response(response)
-        except PynspdServerError as e:
+        except err.PynspdServerError as e:
             if '"code":400004' in e.response.text:
-                raise TooBigContour from e
+                raise err.TooBigContour from e
             raise e
 
     async def search_in_contour(
@@ -540,7 +541,7 @@ class AsyncNspd(BaseNspdClient):
             logger.debug(logger_prefix + "success")
             for f in feats:
                 yield f
-        except TooBigContour:
+        except err.TooBigContour:
             logger.debug(logger_prefix + "failed, split tiles")
             for sp_xmin, sp_ymin, sp_xmax, sp_ymax in split_extent(
                 xmin, ymin, xmax, ymax
@@ -681,10 +682,8 @@ class AsyncNspd(BaseNspdClient):
                 "get", f"/api/geoportal/v1/tab-{type_}-data", params=params
             )
             return r.json()
-        except HTTPStatusError as e:
-            if e.response.status_code == 404:
-                return None
-            raise e
+        except err.NotFound:
+            return None
 
     async def _tab_values_request(
         self, feat: NspdFeature, tab_class: str

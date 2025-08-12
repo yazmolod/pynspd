@@ -25,6 +25,7 @@ dependencies = [
     "pydantic>=2.10.4",
     "pyproj>=3.7",
     "shapely>=2.0.6",
+    "ua-generator>=2.0.10",
 ]
 
 [project.urls]

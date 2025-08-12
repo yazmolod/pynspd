@@ -3,7 +3,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from pynspd import Nspd
-from pynspd.errors import BlockedIP, PynspdServerError
+from pynspd.errors import BlockedIP, PynspdResponseError, PynspdServerError
 
 
 def test_429_error(httpx_mock: HTTPXMock, api: Nspd):
@@ -16,7 +16,7 @@ def test_429_error(httpx_mock: HTTPXMock, api: Nspd):
 
 def test_400_error(httpx_mock: HTTPXMock, api: Nspd):
     httpx_mock.add_response(status_code=400)
-    with pytest.raises(httpx.HTTPStatusError) as e:
+    with pytest.raises(PynspdResponseError) as e:
         api.safe_request("get", "/api")
     assert e.value.response.status_code == 400
 

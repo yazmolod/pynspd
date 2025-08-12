@@ -1,25 +1,8 @@
-from typing import Optional
-
 import httpx
 
 
 class PynspdError(Exception):
-    """Базовый класс библиотеки"""
-
-
-class PynspdServerError(PynspdError):
-    """Ошибки сервера НСПД"""
-
-    def __init__(self, response: httpx.Response, msg: Optional[str] = None):
-        self.response = response
-        if msg is None:
-            msg = f"Status code: {response.status_code}; Details: "
-            try:
-                details: str = response.json()["message"]
-                msg += details
-            except (KeyError, ValueError):
-                msg += "not found"
-        super().__init__(msg)
+    """Базовый класс ошибок библиотеки"""
 
 
 class UnknownLayer(PynspdError):
@@ -34,17 +17,6 @@ class AmbiguousSearchError(PynspdError):
         super().__init__(msg)
 
 
-class BlockedIP(PynspdError):
-    """НСПД заблокировал доступ по используемому IP"""
-
-    def __init__(self):
-        msg = (
-            "НСПД заблокировал доступ по используемому IP. "
-            "Воспользуйтесь прокси в клиенте или смените его"
-        )
-        super().__init__(msg)
-
-
 class TooBigContour(PynspdError):
     """Контур слишком большой, сервер не может ответить"""
 
@@ -53,3 +25,36 @@ class TooBigContour(PynspdError):
             "Попробуйте уменьшить площадь поиска "
             "или воспользоваться методом `.search_in_contour_iter(...)`",
         )
+
+
+class PynspdResponseError(PynspdError):
+    """Базовый класс ошибок для неуспешных запросов"""
+
+    def __init__(self, response: httpx.Response):
+        self.response = response
+        try:
+            details: str = response.json()["message"]
+        except (KeyError, ValueError):
+            details = "-"
+        msg = (
+            f"{self.__class__.__doc__}\n"
+            f"Status code: {response.status_code}\n"
+            f"Details: {details}"
+        )
+        super().__init__(msg)
+
+
+class PynspdServerError(PynspdResponseError):
+    """Серверная ошибка"""
+
+
+class BlockedIP(PynspdResponseError):
+    """Доступ заблокирован"""
+
+
+class TooManyRequests(PynspdResponseError):
+    """Слишком много запросов"""
+
+
+class NotFound(PynspdResponseError):
+    """Ничего не найдено"""
