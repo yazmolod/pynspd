@@ -5,4 +5,4 @@ from pynspd.map_types.enums import ThemeId
 from pynspd.schemas import NspdFeature
 
 __all__ = ["AsyncNspd", "Nspd", "NspdFeature", "ThemeId", "errors"]
-__version__ = "1.1.3"
+__version__ = "1.1.4"

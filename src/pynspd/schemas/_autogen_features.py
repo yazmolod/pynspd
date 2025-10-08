@@ -462,13 +462,13 @@ class Options278838(OptionProperties):
     """Кадастровый район"""
     name_by_doc: Optional[str] = None
     """Наименование зоны"""
-    legal_act_document_name: Optional[str] = None
+    document_name: Optional[str] = None
     """документ"""
-    legal_act_document_number: Optional[str] = None
+    document_number: Optional[str] = None
     """номер"""
-    legal_act_document_date: Optional[str] = None
+    document_date: Optional[str] = None
     """дата"""
-    legal_act_document_issuer: Optional[str] = None
+    document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
 
 
@@ -1063,7 +1063,7 @@ class Layer36945Feature(
             "layerId": 36945,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Кадастровый округ тест",
+            "layerName": "ЕГРН. Кадастровые округа",
             "layerVisibleByDefault": False,
             "categoryId": 38030,
         }
