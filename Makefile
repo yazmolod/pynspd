@@ -19,7 +19,7 @@ coverage:
 	uv run coveralls && uv run coverage html && start "" "htmlcov\index.html"
 
 publish:
-	rmdir /s /q dist && uv build && dotenv --file .env -- set UV_PUBLISH_TOKEN %UV_PUBLISH_TOKEN% && uv publish"
+	rmdir /s /q dist && uv build && uv publish"
 
 docs:
 	uv run mkdocs serve
