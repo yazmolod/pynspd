@@ -32,7 +32,7 @@ from datetime import datetime
 from typing import Union, Optional
 
 from pynspd.schemas.base_feature import BaseFeature
-from pynspd.schemas.geometries import Point, LineString, Polygon, MultiPolygon
+from pynspd.schemas.geometries import Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon
 from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 
@@ -51,11 +51,7 @@ class Options{{ category_id }}(OptionProperties): {% if fields|length == 0 %}...
 
 {% for layer in layers %}
 class Layer{{ layer.layer_id }}Feature(BaseFeature[
-    {%- if layer.geometry_type == 'Polygon' %}
-    Union[MultiPolygon, Polygon, Point],
-    {% else %}
-    {{ layer.geometry_type }},
-    {% endif -%}
+    Union[Multi{{ layer.geometry_type }}, {{ layer.geometry_type }}{%- if layer.geometry_type == 'Polygon' %}, Point{% endif -%}],
     NspdProperties[Options{{ layer.category_id }}]
 ]):
     \"\"\"{{ layer.title }}\"\"\"

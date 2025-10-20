@@ -77,8 +77,72 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Водная эрозия"]
+    ) -> Type[auto.Layer872153Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Линейная эрозия"]
+    ) -> Type[auto.Layer872155Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Ветровая эрозия"]
+    ) -> Type[auto.Layer872164Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Опустынивание"]
+    ) -> Type[auto.Layer872182Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Переувлажнение"]
+    ) -> Type[auto.Layer872183Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Подтопление"]
+    ) -> Type[auto.Layer872202Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Заболачивание"]
+    ) -> Type[auto.Layer872203Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Затопление"]
+    ) -> Type[auto.Layer872205Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Захламление"]
+    ) -> Type[auto.Layer872206Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Обвально-осыпные и оползневые процессы"]
+    ) -> Type[auto.Layer872210Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Кадастровые округа"]
     ) -> Type[auto.Layer36945Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(cls, title: Literal["Абразия"]) -> Type[auto.Layer872211Feature]: ...
 
     @overload
     @classmethod
@@ -95,14 +159,78 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Иные нарушенные земли "]
+    ) -> Type[auto.Layer872212Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Кадастровые кварталы"]
     ) -> Type[auto.Layer36071Feature]: ...
 
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Нарушенные земли при наземном строительстве "]
+    ) -> Type[auto.Layer872213Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Нарушенные земли при гидротехническом строительстве"]
+    ) -> Type[auto.Layer872216Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Нарушенные земли при недропользовании"]
+    ) -> Type[auto.Layer872217Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Нарушенные земли при промышленном лесопользовании"]
+    ) -> Type[auto.Layer872218Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Нарушенные земли при сельскохозяйственном освоении"]
+    ) -> Type[auto.Layer872219Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls,
+        title: Literal[
+            "Нарушенные земли при проведении геологоразведочных, испытательных, эксплуатационных и иных работ"
+        ],
+    ) -> Type[auto.Layer872220Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls,
+        title: Literal[
+            "Нарушенные земли при складировании и захоронении промышленных отходов, загрязнение земель"
+        ],
+    ) -> Type[auto.Layer872221Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Государственная граница Российской Федерации"]
     ) -> Type[auto.Layer37313Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(cls, title: Literal["Гари"]) -> Type[auto.Layer872222Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Негативный процесс отсутствует"]
+    ) -> Type[auto.Layer872224Feature]: ...
 
     @overload
     @classmethod
@@ -115,6 +243,10 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     def by_title(
         cls, title: Literal["Субъекты Российской Федерации (полигоны)"]
     ) -> Type[auto.Layer37315Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(cls, title: Literal["Засоление"]) -> Type[auto.Layer872262Feature]: ...
 
     @overload
     @classmethod
@@ -320,12 +452,6 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
             "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"
         ],
     ) -> Type[auto.Layer37295Feature]: ...
-
-    @overload
-    @classmethod
-    def by_title(
-        cls, title: Literal["Негативные процессы"]
-    ) -> Type[auto.Layer37296Feature]: ...
 
     @overload
     @classmethod

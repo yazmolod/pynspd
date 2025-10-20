@@ -3,7 +3,14 @@ from datetime import datetime
 from typing import Optional, Union
 
 from pynspd.schemas.base_feature import BaseFeature
-from pynspd.schemas.geometries import LineString, MultiPolygon, Point, Polygon
+from pynspd.schemas.geometries import (
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 
@@ -474,22 +481,26 @@ class Options278838(OptionProperties):
 
 class Options38967(OptionProperties):
     title_key = "process_ty_title"
-    process_ty: Optional[str] = None
-    """Тип"""
-    cad_distr: Optional[float] = None
+    sub_rf: Optional[str] = None
+    """Субъект РФ"""
+    cad_distr: Optional[str] = None
     """Кадастровый округ"""
     district: Optional[str] = None
     """Район"""
-    index_map: Optional[str] = None
-    """Индекс"""
     process_ty_title: Optional[str] = None
     """Вид и степень развития негативного процесса"""
+    index_map: Optional[str] = None
+    """Индекс"""
     shape_area: Optional[float] = None
     """Площадь проявления негативного процесса, га"""
     zone_proya: Optional[str] = None
     """Зона проявления"""
+    process_ty: Optional[str] = None
+    """Тип"""
     recommend: Optional[str] = None
     """Рекомендации по использованию земель"""
+    year: Optional[str] = None
+    """Год обследования"""
 
 
 class Options39228(OptionProperties):
@@ -1051,6 +1062,196 @@ class Options36991(OptionProperties):
     """Орган власти, организация выдавшие документ"""
 
 
+class Layer872153Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Водная эрозия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Водная эрозия",
+            "layerTreeId": 33357,
+            "layerId": 872153,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Водная эрозия",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872155Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Линейная эрозия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Линейная эрозия",
+            "layerTreeId": 33358,
+            "layerId": 872155,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Линейная эрозия",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872164Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Ветровая эрозия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Ветровая эрозия",
+            "layerTreeId": 33359,
+            "layerId": 872164,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Ветровая эрозия",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872182Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Опустынивание"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Опустынивание",
+            "layerTreeId": 33360,
+            "layerId": 872182,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Опустынивание",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872183Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Переувлажнение"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Переувлажнение",
+            "layerTreeId": 33361,
+            "layerId": 872183,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Переувлажнение",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872202Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Подтопление"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Подтопление",
+            "layerTreeId": 33362,
+            "layerId": 872202,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Подтопление",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872203Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Заболачивание"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Заболачивание",
+            "layerTreeId": 33363,
+            "layerId": 872203,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Заболачивание",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872205Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Затопление"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Затопление",
+            "layerTreeId": 33364,
+            "layerId": 872205,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Затопление",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872206Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Захламление"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Захламление",
+            "layerTreeId": 33365,
+            "layerId": 872206,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Захламление",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872210Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Обвально-осыпные и оползневые процессы"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Обвально-осыпные и оползневые процессы",
+            "layerTreeId": 33366,
+            "layerId": 872210,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Обвально-осыпные и оползневые процессы",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
 class Layer36945Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
 ):
@@ -1066,6 +1267,25 @@ class Layer36945Feature(
             "layerName": "ЕГРН. Кадастровые округа",
             "layerVisibleByDefault": False,
             "categoryId": 38030,
+        }
+    )
+
+
+class Layer872211Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Абразия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Абразия",
+            "layerTreeId": 33367,
+            "layerId": 872211,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Абразия",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
         }
     )
 
@@ -1108,6 +1328,25 @@ class Layer36070Feature(
     )
 
 
+class Layer872212Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Иные нарушенные земли"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Иные нарушенные земли ",
+            "layerTreeId": 33368,
+            "layerId": 872212,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Иные нарушенные земли",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
 class Layer36071Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36381]]
 ):
@@ -1127,7 +1366,142 @@ class Layer36071Feature(
     )
 
 
-class Layer37313Feature(BaseFeature[LineString, NspdProperties[Options38998]]):
+class Layer872213Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при наземном строительстве"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при наземном строительстве ",
+            "layerTreeId": 33369,
+            "layerId": 872213,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при наземном строительстве",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872216Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при гидротехническом строительстве"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при гидротехническом строительстве",
+            "layerTreeId": 33370,
+            "layerId": 872216,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при гидротехническом строительстве",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872217Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при недропользовании"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при недропользовании",
+            "layerTreeId": 33371,
+            "layerId": 872217,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при недропользовании",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872218Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при промышленном лесопользовании"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при промышленном лесопользовании",
+            "layerTreeId": 33372,
+            "layerId": 872218,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при промышленном лесопользовании",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872219Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при сельскохозяйственном освоении"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при сельскохозяйственном освоении",
+            "layerTreeId": 33373,
+            "layerId": 872219,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при сельскохозяйственном освоении",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872220Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при проведении геологоразведочных, испытательных, эксплуатационных и иных работ"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при проведении геологоразведочных, испытательных, эксплуатационных и иных работ",
+            "layerTreeId": 33374,
+            "layerId": 872220,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при проведении геологоразведочных, испытательных, эксплуатационных и иных работ",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872221Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Нарушенные земли при складировании и захоронении промышленных отходов, загрязнение земель"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Нарушенные земли при складировании и захоронении промышленных отходов, загрязнение земель",
+            "layerTreeId": 33375,
+            "layerId": 872221,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Нарушенные земли при складировании и захоронении промышленных отходов, загрязнение земель",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer37313Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
+):
     """Государственная граница Российской Федерации"""
 
     layer_meta = LayerNode.model_validate(
@@ -1144,7 +1518,47 @@ class Layer37313Feature(BaseFeature[LineString, NspdProperties[Options38998]]):
     )
 
 
-class Layer37314Feature(BaseFeature[LineString, NspdProperties[Options38999]]):
+class Layer872222Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Гари"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Гари",
+            "layerTreeId": 33376,
+            "layerId": 872222,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Гари",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer872224Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Негативный процесс отсутствует"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Негативный процесс отсутствует",
+            "layerTreeId": 33377,
+            "layerId": 872224,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Негативный процесс отсутствует",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
+class Layer37314Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38999]]
+):
     """Субъекты Российской Федерации (линии)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1180,6 +1594,25 @@ class Layer37315Feature(
     )
 
 
+class Layer872262Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Засоление"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Засоление",
+            "layerTreeId": 33378,
+            "layerId": 872262,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Засоление",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
 class Layer36278Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36829]]
 ):
@@ -1199,7 +1632,9 @@ class Layer36278Feature(
     )
 
 
-class Layer36279Feature(BaseFeature[LineString, NspdProperties[Options36830]]):
+class Layer36279Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options36830]]
+):
     """Муниципальные образования (линейный)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1235,7 +1670,9 @@ class Layer36281Feature(
     )
 
 
-class Layer37316Feature(BaseFeature[LineString, NspdProperties[Options38996]]):
+class Layer37316Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38996]]
+):
     """Населённые пункты (линии)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1442,7 +1879,9 @@ class Layer36329Feature(
     )
 
 
-class Layer37433Feature(BaseFeature[Point, NspdProperties[Options39663]]):
+class Layer37433Feature(
+    BaseFeature[Union[MultiPoint, Point], NspdProperties[Options39663]]
+):
     """Единые недвижимые комплексы"""
 
     layer_meta = LayerNode.model_validate(
@@ -1459,7 +1898,9 @@ class Layer37433Feature(BaseFeature[Point, NspdProperties[Options39663]]):
     )
 
 
-class Layer37434Feature(BaseFeature[Point, NspdProperties[Options39664]]):
+class Layer37434Feature(
+    BaseFeature[Union[MultiPoint, Point], NspdProperties[Options39664]]
+):
     """Предприятие как имущественный комплекс"""
 
     layer_meta = LayerNode.model_validate(
@@ -1590,7 +2031,9 @@ class Layer36315Feature(
     )
 
 
-class Layer37293Feature(BaseFeature[LineString, NspdProperties[Options38942]]):
+class Layer37293Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38942]]
+):
     """Красные линии"""
 
     layer_meta = LayerNode.model_validate(
@@ -1702,7 +2145,9 @@ class Layer36469Feature(
     )
 
 
-class Layer36470Feature(BaseFeature[LineString, NspdProperties[Options37148]]):
+class Layer36470Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options37148]]
+):
     """Береговые линии (границы водных объектов)(линейный)"""
 
     layer_meta = LayerNode.model_validate(
@@ -1814,26 +2259,9 @@ class Layer37295Feature(
     )
 
 
-class Layer37296Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+class Layer849601Feature(
+    BaseFeature[Union[MultiPoint, Point], NspdProperties[Options445547]]
 ):
-    """Негативные процессы"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Негативные процессы",
-            "layerTreeId": 65,
-            "layerId": 37296,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Негативные процессы",
-            "layerVisibleByDefault": False,
-            "categoryId": 38967,
-        }
-    )
-
-
-class Layer849601Feature(BaseFeature[Point, NspdProperties[Options445547]]):
     """Объекты туристского интереса"""
 
     layer_meta = LayerNode.model_validate(

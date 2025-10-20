@@ -48,10 +48,26 @@ class ShapeGeometry(BaseModel, Generic[BaseGeomT]):
         return shape_geom.shape(self)
 
 
-class Point(pyd_geom.Point, ShapeGeometry[shape_geom.Point]): ...
+class Point(pyd_geom.Point, ShapeGeometry[shape_geom.Point]):
+    def to_multi_shape(self) -> shape_geom.MultiPoint:
+        return shape_geom.MultiPoint([self.to_shape()])
 
 
-class LineString(pyd_geom.LineString, ShapeGeometry[shape_geom.LineString]): ...
+class MultiPoint(pyd_geom.MultiPoint, ShapeGeometry[shape_geom.MultiPoint]):
+    def to_multi_shape(self) -> shape_geom.MultiPoint:
+        return self.to_shape()
+
+
+class LineString(pyd_geom.LineString, ShapeGeometry[shape_geom.LineString]):
+    def to_multi_shape(self) -> shape_geom.MultiLineString:
+        return shape_geom.MultiLineString([self.to_shape()])
+
+
+class MultiLineString(
+    pyd_geom.MultiLineString, ShapeGeometry[shape_geom.MultiLineString]
+):
+    def to_multi_shape(self) -> shape_geom.MultiLineString:
+        return self.to_shape()
 
 
 class Polygon(pyd_geom.Polygon, ShapeGeometry[shape_geom.Polygon]):
@@ -67,7 +83,9 @@ class MultiPolygon(pyd_geom.MultiPolygon, ShapeGeometry[shape_geom.MultiPolygon]
 Geometry = Annotated[
     Union[
         Point,
+        MultiPoint,
         LineString,
+        MultiLineString,
         Polygon,
         MultiPolygon,
     ],

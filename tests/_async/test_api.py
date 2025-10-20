@@ -1,6 +1,13 @@
 import pytest
 from shapely import wkt
-from shapely.geometry import MultiPolygon, Polygon, box
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Polygon,
+    box,
+)
 
 from pynspd import AsyncNspd, NspdFeature
 from pynspd.errors import TooBigContour
@@ -133,3 +140,31 @@ async def test_search_in_big_contour(async_api: AsyncNspd):
     async for feat in async_api.search_in_contour_iter(contour, layer_def):
         assert feat is not None
         break
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_search_in_linear_layer(async_api: AsyncNspd):
+    feat = await async_api.find_in_layer(
+        "60:09-3.7", NspdFeature.by_title("Муниципальные образования (линейный)")
+    )
+    assert feat is not None
+    assert isinstance(feat.geometry.to_shape(), LineString)
+    assert isinstance(feat.geometry.to_multi_shape(), MultiLineString)
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_search_in_point_layer(async_api: AsyncNspd):
+    feats = await async_api.search_in_contour(
+        box(
+            34.93710,
+            61.90981,
+            35.43174,
+            62.15627,
+        ),
+        NspdFeature.by_title("Объекты туристского интереса"),
+    )
+    assert feats is not None
+    feat = feats[0]
+    # объекта в точечном слое с типом Point не нашел
+    # assert isinstance(feat.geometry.to_shape(), LineString)
+    assert isinstance(feat.geometry.to_multi_shape(), MultiPoint)
