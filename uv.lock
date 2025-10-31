@@ -1595,7 +1595,7 @@ requires-dist = [
     { name = "anysqlite", marker = "extra == 'sqlite'", specifier = ">=0.0.5" },
     { name = "geojson-pydantic", specifier = ">=1.2.0" },
     { name = "geopandas", marker = "extra == 'cli'", specifier = ">=1.0.1" },
-    { name = "hishel", specifier = ">=0.1.1" },
+    { name = "hishel", specifier = ">=0.1.1,<1.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mercantile", specifier = ">=1.2.1" },
     { name = "numpy", specifier = ">1.24.4" },

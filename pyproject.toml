@@ -18,7 +18,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "geojson-pydantic>=1.2.0",
-    "hishel>=0.1.1",
+    "hishel>=0.1.1,<1.0.0",
     "httpx>=0.28.1",
     "mercantile>=1.2.1",
     "numpy>1.24.4",
