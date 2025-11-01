@@ -1309,25 +1309,6 @@ class Layer36316Feature(
     )
 
 
-class Layer36070Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
-):
-    """Кадастровые районы"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Кадастровые районы ",
-            "layerTreeId": 5873,
-            "layerId": 36070,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "ЕГРН. Кадастровые районы",
-            "layerVisibleByDefault": False,
-            "categoryId": 36382,
-        }
-    )
-
-
 class Layer872212Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1343,6 +1324,25 @@ class Layer872212Feature(
             "layerName": "Иные нарушенные земли",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
+        }
+    )
+
+
+class Layer36070Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
+):
+    """Кадастровые районы"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые районы ",
+            "layerTreeId": 5873,
+            "layerId": 36070,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые районы",
+            "layerVisibleByDefault": False,
+            "categoryId": 36382,
         }
     )
 
@@ -1499,25 +1499,6 @@ class Layer872221Feature(
     )
 
 
-class Layer37313Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
-):
-    """Государственная граница Российской Федерации"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Государственная граница Российской Федерации",
-            "layerTreeId": 7,
-            "layerId": 37313,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Государственная граница Российской Федерации",
-            "layerVisibleByDefault": False,
-            "categoryId": 38998,
-        }
-    )
-
-
 class Layer872222Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1533,6 +1514,25 @@ class Layer872222Feature(
             "layerName": "Гари",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
+        }
+    )
+
+
+class Layer37313Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
+):
+    """Государственная граница Российской Федерации"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Государственная граница Российской Федерации",
+            "layerTreeId": 7,
+            "layerId": 37313,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Государственная граница Российской Федерации",
+            "layerVisibleByDefault": False,
+            "categoryId": 38998,
         }
     )
 

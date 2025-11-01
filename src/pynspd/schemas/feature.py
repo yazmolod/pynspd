@@ -153,14 +153,14 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
-        cls, title: Literal["Кадастровые районы "]
-    ) -> Type[auto.Layer36070Feature]: ...
+        cls, title: Literal["Иные нарушенные земли "]
+    ) -> Type[auto.Layer872212Feature]: ...
 
     @overload
     @classmethod
     def by_title(
-        cls, title: Literal["Иные нарушенные земли "]
-    ) -> Type[auto.Layer872212Feature]: ...
+        cls, title: Literal["Кадастровые районы "]
+    ) -> Type[auto.Layer36070Feature]: ...
 
     @overload
     @classmethod
@@ -218,13 +218,13 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
 
     @overload
     @classmethod
-    def by_title(
-        cls, title: Literal["Государственная граница Российской Федерации"]
-    ) -> Type[auto.Layer37313Feature]: ...
+    def by_title(cls, title: Literal["Гари"]) -> Type[auto.Layer872222Feature]: ...
 
     @overload
     @classmethod
-    def by_title(cls, title: Literal["Гари"]) -> Type[auto.Layer872222Feature]: ...
+    def by_title(
+        cls, title: Literal["Государственная граница Российской Федерации"]
+    ) -> Type[auto.Layer37313Feature]: ...
 
     @overload
     @classmethod
