@@ -95,7 +95,7 @@
 
 - `cache_storage`
 
-    Ручная настройка объекта хранилища кэша. Подробнее читайте [здесь](https://hishel.com/advanced/storages/). По умолчанию `None`.
+    Ручная настройка объекта хранилища кэша. Подробнее читайте [здесь](https://hishel.com/0.1.5/advanced/storages/). По умолчанию `None`.
 
 
 ## `Nspd` и `AsyncNspd`: что выбрать?

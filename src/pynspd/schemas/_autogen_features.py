@@ -504,9 +504,47 @@ class Options38967(OptionProperties):
 
 
 class Options39228(OptionProperties):
-    title_key = "Учётный номер КК"
-    terr_name: Optional[str] = None
-    """Наименование территории"""
+    title_key = "terr_name"
+    kkaccountnumber: Optional[str] = None
+    """Учетный номер кадастрового квартала"""
+    stateKKR: Optional[str] = None
+    """Статус выполнения комплексных кадастровых работ"""
+    contract: Optional[datetime] = None
+    """Дата контракта на выполнение комплексных кадастровых работ"""
+    contractNum: Optional[str] = None
+    """Номер контракта на выполнение комплексных кадастровых работ"""
+    krstartdate: Optional[datetime] = None
+    """Дата начала комплексных кадастровых работ"""
+    krenddate: Optional[datetime] = None
+    """Дата окончания комплексных кадастровых работ"""
+    krcustomername: Optional[str] = None
+    """Наименование заказчика комплексных кадастровых работ"""
+    krcustomeraddress: Optional[str] = None
+    """Адрес заказчика комплексных кадастровых работ"""
+    krcustomeremail: Optional[str] = None
+    """Адрес электронной почты заказчика комплексных кадастровых работ"""
+    krcustomerphone: Optional[str] = None
+    """Телефон заказчика комплексных кадастровых работ"""
+    krcontractorname: Optional[str] = None
+    """Наименование юридического лица, с которым заключён контракт на выполнение комплексных кадастровых работ"""
+    krsurveyorname: Optional[str] = None
+    """ФИО кадастрового инженера"""
+    krsurveyoraddress: Optional[str] = None
+    """Адрес кадастрового инженера"""
+    krsurveyoremail: Optional[str] = None
+    """Адрес электронной почты кадастрового инженера"""
+    krsurveyorphone: Optional[str] = None
+    """Телефон кадастрового инженера"""
+    krsurveyoratt: Optional[str] = None
+    """Номер аттестата кадастрового инженера"""
+    krsurveyorattdate: Optional[datetime] = None
+    """Дата выдачи аттестата кадастрового инженера"""
+    krsurveyorsroname: Optional[str] = None
+    """Наименование саморегулируемой организации, членом которой является кадастровый инженер"""
+    typeKKR: Optional[str] = None
+    """Время выполнения работ/Место проведения работ/Виды работ"""
+    krsurveyoraddress: Optional[str] = None
+    """Адрес для предоставления документов о ранее учтенных земельных участках"""
 
 
 class Options38979(OptionProperties): ...
@@ -1252,25 +1290,6 @@ class Layer872210Feature(
     )
 
 
-class Layer36945Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
-):
-    """Кадастровые округа"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Кадастровые округа",
-            "layerTreeId": 3,
-            "layerId": 36945,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "ЕГРН. Кадастровые округа",
-            "layerVisibleByDefault": False,
-            "categoryId": 38030,
-        }
-    )
-
-
 class Layer872211Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1286,6 +1305,25 @@ class Layer872211Feature(
             "layerName": "Абразия",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
+        }
+    )
+
+
+class Layer36945Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
+):
+    """Кадастровые округа"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые округа",
+            "layerTreeId": 3,
+            "layerId": 36945,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые округа",
+            "layerVisibleByDefault": False,
+            "categoryId": 38030,
         }
     )
 
@@ -1309,25 +1347,6 @@ class Layer36316Feature(
     )
 
 
-class Layer872212Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
-):
-    """Иные нарушенные земли"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Иные нарушенные земли ",
-            "layerTreeId": 33368,
-            "layerId": 872212,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Иные нарушенные земли",
-            "layerVisibleByDefault": False,
-            "categoryId": 38967,
-        }
-    )
-
-
 class Layer36070Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
 ):
@@ -1343,6 +1362,25 @@ class Layer36070Feature(
             "layerName": "ЕГРН. Кадастровые районы",
             "layerVisibleByDefault": False,
             "categoryId": 36382,
+        }
+    )
+
+
+class Layer872212Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Иные нарушенные земли"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Иные нарушенные земли ",
+            "layerTreeId": 33368,
+            "layerId": 872212,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Иные нарушенные земли",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
         }
     )
 
@@ -1499,25 +1537,6 @@ class Layer872221Feature(
     )
 
 
-class Layer872222Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
-):
-    """Гари"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Гари",
-            "layerTreeId": 33376,
-            "layerId": 872222,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Гари",
-            "layerVisibleByDefault": False,
-            "categoryId": 38967,
-        }
-    )
-
-
 class Layer37313Feature(
     BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
 ):
@@ -1533,6 +1552,25 @@ class Layer37313Feature(
             "layerName": "Государственная граница Российской Федерации",
             "layerVisibleByDefault": False,
             "categoryId": 38998,
+        }
+    )
+
+
+class Layer872222Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Гари"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Гари",
+            "layerTreeId": 33376,
+            "layerId": 872222,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Гари",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
         }
     )
 
