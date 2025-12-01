@@ -478,9 +478,11 @@ class Nspd(BaseNspdClient):
             )
             return self._validate_feature_collection_response(response)
         except err.PynspdServerError as e:
-            if '"code":400004' in e.response.text:
+            if '"code":400104' in e.response.text:
                 raise err.TooBigContour from e
             raise e
+        except json.decoder.JSONDecodeError as e:
+            raise err.TooBigContour from e
 
     def search_in_contour(
         self,
