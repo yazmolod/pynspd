@@ -139,7 +139,7 @@ class Options36369(OptionProperties):
     """Завершение строительства (г.)"""
     year_commisioning: Optional[str] = None
     """Ввод в эксплуатацию (г.)"""
-    cultural_heritage_object: Optional[str] = None
+    cultural_heritage_val: Optional[str] = None
     """Сведения о включении объекта недвижимости в единый государственный реестр объектов культурного наследия (памятников истории и культуры) народов Российской Федерации"""
     united_cad_number: Optional[str] = None
     """Кадастровый номер единого недвижимого комплекса, в состав которого входит здание"""
@@ -231,36 +231,6 @@ class Options36382(OptionProperties):
     """Количество предприятий как имущественных комплексов"""
 
 
-class Options38943(OptionProperties):
-    title_key = "address"
-    id: Optional[str] = None
-    """ID"""
-    doc_guid: Optional[str] = None
-    """GUID"""
-    doc_type: Optional[str] = None
-    """Наименование вида документа об утверждении схемы расположения земельного участка"""
-    doc_gov: Optional[str] = None
-    """наименование уполномоченного органа"""
-    doc_date: Optional[datetime] = None
-    """дата"""
-    doc_number: Optional[str] = None
-    """номер"""
-    cond_numbe: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    shape_area: Optional[float] = None
-    """Площадь (кв. м)"""
-    address: Optional[str] = None
-    """Адрес или иное описание местоположения земельного участка"""
-    kvartal_id: Optional[str] = None
-    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
-    name_zone: Optional[str] = None
-    """Территориальная зона, в границах которой образуется земельный участок"""
-    category_code: Optional[str] = None
-    """Категория земель образуемого земельного"""
-    utilization: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-
-
 class Options36383(OptionProperties):
     title_key = "cad_number"
     object_type_value: Optional[str] = None
@@ -313,6 +283,36 @@ class Options36383(OptionProperties):
     """Кадастровый номер единого недвижимого комплекса, в состав которого входит сооружение"""
     facility_cad_number: Optional[str] = None
     """Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит"""
+
+
+class Options38943(OptionProperties):
+    title_key = "address"
+    id: Optional[str] = None
+    """ID"""
+    doc_guid: Optional[str] = None
+    """GUID"""
+    doc_type: Optional[str] = None
+    """Наименование вида документа об утверждении схемы расположения земельного участка"""
+    doc_gov: Optional[str] = None
+    """наименование уполномоченного органа"""
+    doc_date: Optional[datetime] = None
+    """дата"""
+    doc_number: Optional[str] = None
+    """номер"""
+    cond_numbe: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    shape_area: Optional[float] = None
+    """Площадь (кв. м)"""
+    address: Optional[str] = None
+    """Адрес или иное описание местоположения земельного участка"""
+    kvartal_id: Optional[str] = None
+    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
+    name_zone: Optional[str] = None
+    """Территориальная зона, в границах которой образуется земельный участок"""
+    category_code: Optional[str] = None
+    """Категория земель образуемого земельного"""
+    utilization: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
 
 
 class Options36384(OptionProperties):
@@ -371,56 +371,6 @@ class Options38942(OptionProperties):
     """дата"""
     DOC_GOV: Optional[str] = None
     """орган власти, организация выдавшие документ"""
-
-
-class Options445347(OptionProperties):
-    title_key = "type"
-    cn: Optional[str] = None
-    """Кадастровый или условный номер"""
-    kvartal_cn: Optional[str] = None
-    """Кадастровый квартал"""
-    reg_name: Optional[str] = None
-    """Субъект Российской Федерации"""
-    mun: Optional[str] = None
-    """Муниципальное образование"""
-    np: Optional[str] = None
-    """Населенный пункт"""
-    address: Optional[str] = None
-    """Адрес"""
-    area: Optional[float] = None
-    """Площадь"""
-    category_text: Optional[str] = None
-    """Категория земель"""
-    util_by_doc: Optional[str] = None
-    """Вид разрешенного использования"""
-    right: Optional[str] = None
-    """Форма собственности"""
-    potential: Optional[str] = None
-    """Потенциал использования"""
-    has_oks: Optional[str] = None
-    """Объекты капитального строительства"""
-    has_network: Optional[str] = None
-    """Инженерные сети"""
-    develop_build: Optional[str] = None
-    """Входит в территорию, в отношении которой возможно (планируется) комплексное развитие территории жилой застройки"""
-    privileges_peo: Optional[str] = None
-    """Предназначена для предоставления льготным категориям граждан"""
-    privileges: Optional[str] = None
-    """Льготная категория"""
-    dom_rf: Optional[str] = None
-    """Агентом Российской Федерации в отношении земельного участка выступает АО «ДОМ. РФ»"""
-    uo_name: Optional[str] = None
-    """Наименование уполномоченного органа"""
-    uo_address: Optional[str] = None
-    """Адрес уполномоченного органа"""
-    uo_phone: Optional[str] = None
-    """Телефон уполномоченного органа"""
-    uo_url: Optional[str] = None
-    """Сайт в сети Интернет"""
-    uo_email: Optional[str] = None
-    """e-mail"""
-    inves_portal: Optional[str] = None
-    """Инвестиционный портал региона"""
 
 
 class Options38944(OptionProperties):
@@ -772,80 +722,32 @@ class Options38996(OptionProperties):
     """орган власти, организация выдавшие документ"""
 
 
-class Options445397(OptionProperties):
-    title_key = "type"
-    cn: Optional[str] = None
-    """Кадастровый или условный номер"""
-    kvartal_cn: Optional[str] = None
-    """Кадастровый квартал"""
-    reg_name: Optional[str] = None
-    """Субъект Российской Федерации"""
-    mun: Optional[str] = None
-    """Муниципальное образование"""
-    np: Optional[str] = None
-    """Населенный пункт"""
-    address: Optional[str] = None
-    """Адрес"""
-    area: Optional[float] = None
-    """Площадь, м"""
-    category_text: Optional[str] = None
-    """Категория земель"""
-    terzone_name_by_pzz: Optional[str] = None
-    """Территориальная зона"""
-    util_by_doc: Optional[str] = None
-    """Вид разрешенного использования"""
-    right: Optional[str] = None
-    """Форма собственности"""
-    cad_cost: Optional[str] = None
-    """Кадастровая стоимость"""
-    power_supply: Optional[str] = None
-    """Электроснабжение"""
-    water_supply: Optional[str] = None
-    """Водоснабжение"""
-    gas_supply: Optional[str] = None
-    """Газоснабжение"""
-    sewerage: Optional[str] = None
-    """Канализация"""
-    heat_supply: Optional[str] = None
-    """Теплоснабжение"""
-    poi: Optional[str] = None
-    """Наименование ближайшего объекта туристского интереса"""
-    poi_cn: Optional[str] = None
-    """Кадастровый или реестровый номер объекта туристского интереса"""
-    distance_to_near_tour_object: Optional[float] = None
-    """Расстояние до ближайшего объекта туристского интереса (км)"""
-    id_oti: Optional[str] = None
-    """Идентификационный номер объекта туристского интереса"""
-    distance_to_near_fed_road: Optional[float] = None
-    """Расстояние до ближайшей федеральной трассы (км)"""
-    distance_to_near_hard_road: Optional[float] = None
-    """Расстояние до ближайшей дороги с твердым покрытием (км)"""
-    distance_to_near_district: Optional[float] = None
-    """Расстояние до ближайшего центра муниципального района или городского округа (км)"""
-    distance_to_near_locality: Optional[float] = None
-    """Расстояние до ближайшего населенного пункта (км)"""
-    distance_to_near_public_catering: Optional[float] = None
-    """Расстояние до ближайшего объекта общественного питания (км)"""
-    distance_to_near_health_care: Optional[float] = None
-    """Расстояние до ближайшего объекта здравоохранения (км)"""
-    distance_to_near_public_transport: Optional[float] = None
-    """Расстояние до ближайшей остановки общественного транспорта (км)"""
-    distance_to_near_railway_station: Optional[float] = None
-    """Расстояние до ближайшей железнодорожной станции (км)"""
-    distance_to_near_airport: Optional[float] = None
-    """Расстояние до ближайшего аэропорта (км)"""
-    additional_info: Optional[str] = None
-    """Инвестиционный портал региона"""
-    tour_object_description: Optional[str] = None
-    """Информационной ресурс, содержащий информацию об объекте туристского интереса"""
-    uo_name: Optional[str] = None
-    """Наименование уполномоченного органа"""
-    uo_phone: Optional[str] = None
-    """Телефон уполномоченного органа"""
-    uo_address: Optional[str] = None
-    """Адрес уполномоченного органа"""
-    uo_email: Optional[str] = None
-    """e-mail"""
+class Options36948(OptionProperties):
+    title_key = "name_by_doc"
+    type_boundary_value: Optional[str] = None
+    """Вид"""
+    registration_date: Optional[datetime] = None
+    """Дата присвоения"""
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+    cadastral_district: Optional[str] = None
+    """Кадастровый район"""
+    old_account_number: Optional[str] = None
+    """Учетный номер"""
+    name_by_doc: Optional[str] = None
+    """Наименование"""
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничение"""
+    document_name: Optional[str] = None
+    """Реквизиты решения об установлении (изменении) границ"""
+    legal_act_document_name: Optional[str] = None
+    """Наименование документа"""
+    legal_act_document_number: Optional[str] = None
+    """Номер"""
+    legal_act_document_date: Optional[str] = None
+    """Дата"""
+    legal_act_document_issuer: Optional[str] = None
+    """Орган власти, организация выдавшие документ"""
 
 
 class Options38998(OptionProperties):
@@ -898,34 +800,6 @@ class Options39000(OptionProperties):
     """дата"""
     legal_act_document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
-
-
-class Options36948(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
 
 
 class Options36829(OptionProperties):
@@ -998,34 +872,6 @@ class Options36832(OptionProperties):
     """дата"""
     document_issuer: Optional[str] = None
     """орган власти, организация выдавшие документ"""
-
-
-class Options445547(OptionProperties):
-    title_key = "id"
-    name: Optional[str] = None
-    """Наименование объекта туристского интереса"""
-    cn: Optional[str] = None
-    """Кадастровый номер (при наличии)"""
-    address: Optional[str] = None
-    """Адрес объекта туристского интереса"""
-    type: Optional[str] = None
-    """Тип объекта туристского интереса"""
-    vid_oopt: Optional[str] = None
-    """Вид особо охраняемой природной территории"""
-    unesko: Optional[str] = None
-    """Наличие у объекта туристского интереса статуса ЮНЕСКО"""
-    vid_okn: Optional[str] = None
-    """Вид объекта культурного-исторического наследия"""
-    status: Optional[str] = None
-    """Статус объекта туристского интереса"""
-    potential: Optional[str] = None
-    """Потенциальный интерес к объекту"""
-    tourist: Optional[str] = None
-    """Среднее количество туристов, посетивших объект туристского интереса за два предыдущих года(тыс. чел.)"""
-    paid_services: Optional[str] = None
-    """Средний объем платных услуг, оказанных объектом туристского интереса за два предыдущих года(млн. руб.)"""
-    url: Optional[str] = None
-    """Ссылка на портал, содержащий информацию об объекте туристского интереса"""
 
 
 class Options39663(OptionProperties):
@@ -1347,6 +1193,25 @@ class Layer36316Feature(
     )
 
 
+class Layer872212Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
+):
+    """Иные нарушенные земли"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Иные нарушенные земли ",
+            "layerTreeId": 33368,
+            "layerId": 872212,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Иные нарушенные земли",
+            "layerVisibleByDefault": False,
+            "categoryId": 38967,
+        }
+    )
+
+
 class Layer36070Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
 ):
@@ -1366,19 +1231,19 @@ class Layer36070Feature(
     )
 
 
-class Layer872212Feature(
+class Layer872213Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
-    """Иные нарушенные земли"""
+    """Нарушенные земли при наземном строительстве"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Иные нарушенные земли ",
-            "layerTreeId": 33368,
-            "layerId": 872212,
+            "title": "Нарушенные земли при наземном строительстве ",
+            "layerTreeId": 33369,
+            "layerId": 872213,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Иные нарушенные земли",
+            "layerName": "Нарушенные земли при наземном строительстве",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
         }
@@ -1400,25 +1265,6 @@ class Layer36071Feature(
             "layerName": "ЕГРН. Кадастровые кварталы",
             "layerVisibleByDefault": False,
             "categoryId": 36381,
-        }
-    )
-
-
-class Layer872213Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
-):
-    """Нарушенные земли при наземном строительстве"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Нарушенные земли при наземном строительстве ",
-            "layerTreeId": 33369,
-            "layerId": 872213,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Нарушенные земли при наземном строительстве",
-            "layerVisibleByDefault": False,
-            "categoryId": 38967,
         }
     )
 
@@ -1799,44 +1645,6 @@ class Layer37298Feature(
             "layerName": "Земельные участки свободные от прав третьих лиц",
             "layerVisibleByDefault": False,
             "categoryId": 38979,
-        }
-    )
-
-
-class Layer849407Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options445347]]
-):
-    """Земля для стройки ПКК"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земля для стройки ПКК",
-            "layerTreeId": 6409,
-            "layerId": 849407,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Земля для стройки",
-            "layerVisibleByDefault": False,
-            "categoryId": 445347,
-        }
-    )
-
-
-class Layer849453Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options445397]]
-):
-    """Земля для туризма ПКК"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земля для туризма ПКК",
-            "layerTreeId": 6410,
-            "layerId": 849453,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Земля для туризма",
-            "layerVisibleByDefault": False,
-            "categoryId": 445397,
         }
     )
 
@@ -2293,25 +2101,6 @@ class Layer37295Feature(
             "layerName": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
             "layerVisibleByDefault": False,
             "categoryId": 38944,
-        }
-    )
-
-
-class Layer849601Feature(
-    BaseFeature[Union[MultiPoint, Point], NspdProperties[Options445547]]
-):
-    """Объекты туристского интереса"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Объекты туристского интереса",
-            "layerTreeId": 6487,
-            "layerId": 849601,
-            "layerType": "wms",
-            "geometryType": "POINT",
-            "layerName": "Объекты туристского интереса",
-            "layerVisibleByDefault": False,
-            "categoryId": 445547,
         }
     )
 
