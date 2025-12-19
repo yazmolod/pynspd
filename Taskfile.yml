@@ -1,0 +1,70 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task: help
+
+  help:
+    desc: "Show this help"
+    cmds:
+      - task --list
+
+  install:
+    desc: Install all packages in venv using uv
+    cmds:
+      - uv sync --all-groups --all-extras --frozen
+      - uv run pre-commit install
+
+  lint:
+    desc: Format and lint code
+    cmds:
+      - uv run ruff check --fix
+      - uv run ruff check --select I --fix
+      - uv run ruff format
+
+  unasync:
+    desc: Generate sync version
+    cmds:
+      - uv run scripts/unasync.py
+      - task: lint
+
+  autogen:
+    desc: Sync layer models with current site state
+    cmds:
+      - uv run scripts/autogeneration.py
+      - task: lint
+
+  tests:
+    desc: Run tests
+    cmds:
+      - uv run coverage run -m pytest tests
+
+  coverage:
+    desc: Show (and optionally update) code coverage
+    vars:
+      COVERALLS: "{{ .COVERALLS | default false }}"
+    cmds:
+      - uv run coverage html
+      - pwsh -c "Invoke-Expression "./htmlcov/index.html""
+      - |
+        if [ {{.COVERALLS}} = true ]; then 
+          uv run coveralls; 
+        fi
+    silent: true
+
+  publish:
+    dotenv:
+      - .env
+    desc: Publish to PyPI
+    cmds:
+      - rm -rf dist
+      - uv build
+      - uv publish
+
+  docs:
+    desc: Run mkdocs server
+    cmds:
+      - uv run mkdocs serve
