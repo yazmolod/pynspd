@@ -8,26 +8,24 @@
 
 Для начала разработки вам нужно сделать свой [форк репозитория pynspd](https://github.com/yazmolod/pynspd/fork).
 
+!!! warning "Использование внешних утилит"
+    Описанные ниже команды использует:
+
+    - [`task`](https://taskfile.dev/docs/installation) - запуск команд в терминале;
+    - [`uv`](https://docs.astral.sh/uv/getting-started/installation/) - современный пакетный менеджер для `python`.
+    
+    Перед началом работы убедитесь, что они установлены.
+
 После этого клонировать репозиторий локально, перейти в скачанную папку и запустить скрипт установки:
 
-!!! warning "Внимание: внешняя зависимость"
-    `pynspd` использует пакетный менеджер [uv](https://docs.astral.sh/uv/) - невероятно быструю замену `pip` и многих других инструментов.
-
-    Убедитесь, что он [установлен](https://docs.astral.sh/uv/getting-started/installation/) перед запуском `make`-команд.
 
 ```bash
 git clone https://github.com/YOUR-USERNAME/pynspd
 cd pynspd
-make install
+task install
 ```
 
 
-??? info "Утилита `make` для Windows"
-    Если вы пользователь Windows, `make` нужно установить отдельно. 
-    Автор рекомендует использовать для этого пакетный менеджер [chocolatey](https://chocolatey.org/install):
-    ```pwsh
-    choco install make
-    ```
 
 
 ## Async/Sync
@@ -39,20 +37,20 @@ make install
 Синхронный код генерируется при помощи команды:
 
 ```bash
-make unasync
+task unasync
 ```
 
 ## Тестирование и линтинг
 Запуск тестов осуществляется при помощи команды:
 
 ```bash
-make tests
+task tests
 ```
 
 Линтинг и форматирование:
 
 ```bash
-make lint
+task lint
 ```
 
 ## Написание документации
@@ -62,6 +60,6 @@ make lint
 Для локального разворачивания сайта документации, воспользуйтесь командой:
 
 ```bash
-make docs
+task docs
 ```
 
