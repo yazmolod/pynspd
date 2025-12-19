@@ -56,9 +56,9 @@ tasks:
     silent: true
 
   publish:
+    desc: Publish to PyPI
     dotenv:
       - .env
-    desc: Publish to PyPI
     cmds:
       - rm -rf dist
       - uv build
@@ -68,3 +68,13 @@ tasks:
     desc: Run mkdocs server
     cmds:
       - uv run mkdocs serve
+
+  release:
+    desc: Rollingg up new release
+    vars:
+      GIT_TAG:
+        sh: uv run hatch version
+    cmds:
+      - git tag {{ .GIT_TAG }}
+      - git push origin main --tags
+      - task: publish
