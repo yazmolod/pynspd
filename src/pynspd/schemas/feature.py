@@ -153,26 +153,26 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
-        cls, title: Literal["Кадастровые районы "]
-    ) -> Type[auto.Layer36070Feature]: ...
-
-    @overload
-    @classmethod
-    def by_title(
         cls, title: Literal["Иные нарушенные земли "]
     ) -> Type[auto.Layer872212Feature]: ...
 
     @overload
     @classmethod
     def by_title(
-        cls, title: Literal["Кадастровые кварталы"]
-    ) -> Type[auto.Layer36071Feature]: ...
+        cls, title: Literal["Кадастровые районы "]
+    ) -> Type[auto.Layer36070Feature]: ...
 
     @overload
     @classmethod
     def by_title(
         cls, title: Literal["Нарушенные земли при наземном строительстве "]
     ) -> Type[auto.Layer872213Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Кадастровые кварталы"]
+    ) -> Type[auto.Layer36071Feature]: ...
 
     @overload
     @classmethod
@@ -298,18 +298,6 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     def by_title(
         cls, title: Literal["Земельные участки, свободные от прав третьих лиц"]
     ) -> Type[auto.Layer37298Feature]: ...
-
-    @overload
-    @classmethod
-    def by_title(
-        cls, title: Literal["Земля для стройки ПКК"]
-    ) -> Type[auto.Layer849407Feature]: ...
-
-    @overload
-    @classmethod
-    def by_title(
-        cls, title: Literal["Земля для туризма ПКК"]
-    ) -> Type[auto.Layer849453Feature]: ...
 
     @overload
     @classmethod
@@ -452,12 +440,6 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
             "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"
         ],
     ) -> Type[auto.Layer37295Feature]: ...
-
-    @overload
-    @classmethod
-    def by_title(
-        cls, title: Literal["Объекты туристского интереса"]
-    ) -> Type[auto.Layer849601Feature]: ...
 
     @overload
     @classmethod
