@@ -70,11 +70,11 @@ tasks:
       - uv run mkdocs serve
 
   release:
-    desc: Rollingg up new release
+    desc: Rolling up new release
     vars:
       GIT_TAG:
         sh: uv run hatch version
     cmds:
-      - git tag {{ .GIT_TAG }}
+      - git tag v{{ .GIT_TAG }}
       - git push origin main --tags
       - task: publish
