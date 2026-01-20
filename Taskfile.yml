@@ -37,7 +37,7 @@ tasks:
       - uv run scripts/autogeneration.py
       - task: lint
 
-  tests:
+  test:
     desc: Run tests
     cmds:
       - uv run coverage run -m pytest tests
