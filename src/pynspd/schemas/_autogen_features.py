@@ -231,6 +231,100 @@ class Options36382(OptionProperties):
     """Количество предприятий как имущественных комплексов"""
 
 
+class Options470045(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options470048(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options470049(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options470050(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options470046(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options470047(OptionProperties):
+    indicator: Optional[str] = None
+    """Индикатор"""
+    year: Optional[str] = None
+    """Период"""
+
+
+class Options38943(OptionProperties):
+    title_key = "address"
+    id: Optional[str] = None
+    """ID"""
+    doc_guid: Optional[str] = None
+    """GUID"""
+    doc_type: Optional[str] = None
+    """Наименование вида документа об утверждении схемы расположения земельного участка"""
+    doc_gov: Optional[str] = None
+    """наименование уполномоченного органа"""
+    doc_date: Optional[datetime] = None
+    """дата"""
+    doc_number: Optional[str] = None
+    """номер"""
+    cond_numbe: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    shape_area: Optional[float] = None
+    """Площадь (кв. м)"""
+    address: Optional[str] = None
+    """Адрес или иное описание местоположения земельного участка"""
+    kvartal_id: Optional[str] = None
+    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
+    name_zone: Optional[str] = None
+    """Территориальная зона, в границах которой образуется земельный участок"""
+    category_code: Optional[str] = None
+    """Категория земель образуемого земельного"""
+    utilization: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+
+
+class Options37158(OptionProperties):
+    title_key = "nominal_number"
+    nominal_number: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    area: Optional[str] = None
+    """Площадь образуемого земельного участка (кв. м)"""
+    land_use_text: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+    brd_nmb: Optional[str] = None
+    """номер"""
+    registration_date: Optional[datetime] = None
+    """дата"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[datetime] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
 class Options36383(OptionProperties):
     title_key = "cad_number"
     object_type_value: Optional[str] = None
@@ -285,36 +379,6 @@ class Options36383(OptionProperties):
     """Кадастровый номер предприятия как имущественного комплекса, в состав которого сооружение (имущественное право на здание) входит"""
 
 
-class Options38943(OptionProperties):
-    title_key = "address"
-    id: Optional[str] = None
-    """ID"""
-    doc_guid: Optional[str] = None
-    """GUID"""
-    doc_type: Optional[str] = None
-    """Наименование вида документа об утверждении схемы расположения земельного участка"""
-    doc_gov: Optional[str] = None
-    """наименование уполномоченного органа"""
-    doc_date: Optional[datetime] = None
-    """дата"""
-    doc_number: Optional[str] = None
-    """номер"""
-    cond_numbe: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    shape_area: Optional[float] = None
-    """Площадь (кв. м)"""
-    address: Optional[str] = None
-    """Адрес или иное описание местоположения земельного участка"""
-    kvartal_id: Optional[str] = None
-    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
-    name_zone: Optional[str] = None
-    """Территориальная зона, в границах которой образуется земельный участок"""
-    category_code: Optional[str] = None
-    """Категория земель образуемого земельного"""
-    utilization: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-
-
 class Options36384(OptionProperties):
     title_key = "cad_num"
     object_under_construction_record_record_type_value: Optional[str] = None
@@ -357,22 +421,6 @@ class Options36384(OptionProperties):
     """Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса"""
 
 
-class Options38942(OptionProperties):
-    title_key = "brd_nmb"
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничения"""
-    doc: Optional[str] = None
-    """Реквизиты решения об утверждении документации по планировке территории"""
-    DOC_TYPE: Optional[str] = None
-    """документ"""
-    DOC_NUMBER: Optional[str] = None
-    """номер"""
-    DOC_DATE: Optional[datetime] = None
-    """дата"""
-    DOC_GOV: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
 class Options38944(OptionProperties):
     schema1: Optional[str] = None
     """Тип"""
@@ -382,28 +430,6 @@ class Options38944(OptionProperties):
     """Тип части"""
     building: Optional[str] = None
     """Наличие объектов капитального строительства"""
-
-
-class Options37158(OptionProperties):
-    title_key = "nominal_number"
-    nominal_number: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    area: Optional[str] = None
-    """Площадь образуемого земельного участка (кв. м)"""
-    land_use_text: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-    brd_nmb: Optional[str] = None
-    """номер"""
-    registration_date: Optional[datetime] = None
-    """дата"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[datetime] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
 
 
 class Options278838(OptionProperties):
@@ -802,6 +828,22 @@ class Options39000(OptionProperties):
     """орган власти, организация выдавшие документ"""
 
 
+class Options38942(OptionProperties):
+    title_key = "brd_nmb"
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничения"""
+    doc: Optional[str] = None
+    """Реквизиты решения об утверждении документации по планировке территории"""
+    DOC_TYPE: Optional[str] = None
+    """документ"""
+    DOC_NUMBER: Optional[str] = None
+    """номер"""
+    DOC_DATE: Optional[datetime] = None
+    """дата"""
+    DOC_GOV: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
 class Options36829(OptionProperties):
     title_key = "name"
     type: Optional[str] = None
@@ -946,6 +988,63 @@ class Options36991(OptionProperties):
     """Орган власти, организация выдавшие документ"""
 
 
+class Layer872974Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470045]]
+):
+    """Объекты площадью от 0 до 25 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 0 до 25 кв. м",
+            "layerTreeId": 34034,
+            "layerId": 872974,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 0 до 25 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470045,
+        }
+    )
+
+
+class Layer872975Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470046]]
+):
+    """Объекты площадью от 25 до 40 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 25 до 40 кв. м",
+            "layerTreeId": 34035,
+            "layerId": 872975,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 25 до 40 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470046,
+        }
+    )
+
+
+class Layer872976Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470047]]
+):
+    """Объекты площадью от 40 до 60 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 40 до 60 кв. м",
+            "layerTreeId": 34036,
+            "layerId": 872976,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 40 до 60 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470047,
+        }
+    )
+
+
 class Layer872153Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -965,6 +1064,25 @@ class Layer872153Feature(
     )
 
 
+class Layer872977Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470048]]
+):
+    """Объекты площадью от 60 до 80 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 60 до 80 кв. м",
+            "layerTreeId": 34037,
+            "layerId": 872977,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 60 до 80 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470048,
+        }
+    )
+
+
 class Layer872155Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -980,6 +1098,44 @@ class Layer872155Feature(
             "layerName": "Линейная эрозия",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
+        }
+    )
+
+
+class Layer872978Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470049]]
+):
+    """Объекты площадью от 80 до 100 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 80 до 100 кв. м",
+            "layerTreeId": 34038,
+            "layerId": 872978,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 80 до 100 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470049,
+        }
+    )
+
+
+class Layer872979Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470050]]
+):
+    """Объекты площадью от 100 кв. м"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты площадью от 100 кв. м",
+            "layerTreeId": 34039,
+            "layerId": 872979,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Объекты площадью от 100 кв. м",
+            "layerVisibleByDefault": False,
+            "categoryId": 470050,
         }
     )
 

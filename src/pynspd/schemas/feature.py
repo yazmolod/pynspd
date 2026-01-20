@@ -77,14 +77,50 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Объекты площадью от 0 до 25 кв. м"]
+    ) -> Type[auto.Layer872974Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Объекты площадью от 25 до 40 кв. м"]
+    ) -> Type[auto.Layer872975Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Объекты площадью от 40 до 60 кв. м"]
+    ) -> Type[auto.Layer872976Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Водная эрозия"]
     ) -> Type[auto.Layer872153Feature]: ...
 
     @overload
     @classmethod
     def by_title(
+        cls, title: Literal["Объекты площадью от 60 до 80 кв. м"]
+    ) -> Type[auto.Layer872977Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
         cls, title: Literal["Линейная эрозия"]
     ) -> Type[auto.Layer872155Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Объекты площадью от 80 до 100 кв. м"]
+    ) -> Type[auto.Layer872978Feature]: ...
+
+    @overload
+    @classmethod
+    def by_title(
+        cls, title: Literal["Объекты площадью от 100 кв. м"]
+    ) -> Type[auto.Layer872979Feature]: ...
 
     @overload
     @classmethod
