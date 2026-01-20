@@ -252,7 +252,7 @@ class Nspd(BaseNspdClient):
             timeout=self._timeout,
             headers={
                 "User-Agent": ua_generator.generate().text,
-                "Referer": self.DNS_URL,
+                "Referer": self.REFERER_URL,
                 "Host": self.DNS_HOST,
             },
             transport=transport,
