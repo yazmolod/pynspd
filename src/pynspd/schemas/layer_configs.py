@@ -56,8 +56,13 @@ class Card(CamelModel):
     @classmethod
     def _unpack_title(cls, data: Any):
         title = data["title"]
-        assert len(title) == 1
+        assert len(title) == 1, str(title)
         data["title"] = title[0]
+        data["card"] = list(
+            filter(
+                lambda x: x["keyValue"].startswith("properties.options."), data["card"]
+            )
+        )
         return data
 
 
