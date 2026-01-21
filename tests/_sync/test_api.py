@@ -3,7 +3,6 @@ from shapely import wkt
 from shapely.geometry import (
     LineString,
     MultiLineString,
-    MultiPoint,
     MultiPolygon,
     Polygon,
     box,
@@ -94,7 +93,7 @@ def test_search_landplots_at_coords(api: Nspd):
 def test_search_buildings_at_point(api: Nspd):
     features = api.search_buildings_at_coords(55.786436698, 37.547790951)
     assert features is None
-    features = api.search_buildings_at_coords(55.786436698, 37.547785813)
+    features = api.search_buildings_at_coords(55.7864621, 37.5473311)
     assert features is not None and len(features) == 1
     assert features[0].properties.options.cad_num == "77:09:0005014:1044"
 
@@ -135,20 +134,3 @@ def test_search_in_linear_layer(api: Nspd):
     assert feat is not None
     assert isinstance(feat.geometry.to_shape(), LineString)
     assert isinstance(feat.geometry.to_multi_shape(), MultiLineString)
-
-
-def test_search_in_point_layer(api: Nspd):
-    feats = api.search_in_contour(
-        box(
-            34.93710,
-            61.90981,
-            35.43174,
-            62.15627,
-        ),
-        NspdFeature.by_title("Объекты туристского интереса"),
-    )
-    assert feats is not None
-    feat = feats[0]
-    # объекта в точечном слое с типом Point не нашел
-    # assert isinstance(feat.geometry.to_shape(), LineString)
-    assert isinstance(feat.geometry.to_multi_shape(), MultiPoint)

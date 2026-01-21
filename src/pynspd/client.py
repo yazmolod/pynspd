@@ -3,8 +3,10 @@ import re
 import ssl
 import warnings
 from typing import Any, Generator, Optional, Type, TypeVar
+from urllib.parse import urlencode
 
 import httpx
+import ua_generator
 from hishel import Controller
 from hishel._utils import generate_key
 from httpcore import Request
@@ -39,7 +41,6 @@ class BaseNspdClient:
 
     DNS_HOST = "nspd.gov.ru"
     DNS_URL = "https://" + DNS_HOST
-    REFERER_URL = DNS_URL + "/map"
 
     IP_HOST = "2.63.246.75"
     # random pool?
@@ -156,3 +157,16 @@ class BaseNspdClient:
         if isinstance(d, str) and d.lower() in ("true", "1"):
             return True
         return False
+
+    @classmethod
+    def _get_headers(cls) -> dict[str, str]:
+        query_params = {
+            # Используем минимум для получения 200,
+            # чтобы не наткнуться на сайд-эффекты
+            "thematic": "PKK",
+        }
+        return {
+            "User-Agent": ua_generator.generate().text,
+            "Referer": cls.DNS_URL + "/map?" + urlencode(query_params),
+            "Host": cls.DNS_HOST,
+        }

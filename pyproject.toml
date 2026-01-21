@@ -94,3 +94,6 @@ asyncio_mode = "auto"
 
 [tool.hatch.version]
 path = "src/pynspd/__init__.py"
+
+[tool.basedpyright]
+typeCheckingMode = "standard"

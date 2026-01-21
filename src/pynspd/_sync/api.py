@@ -9,7 +9,6 @@ from typing import Any, Generator, Literal, Optional, Type, Union
 
 import mercantile
 import numpy as np
-import ua_generator
 from hishel import (
     BaseStorage,
     CacheTransport,
@@ -250,11 +249,7 @@ class Nspd(BaseNspdClient):
         return Client(
             base_url="https://" + host,
             timeout=self._timeout,
-            headers={
-                "User-Agent": ua_generator.generate().text,
-                "Referer": self.REFERER_URL,
-                "Host": self.DNS_HOST,
-            },
+            headers=self._get_headers(),
             transport=transport,
         )
 
