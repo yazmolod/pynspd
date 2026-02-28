@@ -71,6 +71,9 @@ OVERLOAD_TEMPLATE = """{%- for layer in layers %}
 
 
 def generate_files(layers: list[LayerNode], layers_fields: dict[int, Card]):
+    layers = sorted(layers, key=lambda x: x.category_id)
+    layers_fields = dict(sorted(layers_fields.items()))
+
     output = Template(SCHEMAS_TEMPLATE).render(
         layers=layers, layers_fields=layers_fields
     )

@@ -15,60 +15,6 @@ from pynspd.schemas.layer_configs import LayerNode
 from pynspd.schemas.properties import NspdProperties, OptionProperties
 
 
-class Options36992(OptionProperties):
-    title_key = "brd_nmb"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    document_name: Optional[str] = None
-    """Наименование документа"""
-    document_number: Optional[str] = None
-    """Номер"""
-    document_date: Optional[datetime] = None
-    """Дата"""
-    document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options38030(OptionProperties):
-    title_key = "name"
-    obj_kind_value: Optional[str] = None
-    """Тип"""
-    name: Optional[str] = None
-    """Наименование"""
-    cad_num: Optional[str] = None
-    """Учетный номер"""
-    cnt_kr: Optional[float] = None
-    """Количество кадастровых районов"""
-    cnt_kk: Optional[float] = None
-    """Количество кадастровых кварталов"""
-    cnt_land: Optional[float] = None
-    """Количество земельных участков"""
-    cnt_land_geom: Optional[float] = None
-    """c границами"""
-    cnt_land_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_oks: Optional[float] = None
-    """Количество объектов капитального строительства"""
-    cnt_oks_geom: Optional[float] = None
-    """с границами"""
-    cnt_oks_not_geom: Optional[float] = None
-    """без границ"""
-    cnt_enk: Optional[float] = None
-    """Количество единых недвижимых комплексов"""
-    cnt_pik: Optional[float] = None
-    """Количество предприятий как имущественных комплексов"""
-
-
 class Options36368(OptionProperties):
     title_key = "cad_num"
     land_record_type: Optional[str] = None
@@ -147,30 +93,6 @@ class Options36369(OptionProperties):
     """Кадастровый номер предприятия как имущественного комплекса, в состав которого входит здание (имущественное право на здание)"""
 
 
-class Options37148(OptionProperties):
-    title_key = "brd_nmb"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    document_name: Optional[str] = None
-    """Наименование документа"""
-    document_number: Optional[str] = None
-    """Номер"""
-    document_date: Optional[datetime] = None
-    """Дата"""
-    document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
 class Options36381(OptionProperties):
     title_key = "cad_num"
     obj_kind_value: Optional[str] = None
@@ -229,100 +151,6 @@ class Options36382(OptionProperties):
     """Количество единых недвижимых комплексов"""
     cnt_pik: Optional[float] = None
     """Количество предприятий как имущественных комплексов"""
-
-
-class Options470045(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options470048(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options470049(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options470050(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options470046(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options470047(OptionProperties):
-    indicator: Optional[str] = None
-    """Индикатор"""
-    year: Optional[str] = None
-    """Период"""
-
-
-class Options38943(OptionProperties):
-    title_key = "address"
-    id: Optional[str] = None
-    """ID"""
-    doc_guid: Optional[str] = None
-    """GUID"""
-    doc_type: Optional[str] = None
-    """Наименование вида документа об утверждении схемы расположения земельного участка"""
-    doc_gov: Optional[str] = None
-    """наименование уполномоченного органа"""
-    doc_date: Optional[datetime] = None
-    """дата"""
-    doc_number: Optional[str] = None
-    """номер"""
-    cond_numbe: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    shape_area: Optional[float] = None
-    """Площадь (кв. м)"""
-    address: Optional[str] = None
-    """Адрес или иное описание местоположения земельного участка"""
-    kvartal_id: Optional[str] = None
-    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
-    name_zone: Optional[str] = None
-    """Территориальная зона, в границах которой образуется земельный участок"""
-    category_code: Optional[str] = None
-    """Категория земель образуемого земельного"""
-    utilization: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-
-
-class Options37158(OptionProperties):
-    title_key = "nominal_number"
-    nominal_number: Optional[str] = None
-    """Условный номер образуемого земельного участка"""
-    area: Optional[str] = None
-    """Площадь образуемого земельного участка (кв. м)"""
-    land_use_text: Optional[str] = None
-    """Вид разрешенного использования образуемого земельного участка"""
-    brd_nmb: Optional[str] = None
-    """номер"""
-    registration_date: Optional[datetime] = None
-    """дата"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[datetime] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
 
 
 class Options36383(OptionProperties):
@@ -421,6 +249,110 @@ class Options36384(OptionProperties):
     """Кадастровый номер предприятия как имущественного комплекса, если объект незавершенного строительства (имущественное право на объект незавершенного строительства) входит в состав предприятия как имущественного комплекса"""
 
 
+class Options36940(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options37158(OptionProperties):
+    title_key = "nominal_number"
+    nominal_number: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    area: Optional[str] = None
+    """Площадь образуемого земельного участка (кв. м)"""
+    land_use_text: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+    brd_nmb: Optional[str] = None
+    """номер"""
+    registration_date: Optional[datetime] = None
+    """дата"""
+    document_name: Optional[str] = None
+    """документ"""
+    document_number: Optional[str] = None
+    """номер"""
+    document_date: Optional[datetime] = None
+    """дата"""
+    document_issuer: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options38030(OptionProperties):
+    title_key = "name"
+    obj_kind_value: Optional[str] = None
+    """Тип"""
+    name: Optional[str] = None
+    """Наименование"""
+    cad_num: Optional[str] = None
+    """Учетный номер"""
+    cnt_kr: Optional[float] = None
+    """Количество кадастровых районов"""
+    cnt_kk: Optional[float] = None
+    """Количество кадастровых кварталов"""
+    cnt_land: Optional[float] = None
+    """Количество земельных участков"""
+    cnt_land_geom: Optional[float] = None
+    """c границами"""
+    cnt_land_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_oks: Optional[float] = None
+    """Количество объектов капитального строительства"""
+    cnt_oks_geom: Optional[float] = None
+    """с границами"""
+    cnt_oks_not_geom: Optional[float] = None
+    """без границ"""
+    cnt_enk: Optional[float] = None
+    """Количество единых недвижимых комплексов"""
+    cnt_pik: Optional[float] = None
+    """Количество предприятий как имущественных комплексов"""
+
+
+class Options38942(OptionProperties):
+    title_key = "brd_nmb"
+    content_restrict_encumbrances: Optional[str] = None
+    """Ограничения"""
+    doc: Optional[str] = None
+    """Реквизиты решения об утверждении документации по планировке территории"""
+    DOC_TYPE: Optional[str] = None
+    """документ"""
+    DOC_NUMBER: Optional[str] = None
+    """номер"""
+    DOC_DATE: Optional[datetime] = None
+    """дата"""
+    DOC_GOV: Optional[str] = None
+    """орган власти, организация выдавшие документ"""
+
+
+class Options38943(OptionProperties):
+    title_key = "address"
+    id: Optional[str] = None
+    """ID"""
+    doc_guid: Optional[str] = None
+    """GUID"""
+    doc_type: Optional[str] = None
+    """Наименование вида документа об утверждении схемы расположения земельного участка"""
+    doc_gov: Optional[str] = None
+    """наименование уполномоченного органа"""
+    doc_date: Optional[datetime] = None
+    """дата"""
+    doc_number: Optional[str] = None
+    """номер"""
+    cond_numbe: Optional[str] = None
+    """Условный номер образуемого земельного участка"""
+    shape_area: Optional[float] = None
+    """Площадь (кв. м)"""
+    address: Optional[str] = None
+    """Адрес или иное описание местоположения земельного участка"""
+    kvartal_id: Optional[str] = None
+    """Кадастровый номер земельного участка, из которого в соответствии со схемой расположения земельного участка предусмотрено образование земельного участка"""
+    name_zone: Optional[str] = None
+    """Территориальная зона, в границах которой образуется земельный участок"""
+    category_code: Optional[str] = None
+    """Категория земель образуемого земельного"""
+    utilization: Optional[str] = None
+    """Вид разрешенного использования образуемого земельного участка"""
+
+
 class Options38944(OptionProperties):
     schema1: Optional[str] = None
     """Тип"""
@@ -430,29 +362,6 @@ class Options38944(OptionProperties):
     """Тип части"""
     building: Optional[str] = None
     """Наличие объектов капитального строительства"""
-
-
-class Options278838(OptionProperties):
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование зоны"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
 
 
 class Options38967(OptionProperties):
@@ -477,6 +386,23 @@ class Options38967(OptionProperties):
     """Рекомендации по использованию земель"""
     year: Optional[str] = None
     """Год обследования"""
+
+
+class Options38979(OptionProperties): ...
+
+
+class Options38981(OptionProperties):
+    title_key = "Кадастровый номер"
+    auc_thrf: Optional[str] = None
+    """Ссылка на аукцион"""
+
+
+class Options38998(OptionProperties):
+    title_key = "brd_nmb"
+    type: Optional[str] = None
+    """Вид"""
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
 
 
 class Options39228(OptionProperties):
@@ -521,399 +447,6 @@ class Options39228(OptionProperties):
     """Время выполнения работ/Место проведения работ/Виды работ"""
     krsurveyoraddress: Optional[str] = None
     """Адрес для предоставления документов о ранее учтенных земельных участках"""
-
-
-class Options38979(OptionProperties): ...
-
-
-class Options38981(OptionProperties):
-    title_key = "Кадастровый номер"
-    auc_thrf: Optional[str] = None
-    """Ссылка на аукцион"""
-
-
-class Options36940(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    type_zone: Optional[str] = None
-    """Тип зоны"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) ЗОУИТ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36941(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    description: Optional[str] = None
-    """Описание"""
-    document_name: Optional[str] = None
-    """Реквизиты правовых актов об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36942(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36943(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36945(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options36946(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    type_zone: Optional[str] = None
-    """Тип зоны"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    doc: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) территориальной зоны"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-    permitted_uses_name: Optional[str] = None
-    """Вид разрешенного использования"""
-
-
-class Options36947(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[datetime] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options38996(OptionProperties):
-    title_key = "name"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    registration_date: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[datetime] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36948(OptionProperties):
-    title_key = "name_by_doc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[datetime] = None
-    """Дата присвоения"""
-    reg_numb_border: Optional[str] = None
-    """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    name_by_doc: Optional[str] = None
-    """Наименование"""
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничение"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении (изменении) границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
-
-
-class Options38998(OptionProperties):
-    title_key = "brd_nmb"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-
-
-class Options38999(OptionProperties):
-    title_key = "brd_nmb"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    date_reg: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options39000(OptionProperties):
-    title_key = "brd_nmb"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    date_reg: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    legal_act_document_name: Optional[str] = None
-    """документ"""
-    legal_act_document_number: Optional[str] = None
-    """номер"""
-    legal_act_document_date: Optional[str] = None
-    """дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options38942(OptionProperties):
-    title_key = "brd_nmb"
-    content_restrict_encumbrances: Optional[str] = None
-    """Ограничения"""
-    doc: Optional[str] = None
-    """Реквизиты решения об утверждении документации по планировке территории"""
-    DOC_TYPE: Optional[str] = None
-    """документ"""
-    DOC_NUMBER: Optional[str] = None
-    """номер"""
-    DOC_DATE: Optional[datetime] = None
-    """дата"""
-    DOC_GOV: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36829(OptionProperties):
-    title_key = "name"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    registration_date: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36830(OptionProperties):
-    title_key = "name"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    registration_date: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[str] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
-
-
-class Options36832(OptionProperties):
-    title_key = "name"
-    type: Optional[str] = None
-    """Вид"""
-    brd_nmb: Optional[str] = None
-    """Реестровый номер"""
-    registration_date: Optional[datetime] = None
-    """Дата постановки на учет / регистрации"""
-    reg_code: Optional[str] = None
-    """Идентификационный номер"""
-    name: Optional[str] = None
-    """Наименование"""
-    doc: Optional[str] = None
-    """Реквизиты правовых актов о согласовании и об утверждении изменения границ"""
-    document_name: Optional[str] = None
-    """документ"""
-    document_number: Optional[str] = None
-    """номер"""
-    document_date: Optional[datetime] = None
-    """дата"""
-    document_issuer: Optional[str] = None
-    """орган власти, организация выдавшие документ"""
 
 
 class Options39663(OptionProperties):
@@ -962,85 +495,434 @@ class Options39664(OptionProperties):
     """Стоимость предприятия (руб.)"""
 
 
-class Options36991(OptionProperties):
-    title_key = "loc"
-    type_boundary_value: Optional[str] = None
-    """Вид"""
-    registration_date: Optional[str] = None
-    """Дата присвоения"""
+class Options472796(OptionProperties): ...
+
+
+class Options472798(OptionProperties): ...
+
+
+class Options472800(OptionProperties):
+    title_key = "brd_nmb"
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+
+
+class Options472805(OptionProperties):
+    title_key = "brd_nmb"
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+
+
+class Options472812(OptionProperties):
+    title_key = "brd_nmb"
+    brd_nmb: Optional[str] = None
+    """Реестровый номер"""
+
+
+class Options472813(OptionProperties):
+    title_key = "brd_nmb"
     brd_nmb: Optional[str] = None
     """Реестровый номер границы"""
-    cadastral_district: Optional[str] = None
-    """Кадастровый район"""
-    old_account_number: Optional[str] = None
-    """Учетный номер"""
-    loc: Optional[str] = None
-    """Наименование"""
-    document_name: Optional[str] = None
-    """Реквизиты решения об установлении или изменении границ"""
-    legal_act_document_name: Optional[str] = None
-    """Наименование документа"""
-    legal_act_document_number: Optional[str] = None
-    """Номер"""
-    legal_act_document_date: Optional[str] = None
-    """Дата"""
-    legal_act_document_issuer: Optional[str] = None
-    """Орган власти, организация выдавшие документ"""
 
 
-class Layer872974Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470045]]
+class Options472816(OptionProperties):
+    title_key = "brd_nmb"
+    brd_nmb: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472819(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472820(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472825(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472826(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472827(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472828(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472846(OptionProperties):
+    title_key = "brd_nmb"
+    brd_nmb: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472847(OptionProperties):
+    title_key = "reg_numb_border"
+    reg_numb_border: Optional[str] = None
+    """Реестровый номер границы"""
+
+
+class Options472853(OptionProperties): ...
+
+
+class Options472860(OptionProperties): ...
+
+
+class Layer36048Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
-    """Объекты площадью от 0 до 25 кв. м"""
+    """Земельные участки из ЕГРН"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Объекты площадью от 0 до 25 кв. м",
-            "layerTreeId": 34034,
-            "layerId": 872974,
+            "title": "Земельные участки из ЕГРН",
+            "layerTreeId": 72,
+            "layerId": 36048,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 0 до 25 кв. м",
+            "layerName": "Росреестр: Земельные участки ЕГРН",
             "layerVisibleByDefault": False,
-            "categoryId": 470045,
+            "categoryId": 36368,
         }
     )
 
 
-class Layer872975Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470046]]
+class Layer37236Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
-    """Объекты площадью от 25 до 40 кв. м"""
+    """Кадастровая стоимость объекта"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Объекты площадью от 25 до 40 кв. м",
-            "layerTreeId": 34035,
-            "layerId": 872975,
+            "title": "Кадастровая стоимость объекта",
+            "layerTreeId": 69,
+            "layerId": 37236,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 25 до 40 кв. м",
+            "layerName": "Росреестр: Земельные участки ЕГРН. Кадастровая стоимость Тепловая карта",
             "layerVisibleByDefault": False,
-            "categoryId": 470046,
+            "categoryId": 36368,
         }
     )
 
 
-class Layer872976Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470047]]
+class Layer37758Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
 ):
-    """Объекты площадью от 40 до 60 кв. м"""
+    """Удельный показатель кадастровой стоимости"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Объекты площадью от 40 до 60 кв. м",
-            "layerTreeId": 34036,
-            "layerId": 872976,
+            "title": "Удельный показатель кадастровой стоимости",
+            "layerTreeId": 70,
+            "layerId": 37758,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 40 до 60 кв. м",
+            "layerName": "Росреестр: Земельные участки ЕГРН. Удельный Показатель Кадастровой Стоимости Тепловая карта",
             "layerVisibleByDefault": False,
-            "categoryId": 470047,
+            "categoryId": 36368,
+        }
+    )
+
+
+class Layer36049Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36369]]
+):
+    """Здания"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Здания",
+            "layerTreeId": 29,
+            "layerId": 36049,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Здания ЕГРН",
+            "layerVisibleByDefault": False,
+            "categoryId": 36369,
+        }
+    )
+
+
+class Layer36071Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36381]]
+):
+    """Кадастровые кварталы"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые кварталы",
+            "layerTreeId": 5,
+            "layerId": 36071,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые кварталы",
+            "layerVisibleByDefault": False,
+            "categoryId": 36381,
+        }
+    )
+
+
+class Layer36070Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
+):
+    """Кадастровые районы"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые районы ",
+            "layerTreeId": 5873,
+            "layerId": 36070,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые районы",
+            "layerVisibleByDefault": False,
+            "categoryId": 36382,
+        }
+    )
+
+
+class Layer36328Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36383]]
+):
+    """Сооружения"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Сооружения",
+            "layerTreeId": 30,
+            "layerId": 36328,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Сооружения ЕГРН",
+            "layerVisibleByDefault": False,
+            "categoryId": 36383,
+        }
+    )
+
+
+class Layer36329Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36384]]
+):
+    """Объекты незавершенного строительства"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Объекты незавершенного строительства",
+            "layerTreeId": 31,
+            "layerId": 36329,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Росреестр: Объекты незавершённого строительства ЕГРН",
+            "layerVisibleByDefault": False,
+            "categoryId": 36384,
+        }
+    )
+
+
+class Layer37577Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+):
+    """ЗОУИТ объектов культурного наследия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ объектов культурного наследия",
+            "layerTreeId": 39,
+            "layerId": 37577,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ объектов культурного наследия",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37578Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+):
+    """ЗОУИТ объектов энергетики, связи, транспорта"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ объектов энергетики, связи, транспорта",
+            "layerTreeId": 40,
+            "layerId": 37578,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ объектов энергетики, связи, транспорта",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37580Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+):
+    """ЗОУИТ природных территорий"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ природных территорий",
+            "layerTreeId": 41,
+            "layerId": 37580,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ природных территорий",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37579Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+):
+    """ЗОУИТ охраняемых объектов и безопасности"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "ЗОУИТ охраняемых объектов и безопасности",
+            "layerTreeId": 42,
+            "layerId": 37579,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЗОУИТ охраняемых объектов и безопасности",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer37581Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+):
+    """Иные ЗОУИТ"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Иные ЗОУИТ",
+            "layerTreeId": 43,
+            "layerId": 37581,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Иные ЗОУИТ",
+            "layerVisibleByDefault": False,
+            "categoryId": 36940,
+        }
+    )
+
+
+class Layer36473Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options37158]]
+):
+    """Земельные участки, образуемые по проекту межевания территории"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по проекту межевания территории",
+            "layerTreeId": 21,
+            "layerId": 36473,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
+            "layerVisibleByDefault": False,
+            "categoryId": 37158,
+        }
+    )
+
+
+class Layer36945Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
+):
+    """Кадастровые округа"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Кадастровые округа",
+            "layerTreeId": 3,
+            "layerId": 36945,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "ЕГРН. Кадастровые округа",
+            "layerVisibleByDefault": False,
+            "categoryId": 38030,
+        }
+    )
+
+
+class Layer37293Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38942]]
+):
+    """Красные линии"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Красные линии ",
+            "layerTreeId": 46,
+            "layerId": 37293,
+            "layerType": "wms",
+            "geometryType": "LINESTRING",
+            "layerName": "Красные линии",
+            "layerVisibleByDefault": False,
+            "categoryId": 38942,
+        }
+    )
+
+
+class Layer37294Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38943]]
+):
+    """Земельные участки, образуемые по схеме расположения земельного участка"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Земельные участки, образуемые по схеме расположения земельного участка",
+            "layerTreeId": 22,
+            "layerId": 37294,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Схемы расположения земельных участков",
+            "layerVisibleByDefault": False,
+            "categoryId": 38943,
+        }
+    )
+
+
+class Layer37295Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38944]]
+):
+    """Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
+            "layerTreeId": 64,
+            "layerId": 37295,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
+            "layerVisibleByDefault": False,
+            "categoryId": 38944,
         }
     )
 
@@ -1064,25 +946,6 @@ class Layer872153Feature(
     )
 
 
-class Layer872977Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470048]]
-):
-    """Объекты площадью от 60 до 80 кв. м"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Объекты площадью от 60 до 80 кв. м",
-            "layerTreeId": 34037,
-            "layerId": 872977,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 60 до 80 кв. м",
-            "layerVisibleByDefault": False,
-            "categoryId": 470048,
-        }
-    )
-
-
 class Layer872155Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1098,44 +961,6 @@ class Layer872155Feature(
             "layerName": "Линейная эрозия",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
-        }
-    )
-
-
-class Layer872978Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470049]]
-):
-    """Объекты площадью от 80 до 100 кв. м"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Объекты площадью от 80 до 100 кв. м",
-            "layerTreeId": 34038,
-            "layerId": 872978,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 80 до 100 кв. м",
-            "layerVisibleByDefault": False,
-            "categoryId": 470049,
-        }
-    )
-
-
-class Layer872979Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options470050]]
-):
-    """Объекты площадью от 100 кв. м"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Объекты площадью от 100 кв. м",
-            "layerTreeId": 34039,
-            "layerId": 872979,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Объекты площадью от 100 кв. м",
-            "layerVisibleByDefault": False,
-            "categoryId": 470050,
         }
     )
 
@@ -1311,44 +1136,6 @@ class Layer872211Feature(
     )
 
 
-class Layer36945Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38030]]
-):
-    """Кадастровые округа"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Кадастровые округа",
-            "layerTreeId": 3,
-            "layerId": 36945,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "ЕГРН. Кадастровые округа",
-            "layerVisibleByDefault": False,
-            "categoryId": 38030,
-        }
-    )
-
-
-class Layer36316Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36947]]
-):
-    """Территории объектов культурного наследия"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Территории объектов культурного наследия",
-            "layerTreeId": 62,
-            "layerId": 36316,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Территории объекта культурного наследия (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36947,
-        }
-    )
-
-
 class Layer872212Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1368,25 +1155,6 @@ class Layer872212Feature(
     )
 
 
-class Layer36070Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36382]]
-):
-    """Кадастровые районы"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Кадастровые районы ",
-            "layerTreeId": 5873,
-            "layerId": 36070,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "ЕГРН. Кадастровые районы",
-            "layerVisibleByDefault": False,
-            "categoryId": 36382,
-        }
-    )
-
-
 class Layer872213Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1402,25 +1170,6 @@ class Layer872213Feature(
             "layerName": "Нарушенные земли при наземном строительстве",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
-        }
-    )
-
-
-class Layer36071Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36381]]
-):
-    """Кадастровые кварталы"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Кадастровые кварталы",
-            "layerTreeId": 5,
-            "layerId": 36071,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "ЕГРН. Кадастровые кварталы",
-            "layerVisibleByDefault": False,
-            "categoryId": 36381,
         }
     )
 
@@ -1539,25 +1288,6 @@ class Layer872221Feature(
     )
 
 
-class Layer37313Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
-):
-    """Государственная граница Российской Федерации"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Государственная граница Российской Федерации",
-            "layerTreeId": 7,
-            "layerId": 37313,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Государственная граница Российской Федерации",
-            "layerVisibleByDefault": False,
-            "categoryId": 38998,
-        }
-    )
-
-
 class Layer872222Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1596,44 +1326,6 @@ class Layer872224Feature(
     )
 
 
-class Layer37314Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38999]]
-):
-    """Субъекты Российской Федерации (линии)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Субъекты Российской Федерации (линии)",
-            "layerTreeId": 9,
-            "layerId": 37314,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Границы между субъектами Российской Федерации (линии)",
-            "layerVisibleByDefault": False,
-            "categoryId": 38999,
-        }
-    )
-
-
-class Layer37315Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options39000]]
-):
-    """Субъекты Российской Федерации (полигоны)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Субъекты Российской Федерации (полигоны)",
-            "layerTreeId": 10,
-            "layerId": 37315,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Границы между субъектами Российской Федерации (полигоны)",
-            "layerVisibleByDefault": False,
-            "categoryId": 39000,
-        }
-    )
-
-
 class Layer872262Feature(
     BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38967]]
 ):
@@ -1649,139 +1341,6 @@ class Layer872262Feature(
             "layerName": "Засоление",
             "layerVisibleByDefault": False,
             "categoryId": 38967,
-        }
-    )
-
-
-class Layer36278Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36829]]
-):
-    """Муниципальные образования (полигональный)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Муниципальные образования (полигональный)",
-            "layerTreeId": 12,
-            "layerId": 36278,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Муниципальные образования (полигональный)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36829,
-        }
-    )
-
-
-class Layer36279Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options36830]]
-):
-    """Муниципальные образования (линейный)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Муниципальные образования (линейный)",
-            "layerTreeId": 13,
-            "layerId": 36279,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Муниципальные образования (линейный)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36830,
-        }
-    )
-
-
-class Layer36281Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36832]]
-):
-    """Населённые пункты (полигоны)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Населённые пункты (полигоны)",
-            "layerTreeId": 15,
-            "layerId": 36281,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Границы населенных пунктов",
-            "layerVisibleByDefault": False,
-            "categoryId": 36832,
-        }
-    )
-
-
-class Layer37316Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38996]]
-):
-    """Населённые пункты (линии)"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Населённые пункты (линии)",
-            "layerTreeId": 16,
-            "layerId": 37316,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Границы населенных пунктов (линии)",
-            "layerVisibleByDefault": False,
-            "categoryId": 38996,
-        }
-    )
-
-
-class Layer36048Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
-):
-    """Земельные участки из ЕГРН"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земельные участки из ЕГРН",
-            "layerTreeId": 72,
-            "layerId": 36048,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Росреестр: Земельные участки ЕГРН",
-            "layerVisibleByDefault": False,
-            "categoryId": 36368,
-        }
-    )
-
-
-class Layer37294Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38943]]
-):
-    """Земельные участки, образуемые по схеме расположения земельного участка"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земельные участки, образуемые по схеме расположения земельного участка",
-            "layerTreeId": 22,
-            "layerId": 37294,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Схемы расположения земельных участков",
-            "layerVisibleByDefault": False,
-            "categoryId": 38943,
-        }
-    )
-
-
-class Layer37299Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38981]]
-):
-    """Земельные участки, выставленные на аукцион"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Земельные участки, выставленные на аукцион ",
-            "layerTreeId": 23,
-            "layerId": 37299,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Земельные участки, выставленные на аукцион",
-            "layerVisibleByDefault": False,
-            "categoryId": 38981,
         }
     )
 
@@ -1805,78 +1364,59 @@ class Layer37298Feature(
     )
 
 
-class Layer36473Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options37158]]
+class Layer37299Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38981]]
 ):
-    """Земельные участки, образуемые по проекту межевания территории"""
+    """Земельные участки, выставленные на аукцион"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Земельные участки, образуемые по проекту межевания территории",
-            "layerTreeId": 21,
-            "layerId": 36473,
+            "title": "Земельные участки, выставленные на аукцион ",
+            "layerTreeId": 23,
+            "layerId": 37299,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Земельные участки, образуемые по проекту межевания территории (полигональный)",
+            "layerName": "Земельные участки, выставленные на аукцион",
             "layerVisibleByDefault": False,
-            "categoryId": 37158,
+            "categoryId": 38981,
         }
     )
 
 
-class Layer36049Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36369]]
+class Layer37313Feature(
+    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38998]]
 ):
-    """Здания"""
+    """Государственная граница Российской Федерации"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Здания",
-            "layerTreeId": 29,
-            "layerId": 36049,
+            "title": "Государственная граница Российской Федерации",
+            "layerTreeId": 7,
+            "layerId": 37313,
             "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Росреестр: Здания ЕГРН",
+            "geometryType": "LINESTRING",
+            "layerName": "Государственная граница Российской Федерации",
             "layerVisibleByDefault": False,
-            "categoryId": 36369,
+            "categoryId": 38998,
         }
     )
 
 
-class Layer36328Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36383]]
+class Layer37430Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options39228]]
 ):
-    """Сооружения"""
+    """Территории выполнения комплексных кадастровых работ"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Сооружения",
-            "layerTreeId": 30,
-            "layerId": 36328,
+            "title": "Территории выполнения комплексных кадастровых работ",
+            "layerTreeId": 66,
+            "layerId": 37430,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Росреестр: Сооружения ЕГРН",
+            "layerName": "ЕГРН.Территории выполнения комплексных кадастровых работ",
             "layerVisibleByDefault": False,
-            "categoryId": 36383,
-        }
-    )
-
-
-class Layer36329Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36384]]
-):
-    """Объекты незавершенного строительства"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Объекты незавершенного строительства",
-            "layerTreeId": 31,
-            "layerId": 36329,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Росреестр: Объекты незавершённого строительства ЕГРН",
-            "layerVisibleByDefault": False,
-            "categoryId": 36384,
+            "categoryId": 39228,
         }
     )
 
@@ -1919,381 +1459,324 @@ class Layer37434Feature(
     )
 
 
-class Layer37577Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+class Layer875815Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472796]]
 ):
-    """ЗОУИТ объектов культурного наследия"""
+    """Субъекты Российской Федерации (линии)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "ЗОУИТ объектов культурного наследия",
-            "layerTreeId": 39,
-            "layerId": 37577,
+            "title": "Субъекты Российской Федерации (линии)",
+            "layerTreeId": 42807,
+            "layerId": 875815,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "ЗОУИТ объектов культурного наследия",
+            "layerName": "Субъекты Российской Федерации (линии)",
             "layerVisibleByDefault": False,
-            "categoryId": 36940,
+            "categoryId": 472796,
         }
     )
 
 
-class Layer37578Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+class Layer875817Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472798]]
 ):
-    """ЗОУИТ объектов энергетики, связи, транспорта"""
+    """Субъекты Российской Федерации (полигоны)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "ЗОУИТ объектов энергетики, связи, транспорта",
-            "layerTreeId": 40,
-            "layerId": 37578,
+            "title": "Субъекты Российской Федерации (полигоны)",
+            "layerTreeId": 42808,
+            "layerId": 875817,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "ЗОУИТ объектов энергетики, связи, транспорта",
+            "layerName": "Субъекты Российской Федерации (полигоны)",
             "layerVisibleByDefault": False,
-            "categoryId": 36940,
+            "categoryId": 472798,
         }
     )
 
 
-class Layer37580Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+class Layer875819Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472800]]
 ):
-    """ЗОУИТ природных территорий"""
+    """Муниципальные образования (полигональный)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "ЗОУИТ природных территорий",
-            "layerTreeId": 41,
-            "layerId": 37580,
+            "title": "Муниципальные образования (полигональный)",
+            "layerTreeId": 42836,
+            "layerId": 875819,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "ЗОУИТ природных территорий",
+            "layerName": "Муниципальные образования (полигональный)",
             "layerVisibleByDefault": False,
-            "categoryId": 36940,
+            "categoryId": 472800,
         }
     )
 
 
-class Layer37579Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+class Layer875824Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472805]]
 ):
-    """ЗОУИТ охраняемых объектов и безопасности"""
+    """Муниципальные образования (линейный)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "ЗОУИТ охраняемых объектов и безопасности",
-            "layerTreeId": 42,
-            "layerId": 37579,
+            "title": "Муниципальные образования (линейный)",
+            "layerTreeId": 42837,
+            "layerId": 875824,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "ЗОУИТ охраняемых объектов и безопасности",
+            "layerName": "Муниципальные образования (линейный)",
             "layerVisibleByDefault": False,
-            "categoryId": 36940,
+            "categoryId": 472805,
         }
     )
 
 
-class Layer37581Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36940]]
+class Layer875831Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472812]]
 ):
-    """Иные ЗОУИТ"""
+    """Населённые пункты (полигоны)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Иные ЗОУИТ",
-            "layerTreeId": 43,
-            "layerId": 37581,
+            "title": "Населённые пункты (полигоны)",
+            "layerTreeId": 42857,
+            "layerId": 875831,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Иные ЗОУИТ",
+            "layerName": "Населённые пункты (полигоны)",
             "layerVisibleByDefault": False,
-            "categoryId": 36940,
+            "categoryId": 472812,
         }
     )
 
 
-class Layer36315Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36946]]
-):
-    """Территориальные зоны"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Территориальные зоны",
-            "layerTreeId": 45,
-            "layerId": 36315,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Территориальные зоны (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36946,
-        }
-    )
-
-
-class Layer37293Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38942]]
-):
-    """Красные линии"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Красные линии ",
-            "layerTreeId": 46,
-            "layerId": 37293,
-            "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Красные линии",
-            "layerVisibleByDefault": False,
-            "categoryId": 38942,
-        }
-    )
-
-
-class Layer36317Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36948]]
-):
-    """Особо охраняемые природные территории"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Особо охраняемые природные территории ",
-            "layerTreeId": 49,
-            "layerId": 36317,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Особо охраняемая природные территории (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36948,
-        }
-    )
-
-
-class Layer36311Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36942]]
-):
-    """Охотничьи угодья"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Охотничьи угодья ",
-            "layerTreeId": 50,
-            "layerId": 36311,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Охотничьи угодья (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36942,
-        }
-    )
-
-
-class Layer36314Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36945]]
-):
-    """Лесничества"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Лесничества",
-            "layerTreeId": 51,
-            "layerId": 36314,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Лесничества (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 36945,
-        }
-    )
-
-
-class Layer843763Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options278838]]
-):
-    """Граница лесопарка"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Граница лесопарка",
-            "layerTreeId": 22395,
-            "layerId": 843763,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Граница лесопарка (ЕГРН)",
-            "layerVisibleByDefault": False,
-            "categoryId": 278838,
-        }
-    )
-
-
-class Layer36469Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36992]]
+class Layer875832Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472813]]
 ):
     """Береговые линии (границы водных объектов) (полигональный)"""
 
     layer_meta = LayerNode.model_validate(
         {
             "title": "Береговые линии (границы водных объектов) (полигональный)",
-            "layerTreeId": 55,
-            "layerId": 36469,
+            "layerTreeId": 42864,
+            "layerId": 875832,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Сведения о береговых линиях (границах водных объектов). (полигональный)",
+            "layerName": "Береговые линии (границы водных объектов) (полигональный)",
             "layerVisibleByDefault": False,
-            "categoryId": 36992,
+            "categoryId": 472813,
         }
     )
 
 
-class Layer36470Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options37148]]
+class Layer875835Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472816]]
 ):
     """Береговые линии (границы водных объектов)(линейный)"""
 
     layer_meta = LayerNode.model_validate(
         {
             "title": "Береговые линии (границы водных объектов)(линейный)",
-            "layerTreeId": 56,
-            "layerId": 36470,
+            "layerTreeId": 42865,
+            "layerId": 875835,
             "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Сведения о береговых линиях (границах водных объектов). (линейный)",
+            "geometryType": "POLYGON",
+            "layerName": "Береговые линии (границы водных объектов) (линейный)",
             "layerVisibleByDefault": False,
-            "categoryId": 37148,
+            "categoryId": 472816,
         }
     )
 
 
-class Layer36303Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36941]]
+class Layer875838Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472819]]
+):
+    """Территориальные зоны"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территориальные зоны",
+            "layerTreeId": 44234,
+            "layerId": 875838,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территориальные зоны",
+            "layerVisibleByDefault": False,
+            "categoryId": 472819,
+        }
+    )
+
+
+class Layer875840Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472820]]
+):
+    """Территории объектов культурного наследия"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Территории объектов культурного наследия",
+            "layerTreeId": 44235,
+            "layerId": 875840,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Территории объекта культурного наследия",
+            "layerVisibleByDefault": False,
+            "categoryId": 472820,
+        }
+    )
+
+
+class Layer875845Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472825]]
+):
+    """Особо охраняемые природные территории"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Особо охраняемые природные территории ",
+            "layerTreeId": 44236,
+            "layerId": 875845,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Особо охраняемые природные территории",
+            "layerVisibleByDefault": False,
+            "categoryId": 472825,
+        }
+    )
+
+
+class Layer875846Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472826]]
 ):
     """Особые экономические зоны"""
 
     layer_meta = LayerNode.model_validate(
         {
             "title": "Особые экономические зоны",
-            "layerTreeId": 58,
-            "layerId": 36303,
+            "layerTreeId": 44237,
+            "layerId": 875846,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Особые экономические зоны (ЕГРН)",
+            "layerName": "Особые экономические зоны",
             "layerVisibleByDefault": False,
-            "categoryId": 36941,
+            "categoryId": 472826,
         }
     )
 
 
-class Layer36312Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36943]]
+class Layer875847Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472827]]
+):
+    """Охотничьи угодья"""
+
+    layer_meta = LayerNode.model_validate(
+        {
+            "title": "Охотничьи угодья",
+            "layerTreeId": 44238,
+            "layerId": 875847,
+            "layerType": "wms",
+            "geometryType": "POLYGON",
+            "layerName": "Охотничьи угодья",
+            "layerVisibleByDefault": False,
+            "categoryId": 472827,
+        }
+    )
+
+
+class Layer875848Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472828]]
 ):
     """Территории опережающего развития"""
 
     layer_meta = LayerNode.model_validate(
         {
             "title": "Территории опережающего развития",
-            "layerTreeId": 59,
-            "layerId": 36312,
+            "layerTreeId": 44239,
+            "layerId": 875848,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Территории опережающего развития (ЕГРН)",
+            "layerName": "Территории опережающего развития",
             "layerVisibleByDefault": False,
-            "categoryId": 36943,
+            "categoryId": 472828,
         }
     )
 
 
-class Layer36471Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36991]]
+class Layer875865Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472846]]
 ):
     """Игорные зоны"""
 
     layer_meta = LayerNode.model_validate(
         {
             "title": "Игорные зоны",
-            "layerTreeId": 61,
-            "layerId": 36471,
+            "layerTreeId": 44240,
+            "layerId": 875865,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Границы игорных зон",
+            "layerName": "Игорные зоны",
             "layerVisibleByDefault": False,
-            "categoryId": 36991,
+            "categoryId": 472846,
         }
     )
 
 
-class Layer37430Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options39228]]
+class Layer875866Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472847]]
 ):
-    """Территории выполнения комплексных кадастровых работ"""
+    """Лесничества"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Территории выполнения комплексных кадастровых работ",
-            "layerTreeId": 66,
-            "layerId": 37430,
+            "title": "Лесничества",
+            "layerTreeId": 44241,
+            "layerId": 875866,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "ЕГРН.Территории выполнения комплексных кадастровых работ",
+            "layerName": "Лесничества",
             "layerVisibleByDefault": False,
-            "categoryId": 39228,
+            "categoryId": 472847,
         }
     )
 
 
-class Layer37295Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38944]]
+class Layer875874Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472853]]
 ):
-    """Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области"""
+    """Граница лесопарка"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
-            "layerTreeId": 64,
-            "layerId": 37295,
+            "title": "Граница лесопарка",
+            "layerTreeId": 42872,
+            "layerId": 875874,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Территория проведения мероприятий по ликвидации накопленного вреда окружающей среде, образовавшегося в результате производства химической продукции в г. Усолье-Сибирское Иркутской области",
+            "layerName": "Граница лесопарка",
             "layerVisibleByDefault": False,
-            "categoryId": 38944,
+            "categoryId": 472853,
         }
     )
 
 
-class Layer37236Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
+class Layer875882Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options472860]]
 ):
-    """Кадастровая стоимость объекта"""
+    """Населённые пункты (линии)"""
 
     layer_meta = LayerNode.model_validate(
         {
-            "title": "Кадастровая стоимость объекта",
-            "layerTreeId": 69,
-            "layerId": 37236,
+            "title": "Населённые пункты (линии)",
+            "layerTreeId": 42858,
+            "layerId": 875882,
             "layerType": "wms",
             "geometryType": "POLYGON",
-            "layerName": "Росреестр: Земельные участки ЕГРН. Кадастровая стоимость Тепловая карта",
+            "layerName": "Населённые пункты (линии)",
             "layerVisibleByDefault": False,
-            "categoryId": 36368,
-        }
-    )
-
-
-class Layer37758Feature(
-    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options36368]]
-):
-    """Удельный показатель кадастровой стоимости"""
-
-    layer_meta = LayerNode.model_validate(
-        {
-            "title": "Удельный показатель кадастровой стоимости",
-            "layerTreeId": 70,
-            "layerId": 37758,
-            "layerType": "wms",
-            "geometryType": "POLYGON",
-            "layerName": "Росреестр: Земельные участки ЕГРН. Удельный Показатель Кадастровой Стоимости Тепловая карта",
-            "layerVisibleByDefault": False,
-            "categoryId": 36368,
+            "categoryId": 472860,
         }
     )
