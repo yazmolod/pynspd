@@ -85,6 +85,9 @@ def retry_on_http_error(func):
                 elif isinstance(e, TimeoutException):
                     logger.debug("%s timeout", logger_suffix)
                     await sleep(1)
+                elif isinstance(e, ProxyError):
+                    logger.debug("%s proxy error", logger_suffix)
+                    await sleep(1)
                 else:
                     logger.exception("%s unexpected exception", logger_suffix)
                     raise e
