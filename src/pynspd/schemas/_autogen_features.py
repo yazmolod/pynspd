@@ -870,8 +870,8 @@ class Layer36945Feature(
     )
 
 
-class Layer37293Feature(
-    BaseFeature[Union[MultiLineString, LineString], NspdProperties[Options38942]]
+class Layer879243Feature(
+    BaseFeature[Union[MultiPolygon, Polygon, Point], NspdProperties[Options38942]]
 ):
     """Красные линии"""
 
@@ -879,10 +879,10 @@ class Layer37293Feature(
         {
             "title": "Красные линии ",
             "layerTreeId": 46,
-            "layerId": 37293,
+            "layerId": 879243,
             "layerType": "wms",
-            "geometryType": "LINESTRING",
-            "layerName": "Красные линии",
+            "geometryType": "POLYGON",
+            "layerName": "Красные линии ПКК",
             "layerVisibleByDefault": False,
             "categoryId": 38942,
         }

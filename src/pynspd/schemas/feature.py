@@ -163,7 +163,7 @@ class NspdFeature(BaseFeature[Geometry, NspdProperties[OptionProperties]]):
     @classmethod
     def by_title(
         cls, title: Literal["Красные линии "]
-    ) -> Type[auto.Layer37293Feature]: ...
+    ) -> Type[auto.Layer879243Feature]: ...
 
     @overload
     @classmethod
