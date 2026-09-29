@@ -1,4 +1,4 @@
-import httpx2 as httpx
+import httpx
 
 
 class PynspdError(Exception):

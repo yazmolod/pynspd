@@ -17,7 +17,8 @@ requires-python = ">=3.10"
 dependencies = [
   "geojson-pydantic>=1.2.0",
   "hishel>=0.1.1,<1.0.0",
-  "httpx2>=2.13.1",
+  "httpx>=0.28.1",
+  # "httpx2>=2.13.1",
   "mercantile>=1.2.1",
   "numpy>1.24.4",
   "pydantic>=2.10.4",
@@ -67,7 +68,8 @@ tests = [
   "coverage>=7.6.10",
   "coveralls[yaml]>=4.0.1",
   "python-dotenv>=1.1.0",
-  "httpx2-pytest>=2.0.0",
+  # "httpx2-pytest>=2.0.0",
+  "pytest-httpx>=0.36.2",
 ]
 lint = ["ruff>=0.8.4", "mypy>=1.14.0"]
 docs = ["mkdocs-material>=9.6.2", "mkdocstrings[python]>=0.28.1"]

@@ -17,7 +17,7 @@ from hishel import (
     AsyncRedisStorage,
     AsyncSQLiteStorage,
 )
-from httpx2 import (
+from httpx import (
     AsyncBaseTransport,
     AsyncClient,
     AsyncHTTPTransport,
@@ -28,7 +28,7 @@ from httpx2 import (
     Response,
     TimeoutException,
 )
-from httpx2._types import ProxyTypes, QueryParamTypes
+from httpx._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 
 try:

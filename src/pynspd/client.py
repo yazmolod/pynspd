@@ -7,7 +7,7 @@ from collections.abc import Generator
 from typing import Any, TypeVar
 from urllib.parse import urlencode
 
-import httpx2 as httpx
+import httpx
 import ua_generator
 from hishel import Controller
 from hishel._utils import generate_key
