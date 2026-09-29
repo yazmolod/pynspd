@@ -16,7 +16,7 @@ from hishel import (
     AsyncRedisStorage,
     AsyncSQLiteStorage,
 )
-from httpx import (
+from httpx2 import (
     AsyncBaseTransport,
     AsyncClient,
     AsyncHTTPTransport,
@@ -27,7 +27,7 @@ from httpx import (
     Response,
     TimeoutException,
 )
-from httpx._types import ProxyTypes, QueryParamTypes
+from httpx2._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 
 try:
@@ -239,7 +239,9 @@ class AsyncNspd(BaseNspdClient):
 
     async def _build_client(self) -> AsyncClient:
         transport: AsyncBaseTransport = AsyncHTTPTransport(
-            verify=SSL_CONTEXT, retries=self._retries, proxy=self._proxy
+            verify=SSL_CONTEXT,
+            retries=self._retries,
+            proxy=self._proxy,
         )
         if self._cache_storage is None:
             self._cache_storage = await self._build_cache_storage()
@@ -250,7 +252,7 @@ class AsyncNspd(BaseNspdClient):
                 controller=NSPD_CACHE_CONTROLLER,
             )
 
-        host = self.DNS_HOST if not self._dns_resolve else self.IP_HOST
+        host = self.DNS_HOST if not self._dns_resolve else self._get_ip()
         return AsyncClient(
             base_url="https://" + host,
             timeout=self._timeout,

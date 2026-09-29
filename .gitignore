@@ -15,9 +15,10 @@ wheels/
 htmlcov/
 %LOCALAPPDATA%/
 .env
-playground.ipynb
+playground.py
 .coveralls.yml
 .vscode/
 .cache/
 .hishel.sqlite
 .test.cache.sqlite
+__marimo__/

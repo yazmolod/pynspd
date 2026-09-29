@@ -16,7 +16,7 @@ from hishel import (
     RedisStorage,
     SQLiteStorage,
 )
-from httpx import (
+from httpx2 import (
     BaseTransport,
     Client,
     ConnectError,
@@ -27,7 +27,7 @@ from httpx import (
     Response,
     TimeoutException,
 )
-from httpx._types import ProxyTypes, QueryParamTypes
+from httpx2._types import ProxyTypes, QueryParamTypes
 from shapely import MultiPolygon, Point, Polygon, box, to_geojson
 
 try:
@@ -237,7 +237,9 @@ class Nspd(BaseNspdClient):
 
     def _build_client(self) -> Client:
         transport: BaseTransport = HTTPTransport(
-            verify=SSL_CONTEXT, retries=self._retries, proxy=self._proxy
+            verify=SSL_CONTEXT,
+            retries=self._retries,
+            proxy=self._proxy,
         )
         if self._cache_storage is None:
             self._cache_storage = self._build_cache_storage()
@@ -248,7 +250,7 @@ class Nspd(BaseNspdClient):
                 controller=NSPD_CACHE_CONTROLLER,
             )
 
-        host = self.DNS_HOST if not self._dns_resolve else self.IP_HOST
+        host = self.DNS_HOST if not self._dns_resolve else self._get_ip()
         return Client(
             base_url="https://" + host,
             timeout=self._timeout,

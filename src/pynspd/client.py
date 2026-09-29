@@ -1,11 +1,12 @@
 import os
 import re
+import socket
 import ssl
 import warnings
 from typing import Any, Generator, Optional, Type, TypeVar
 from urllib.parse import urlencode
 
-import httpx
+import httpx2 as httpx
 import ua_generator
 from hishel import Controller
 from hishel._utils import generate_key
@@ -41,10 +42,6 @@ class BaseNspdClient:
 
     DNS_HOST = "nspd.gov.ru"
     DNS_URL = "https://" + DNS_HOST
-
-    IP_HOST = "2.63.246.75"
-    # random pool?
-    # IP_HOST = "2.63.246.76"
 
     @staticmethod
     def iter_cn(input_str: str) -> Generator[str, None, None]:
@@ -170,3 +167,10 @@ class BaseNspdClient:
             "Referer": cls.DNS_URL + "/map?" + urlencode(query_params),
             "Host": cls.DNS_HOST,
         }
+
+    @classmethod
+    def _get_ip(cls) -> str:
+        ips = socket.gethostbyname_ex(cls.DNS_HOST)[2]
+        if len(ips) == 0:
+            raise RuntimeError("Can't resolve nspd.gov.ru")
+        return ips[0]
