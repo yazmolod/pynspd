@@ -66,8 +66,8 @@ tests = [
   "pytest-asyncio>=0.25.0",
   "coverage>=7.6.10",
   "coveralls[yaml]>=4.0.1",
-  "pytest-httpx>=0.35.0",
   "python-dotenv>=1.1.0",
+  "httpx2-pytest>=2.0.0",
 ]
 lint = ["ruff>=0.8.4", "mypy>=1.14.0"]
 docs = ["mkdocs-material>=9.6.2", "mkdocstrings[python]>=0.28.1"]
