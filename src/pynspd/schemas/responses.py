@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Union
+from typing import Annotated
 
 from geojson_pydantic import FeatureCollection
 from pydantic import BaseModel, BeforeValidator, RootModel
@@ -29,13 +29,13 @@ class Meta(CamelModel):
     category_id: int
 
 
-ResponseModel = RootModel[Union[SearchResponse, BadResponse]]
+ResponseModel = RootModel[SearchResponse | BadResponse]
 
 
 class NspdTabResponse(BaseModel):
     title: str
     value: Annotated[
-        Optional[list[str]],
+        list[str] | None,
         BeforeValidator(
             lambda x: None if isinstance(x, list) and len(x) == 1 and x[0] == "" else x
         ),

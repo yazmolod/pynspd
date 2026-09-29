@@ -21,8 +21,7 @@ tasks:
   lint:
     desc: Format and lint code
     cmds:
-      - uv run ruff check --fix
-      - uv run ruff check --select I --fix
+      - uv run ruff check --fix --unsafe-fixes
       - uv run ruff format
 
   unasync:

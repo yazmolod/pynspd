@@ -1,14 +1,10 @@
 import re
 from collections import Counter
+from collections.abc import Callable, Generator, Sequence
 from pathlib import Path
 from typing import (
     Annotated,
     Any,
-    Callable,
-    Generator,
-    Optional,
-    Sequence,
-    Type,
     TypeVar,
     get_args,
 )
@@ -45,7 +41,7 @@ T = TypeVar("T")
 
 
 OutputOption = Annotated[
-    Optional[Path],
+    Path | None,
     typer.Option(
         "--output",
         "-o",
@@ -160,7 +156,7 @@ def define_geoms(input_: str) -> list[Point] | list[Polygon] | list[MultiPolygon
     return geometry
 
 
-def define_layer_def(layer_name: str) -> Type[BaseFeature]:
+def define_layer_def(layer_name: str) -> type[BaseFeature]:
     """Определение типа слоя"""
     try:
         return NspdFeature.by_title(layer_name)
@@ -192,8 +188,8 @@ def _progress_iter(items: Sequence[T]) -> Generator[T, None, None]:
 def _get_features_from_list(
     client: Nspd,
     queries: list[str],
-    layer_defs: Optional[list[Type[BaseFeature]]],
-) -> Optional[list[NspdFeature]]:
+    layer_defs: list[type[BaseFeature]] | None,
+) -> list[NspdFeature] | None:
     features = []
     missing = []
     for query in _progress_iter(queries):
@@ -219,11 +215,11 @@ def _get_features_from_list(
 
 def _get_features_from_geom(
     method: Callable[
-        [Point | Polygon | MultiPolygon, Type[BaseFeature]], Optional[list[BaseFeature]]
+        [Point | Polygon | MultiPolygon, type[BaseFeature]], list[BaseFeature] | None
     ],
     geoms: list[Point | Polygon | MultiPolygon],
-    layer_def: Type[BaseFeature],
-) -> Optional[list[BaseFeature]]:
+    layer_def: type[BaseFeature],
+) -> list[BaseFeature] | None:
     features = []
     missing_count = 0
     for geom in _progress_iter(geoms):
@@ -280,7 +276,7 @@ def prepare_features(features: list[NspdFeature], localize: bool) -> gpd.GeoData
 
 
 def process_output(
-    features: Optional[list[NspdFeature]], output: Optional[Path], localize: bool
+    features: list[NspdFeature] | None, output: Path | None, localize: bool
 ) -> None:
     if features is None:
         print("[red]Ничего не найдено")
@@ -343,7 +339,7 @@ def geo(
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
-    _test_layer_name: Annotated[Optional[str], typer.Option(hidden=True)] = None,
+    _test_layer_name: Annotated[str | None, typer.Option(hidden=True)] = None,
 ) -> None:
     """Поиск объектов по геоданным
 
@@ -395,7 +391,7 @@ def search(
     output: OutputOption = None,
     localize: LocalizeOption = False,
     add_tab_object: TabObjectsOption = False,
-    _test_layer_names: Annotated[Optional[list[str]], typer.Option(hidden=True)] = None,
+    _test_layer_names: Annotated[list[str] | None, typer.Option(hidden=True)] = None,
 ) -> None:
     """Поиск объектов по тексту
 
@@ -408,9 +404,9 @@ def search(
             else questionary.checkbox(
                 "Выберите слои: ",
                 choices=get_args(LayerTitle),
-                validate=lambda x: "Не выбрано ни одно значение"
-                if len(x) == 0
-                else True,
+                validate=lambda x: (
+                    "Не выбрано ни одно значение" if len(x) == 0 else True
+                ),
             ).ask()
         )
         if layer_names is None:

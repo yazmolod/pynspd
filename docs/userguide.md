@@ -39,18 +39,15 @@ from pynspd import ThemeId
 
 feat = nspd.find("77:05:0001005:19", ThemeId.REAL_ESTATE_OBJECTS)
 print(feat.properties.options.land_record_type)
-#> Земельный участок
+# > Земельный участок
 ```
 
 #### По слоям
 
 ```python
-feat = nspd.find_in_layer(
-    "77:06:0002007:1014", 
-    NspdFeature.by_title("Здания")
-)
+feat = nspd.find_in_layer("77:06:0002007:1014", NspdFeature.by_title("Здания"))
 print(feat.properties.options.floors)
-#> 5
+# > 5
 ```
 
 Если вы работаете в современной **IDE** (*VS Code*, *PyCharm* и т.д.), то она сама подскажет вам доступный список слоев (автоматически или после сочетания клавиш `Ctrl+Пробел`):
@@ -78,34 +75,33 @@ print(feat.properties.options.floors)
 методы `.find` вам могут не подойти из-за их строгой фильтрации. Вместо этого воспользуйтесь метод `.search(...)`:
 
 ```python
-feats = nspd.search('Москва Новочерёмушкинская улица 24 корпус 1')
+feats = nspd.search("Москва Новочерёмушкинская улица 24 корпус 1")
 print(feats)
-#> [ NspdFeature<Здания: 77:06:0004001:1042>,
-#>  NspdFeature<Помещения: 77:06:0002011:1040>,
-#>  NspdFeature<Помещения: 77:06:0002013:1204>,, ...]
+# > [ NspdFeature<Здания: 77:06:0004001:1042>,
+# >  NspdFeature<Помещения: 77:06:0002011:1040>,
+# >  NspdFeature<Помещения: 77:06:0002013:1204>,, ...]
 ```
 
 Как и в предыдущих примерах, вы можете уточнить слой для поиска:
 
 ```python
 feats = nspd.search_in_layer(
-    'Москва Новочерёмушкинская улица 24 корпус 1',
-    NspdFeature.by_title("Здания")
+    "Москва Новочерёмушкинская улица 24 корпус 1", NspdFeature.by_title("Здания")
 )
 print(feats)
-#> [NspdFeature<Здания: 77:06:0004001:1042>]
+# > [NspdFeature<Здания: 77:06:0004001:1042>]
 ```
 
 А также производить поиск по нескольким слоям сразу:
 
 ```python
 feats = nspd.search_in_layers(
-    'Обнинск',
+    "Обнинск",
     NspdFeature.by_title("Муниципальные образования (полигональный)"),
-    NspdFeature.by_title("Населённые пункты (полигоны)")
+    NspdFeature.by_title("Населённые пункты (полигоны)"),
 )
 print(feats)
-#> [NspdFeature<Муниципальные образования (полигональный)>, NspdFeature<Населённые пункты (полигоны)>]
+# > [NspdFeature<Муниципальные образования (полигональный)>, NspdFeature<Населённые пункты (полигоны)>]
 ```
 
 !!! warning "Форматируйте адрес перед запросом"
@@ -126,7 +122,7 @@ layer_def = NspdFeature.by_title("Земельные участки из ЕГР�
 feats = nspd.search_at_point(Point(37.546440653, 55.787139958), layer_def)
 
 print(feats[0].properties.options.cad_num)
-#> "77:09:0005008:11446"
+# > "77:09:0005008:11446"
 ```
 
 !!! tip
@@ -150,7 +146,7 @@ feats = nspd.search_in_contour(
 )
 cns = [i.properties.options.cad_num for i in feats]
 print(cns)
-#> ["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]
+# > ["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]
 ```
 
 Аналогично поиску по слою, ответ будет приведен к статическому типу.
@@ -163,8 +159,8 @@ print(cns)
 for i in nspd.search_in_contour_iter(
     contour,
     NspdFeature.by_title("Земельные участки из ЕГРН"),
-    only_intersects=True, # по умолчанию метод ищет все объекты 
-                          # в bounding box контура для экономии ресурсов
+    only_intersects=True,  # по умолчанию метод ищет все объекты
+    # в bounding box контура для экономии ресурсов
 ):
     print(i.properties.options.cad_num)
 ```
@@ -200,16 +196,15 @@ feat.geometry.to_multi_shape()
 
 ```python
 feat = nspd.search_in_layer(
-    '63:01:0810003:510', 
-    NspdFeature.by_title("Земельные участки из ЕГРН")
+    "63:01:0810003:510", NspdFeature.by_title("Земельные участки из ЕГРН")
 )
 
 print(feat.properties.model_dump().keys())
-#> ['category',
-#>  'category_name',
-#>  'options',
-#>  'system_info',
-#>  ...]
+# > ['category',
+# >  'category_name',
+# >  'options',
+# >  'system_info',
+# >  ...]
 ```
 
 !!! info "Что за `.model_dump()`?"
@@ -222,25 +217,25 @@ print(feat.properties.model_dump().keys())
 
 ```python
 print(feat.properties.options.model_dump().keys())
-#> ['cad_num',
-#>  'readable_address',
-#>  'specified_area',
-#>  'declared_area',
-#>  'cost_value',
-#>  ...]
+# > ['cad_num',
+# >  'readable_address',
+# >  'specified_area',
+# >  'declared_area',
+# >  'cost_value',
+# >  ...]
 ```
 
 Также вы можете сразу получить словарь с названиями из карточки НСПД:
 
 ```python
 print(feat.properties.cast().options.model_dump_human_readable().keys())
-#> ['Кадастровый номер',
-#>  'Адрес',
-#>  'Площадь уточненная (кв. м)',
-#>  'Площадь декларированная (кв. м)',
-#>  'Площадь (кв. м)',
-#>  'Кадастровая стоимость (руб.)',
-#>  ...]
+# > ['Кадастровый номер',
+# >  'Адрес',
+# >  'Площадь уточненная (кв. м)',
+# >  'Площадь декларированная (кв. м)',
+# >  'Площадь (кв. м)',
+# >  'Кадастровая стоимость (руб.)',
+# >  ...]
 ```
 
 !!! info "Приведение типа объекта"

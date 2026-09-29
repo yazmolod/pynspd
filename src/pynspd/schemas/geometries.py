@@ -1,5 +1,5 @@
 import json
-from typing import Annotated, Generic, Literal, TypeVar, Union
+from typing import Annotated, Generic, Literal, TypeVar
 
 import geojson_pydantic.geometries as pyd_geom
 import pyproj
@@ -81,13 +81,6 @@ class MultiPolygon(pyd_geom.MultiPolygon, ShapeGeometry[shape_geom.MultiPolygon]
 
 
 Geometry = Annotated[
-    Union[
-        Point,
-        MultiPoint,
-        LineString,
-        MultiLineString,
-        Polygon,
-        MultiPolygon,
-    ],
+    Point | MultiPoint | LineString | MultiLineString | Polygon | MultiPolygon,
     Field(discriminator="type"),
 ]

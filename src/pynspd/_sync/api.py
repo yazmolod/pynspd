@@ -1,11 +1,12 @@
 import json
 import re
 import warnings
+from collections.abc import Generator
 from functools import wraps
 from hashlib import md5
 from pathlib import Path
 from time import sleep
-from typing import Any, Generator, Literal, Optional, Type, Union
+from typing import Any, Literal
 
 import mercantile
 import numpy as np
@@ -62,7 +63,7 @@ def retry_on_http_error(func):
     @wraps(func)
     def wrapper(self: "Nspd", *args, **kwargs):
         attempt = -1
-        last_error: Optional[Exception] = None
+        last_error: Exception | None = None
         while True:
             attempt += 1
             logger_suffix = f'Wrapped method "{func.__name__}", retry {attempt} -'
@@ -90,7 +91,7 @@ def retry_on_http_error(func):
                     sleep(1)
                 else:
                     logger.exception("%s unexpected exception", logger_suffix)
-                    raise e
+                    raise
             except err.PynspdServerError as e:
                 logger.debug("%s unknown server error", logger_suffix)
                 last_error = e
@@ -98,7 +99,7 @@ def retry_on_http_error(func):
                 logger.debug("%s blocked IP, retrying", logger_suffix)
                 last_error = e
                 if not self._retry_on_blocked_ip:
-                    raise e
+                    raise
             except err.TooManyRequests as e:
                 logger.debug("%s too many requests", logger_suffix)
                 last_error = e
@@ -152,16 +153,16 @@ class Nspd(BaseNspdClient):
     def __init__(
         self,
         *,
-        client_timeout: Optional[int] = None,
-        client_retries: Optional[int] = None,
-        client_retry_on_blocked_ip: Optional[bool] = None,
-        client_proxy: Optional[ProxyTypes] = None,
-        client_dns_resolve: Optional[bool] = None,
-        cache_storage: Optional[BaseStorage] = None,
-        cache_folder_path: Optional[Union[str, Path]] = None,
-        cache_sqlite_url: Optional[str] = None,
-        cache_redis_url: Optional[str] = None,
-        cache_ttl: Optional[int] = None,
+        client_timeout: int | None = None,
+        client_retries: int | None = None,
+        client_retry_on_blocked_ip: bool | None = None,
+        client_proxy: ProxyTypes | None = None,
+        client_dns_resolve: bool | None = None,
+        cache_storage: BaseStorage | None = None,
+        cache_folder_path: str | Path | None = None,
+        cache_sqlite_url: str | None = None,
+        cache_redis_url: str | None = None,
+        cache_ttl: int | None = None,
         trust_env: bool = True,
     ):
         self._timeout = self._int_var("client_timeout", client_timeout, trust_env)
@@ -207,10 +208,10 @@ class Nspd(BaseNspdClient):
         ):
             raise ValueError("Допустимо выбрать только один вариант хранилища кэша")
 
-        self._client: Optional[Client] = None
-        self._last_response: Optional[Response] = None
+        self._client: Client | None = None
+        self._last_response: Response | None = None
 
-    def _build_cache_storage(self) -> Optional[BaseStorage]:
+    def _build_cache_storage(self) -> BaseStorage | None:
         if self._cache_folder_path is not None:
             return FileStorage(
                 base_path=Path(self._cache_folder_path), ttl=self._cache_ttl
@@ -287,8 +288,8 @@ class Nspd(BaseNspdClient):
         self,
         method: str,
         url: str,
-        params: Optional[QueryParamTypes] = None,
-        json: Optional[dict] = None,
+        params: QueryParamTypes | None = None,
+        json: dict | None = None,
     ) -> Response:
         """Базовый запрос к API НСПД"""
         logger.debug("Request %s", url)
@@ -307,7 +308,7 @@ class Nspd(BaseNspdClient):
                 logger.debug("Proxy can't resolve dns; change to ip mode")
                 self._rebuild_client_with_dns_resolve()
                 return self.request(method, url, params, json)
-            raise e
+            raise
         self._last_response = r
         code = r.status_code
         if code == 403:
@@ -327,8 +328,8 @@ class Nspd(BaseNspdClient):
         self,
         method: str,
         url: str,
-        params: Optional[QueryParamTypes] = None,
-        json: Optional[dict] = None,
+        params: QueryParamTypes | None = None,
+        json: dict | None = None,
     ) -> Response:
         """Базовый запрос к api НСПД с обработкой ошибок"""
         return self.request(method, url, params, json)
@@ -338,7 +339,7 @@ class Nspd(BaseNspdClient):
     ####################
 
     @retry_on_http_error
-    def _search(self, params: dict[str, Any]) -> Optional[list[NspdFeature]]:
+    def _search(self, params: dict[str, Any]) -> list[NspdFeature] | None:
         """Базовый поисковый запрос на НСПД"""
         try:
             r = self.request("get", "/api/geoportal/v2/search/geoportal", params=params)
@@ -348,7 +349,7 @@ class Nspd(BaseNspdClient):
 
     def search(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
-    ) -> Optional[list[NspdFeature]]:
+    ) -> list[NspdFeature] | None:
         """Поисковой запрос по предустановленной теме
 
         Args:
@@ -367,9 +368,7 @@ class Nspd(BaseNspdClient):
             }
         )
 
-    def search_in_layer(
-        self, query: str, layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
+    def search_in_layer(self, query: str, layer_def: type[Feat]) -> list[Feat] | None:
         """Поиск по определению слоя
 
         Args:
@@ -388,8 +387,8 @@ class Nspd(BaseNspdClient):
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
     def search_in_layers(
-        self, query: str, *layer_defs: Type[Feat]
-    ) -> Optional[list[NspdFeature]]:
+        self, query: str, *layer_defs: type[Feat]
+    ) -> list[NspdFeature] | None:
         """Поиск по определениям слоев
 
         Args:
@@ -408,7 +407,7 @@ class Nspd(BaseNspdClient):
 
     def find(
         self, query: str, theme_id: ThemeId = ThemeId.REAL_ESTATE_OBJECTS
-    ) -> Optional[NspdFeature]:
+    ) -> NspdFeature | None:
         """Найти объект по предустановленной теме
 
         Args:
@@ -422,7 +421,7 @@ class Nspd(BaseNspdClient):
         """
         return self._filter_search_by_query(self.search(query, theme_id), query)
 
-    def find_in_layer(self, query: str, layer_def: Type[Feat]) -> Optional[Feat]:
+    def find_in_layer(self, query: str, layer_def: type[Feat]) -> Feat | None:
         """Найти объект по определению слоя
 
         Args:
@@ -443,9 +442,9 @@ class Nspd(BaseNspdClient):
     @retry_on_http_error
     def _search_in_contour(
         self,
-        countour: Union[Polygon, MultiPolygon],
+        countour: Polygon | MultiPolygon,
         *category_ids: int,
-    ) -> Optional[list[NspdFeature]]:
+    ) -> list[NspdFeature] | None:
         """Поиск объектов в контуре по ID категорий слоев
 
         Args:
@@ -480,15 +479,15 @@ class Nspd(BaseNspdClient):
         except err.PynspdServerError as e:
             if '"code":400104' in e.response.text:
                 raise err.TooBigContour from e
-            raise e
+            raise
         except json.decoder.JSONDecodeError as e:
             raise err.TooBigContour from e
 
     def search_in_contour(
         self,
-        countour: Union[Polygon, MultiPolygon],
-        layer_def: Type[Feat],
-    ) -> Optional[list[Feat]]:
+        countour: Polygon | MultiPolygon,
+        layer_def: type[Feat],
+    ) -> list[Feat] | None:
         """Поиск объектов слоя в контуре
 
         Args:
@@ -512,7 +511,7 @@ class Nspd(BaseNspdClient):
         ymin: float,
         xmax: float,
         ymax: float,
-        layer_def: Type[Feat],
+        layer_def: type[Feat],
     ) -> Generator[Feat, None, None]:
         """Рекурсивный поиск объектов в границах"""
 
@@ -525,12 +524,7 @@ class Nspd(BaseNspdClient):
             yield xmin, midy, midx, ymax
 
         try:
-            logger_prefix = "Search [%.2f, %.2f, %.2f, %.2f]: " % (
-                xmin,
-                ymin,
-                xmax,
-                ymax,
-            )
+            logger_prefix = f"Search [{xmin:.2f}, {ymin:.2f}, {xmax:.2f}, {ymax:.2f}]: "
             logger.debug(logger_prefix + "start")
             feats = self.search_in_contour(box(xmin, ymin, xmax, ymax), layer_def)
             if feats is None:
@@ -551,8 +545,8 @@ class Nspd(BaseNspdClient):
 
     def search_in_contour_iter(
         self,
-        countour: Union[Polygon, MultiPolygon],
-        layer_def: Type[Feat],
+        countour: Polygon | MultiPolygon,
+        layer_def: type[Feat],
         *,
         only_intersects: bool = False,
     ) -> Generator[Feat, None, None]:
@@ -588,7 +582,7 @@ class Nspd(BaseNspdClient):
     ####################
 
     @retry_on_http_error
-    def _search_at_point(self, pt: Point, layer_id: int) -> Optional[list[NspdFeature]]:
+    def _search_at_point(self, pt: Point, layer_id: int) -> list[NspdFeature] | None:
         """Поиск объектов слоя в точке"""
         tile_size = 512
         tile = mercantile.tile(
@@ -623,7 +617,7 @@ class Nspd(BaseNspdClient):
         )
         return self._validate_feature_collection_response(response)
 
-    def search_at_point(self, pt: Point, layer_def: Type[Feat]) -> Optional[list[Feat]]:
+    def search_at_point(self, pt: Point, layer_def: type[Feat]) -> list[Feat] | None:
         """Поиск объектов слоя в точке (с типизацией)
 
         Args:
@@ -637,8 +631,8 @@ class Nspd(BaseNspdClient):
         return self._cast_features_to_layer_defs(raw_features, layer_def)
 
     def search_at_coords(
-        self, lat: float, lng: float, layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
+        self, lat: float, lng: float, layer_def: type[Feat]
+    ) -> list[Feat] | None:
         """Поиск объектов слоя в координатах
 
         Args:
@@ -658,7 +652,7 @@ class Nspd(BaseNspdClient):
     @retry_on_http_error
     def _tab_request(
         self, feat: NspdFeature, tab_class: str, type_: Literal["values", "group"]
-    ) -> Optional[dict]:
+    ) -> dict | None:
         if feat.properties.options.no_coords:
             params = {
                 "tabClass": tab_class,
@@ -681,7 +675,7 @@ class Nspd(BaseNspdClient):
 
     def _tab_values_request(
         self, feat: NspdFeature, tab_class: str
-    ) -> Optional[list[str]]:
+    ) -> list[str] | None:
         resp = self._tab_request(feat, tab_class, "values")
         if resp is None:
             return None
@@ -689,7 +683,7 @@ class Nspd(BaseNspdClient):
 
     def _tab_groups_request(
         self, feat: NspdFeature, tab_class: str
-    ) -> Optional[dict[str, Optional[list[str]]]]:
+    ) -> dict[str, list[str] | None] | None:
         resp = self._tab_request(feat, tab_class, "group")
         if resp is None:
             return None
@@ -702,29 +696,27 @@ class Nspd(BaseNspdClient):
             return None
         return data
 
-    def tab_land_parts(self, feat: NspdFeature) -> Optional[list[str]]:
-        """Получение данных с вкладки \"Части ЗУ\" """
+    def tab_land_parts(self, feat: NspdFeature) -> list[str] | None:
+        """Получение данных с вкладки \"Части ЗУ\""""
         return self._tab_values_request(feat, "landParts")
 
-    def tab_land_links(self, feat: NspdFeature) -> Optional[list[str]]:
-        """Получение данных с вкладки \"Связанные ЗУ\" """
+    def tab_land_links(self, feat: NspdFeature) -> list[str] | None:
+        """Получение данных с вкладки \"Связанные ЗУ\""""
         return self._tab_values_request(feat, "landLinks")
 
-    def tab_permission_type(self, feat: NspdFeature) -> Optional[list[str]]:
-        """Получение данных с вкладки \"Виды разрешенного использования\" """
+    def tab_permission_type(self, feat: NspdFeature) -> list[str] | None:
+        """Получение данных с вкладки \"Виды разрешенного использования\""""
         return self._tab_values_request(feat, "permissionType")
 
-    def tab_composition_land(self, feat: NspdFeature) -> Optional[list[str]]:
-        """Получение данных с вкладки \"Состав ЕЗП\" """
+    def tab_composition_land(self, feat: NspdFeature) -> list[str] | None:
+        """Получение данных с вкладки \"Состав ЕЗП\""""
         return self._tab_values_request(feat, "compositionLand")
 
-    def tab_build_parts(self, feat: NspdFeature) -> Optional[list[str]]:
-        """Получение данных с вкладки \"Части ОКС\" """
+    def tab_build_parts(self, feat: NspdFeature) -> list[str] | None:
+        """Получение данных с вкладки \"Части ОКС\""""
         return self._tab_values_request(feat, "buildParts")
 
-    def tab_objects_list(
-        self, feat: NspdFeature
-    ) -> Optional[dict[str, Optional[list[str]]]]:
+    def tab_objects_list(self, feat: NspdFeature) -> dict[str, list[str] | None] | None:
         """
         Получение данных с вкладки \"Объекты\"
         """
@@ -750,50 +742,50 @@ class Nspd(BaseNspdClient):
     ### SHORTCUTS ###
     #################
 
-    def find_landplot(self, query: str) -> Optional[Layer36048Feature]:
+    def find_landplot(self, query: str) -> Layer36048Feature | None:
         """Найти ЗУ по кадастровому номеру"""
         return self._filter_search_by_query(self.search_landplots(query), query)
 
-    def find_building(self, query: str) -> Optional[Layer36049Feature]:
+    def find_building(self, query: str) -> Layer36049Feature | None:
         """Найти ОКС по кадастровому номеру"""
         return self._filter_search_by_query(self.search_buildings(query), query)
 
-    def search_landplots_at_point(self, pt: Point) -> Optional[list[Layer36048Feature]]:
+    def search_landplots_at_point(self, pt: Point) -> list[Layer36048Feature] | None:
         """Поиск ЗУ в точке"""
         return self.search_at_point(pt, Layer36048Feature)
 
-    def search_buildings_at_point(self, pt: Point) -> Optional[list[Layer36049Feature]]:
+    def search_buildings_at_point(self, pt: Point) -> list[Layer36049Feature] | None:
         """Поиск ОКС в точке"""
         return self.search_at_point(pt, Layer36049Feature)
 
-    def search_landplots(self, cn: str) -> Optional[list[Layer36048Feature]]:
+    def search_landplots(self, cn: str) -> list[Layer36048Feature] | None:
         """Поиск ЗУ по кадастровому номеру"""
         return self.search_in_layer(cn, Layer36048Feature)
 
-    def search_buildings(self, cn: str) -> Optional[list[Layer36049Feature]]:
+    def search_buildings(self, cn: str) -> list[Layer36049Feature] | None:
         """Поиск ОКС по кадастровому номеру"""
         return self.search_in_layer(cn, Layer36049Feature)
 
     def search_landplots_at_coords(
         self, lat: float, lng: float
-    ) -> Optional[list[Layer36048Feature]]:
+    ) -> list[Layer36048Feature] | None:
         """Поиск ЗУ в координатах"""
         return self.search_at_coords(lat, lng, Layer36048Feature)
 
     def search_buildings_at_coords(
         self, lat: float, lng: float
-    ) -> Optional[list[Layer36049Feature]]:
+    ) -> list[Layer36049Feature] | None:
         """Поиск ОКС в координатах"""
         return self.search_at_coords(lat, lng, Layer36049Feature)
 
     def search_landplots_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36048Feature]]:
+        self, countour: Polygon | MultiPolygon
+    ) -> list[Layer36048Feature] | None:
         """Поиск ЗУ в контуре"""
         return self.search_in_contour(countour, Layer36048Feature)
 
     def search_buildings_in_contour(
-        self, countour: Union[Polygon, MultiPolygon]
-    ) -> Optional[list[Layer36049Feature]]:
+        self, countour: Polygon | MultiPolygon
+    ) -> list[Layer36049Feature] | None:
         """Поиск ОКС в контуре"""
         return self.search_in_contour(countour, Layer36049Feature)

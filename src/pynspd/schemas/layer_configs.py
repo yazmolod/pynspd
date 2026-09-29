@@ -1,4 +1,4 @@
-from typing import Any, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import (
     ConfigDict,
@@ -68,7 +68,7 @@ class Card(CamelModel):
 
 class TitleField(CamelModel):
     prefix: str
-    key_value: Optional[str]
+    key_value: str | None
     default_value: str
 
     @field_validator("key_value", mode="after")
@@ -88,14 +88,14 @@ class CardField(CamelModel):
     padding: bool
     default_value: str
     show_empty: bool
-    prefix: Optional[str] = None
-    postfix: Optional[str] = None
+    prefix: str | None = None
+    postfix: str | None = None
 
     @model_validator(mode="after")
     def _update_mistyped_data(self):
         # тип в конфиге отличается от реального
         if self.key_type == "str" and "_area" in self.key_value:
-            self.key_type = "Union[str, float]"
+            self.key_type = "str | float"
         return self
 
     @field_validator("key_value", mode="after")

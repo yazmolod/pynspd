@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Annotated, ClassVar, Generic, Optional, Type, TypeVar, overload
+from typing import Annotated, ClassVar, Generic, Optional, TypeVar, overload
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -24,28 +24,28 @@ class NspdProperties(CamelModel, Generic[OptProps]):
     """Свойства объекта"""
 
     system_info: Optional["SystemInfoProperties"] = None
-    cadastral_districts_code: Optional[int] = None
-    descr: Optional[str] = None
-    external_key: Optional[str] = None
-    interaction_id: Optional[int] = None
-    label: Optional[str] = None
-    subcategory: Optional[int] = None
-    score: Optional[int] = None
+    cadastral_districts_code: int | None = None
+    descr: str | None = None
+    external_key: str | None = None
+    interaction_id: int | None = None
+    label: str | None = None
+    subcategory: int | None = None
+    score: int | None = None
 
     @overload
     def cast(self, option_def: None = None) -> "NspdProperties[OptionProperties]": ...
 
     @overload
-    def cast(self, option_def: Type[T]) -> "NspdProperties[T]": ...
+    def cast(self, option_def: type[T]) -> "NspdProperties[T]": ...
 
-    def cast(self, option_def: Optional[Type[T]] = None):
+    def cast(self, option_def: type[T] | None = None):
         if option_def is None:
             model = NspdProperties[OptionProperties.by_category_id(self.category)]
         else:
             model = NspdProperties[option_def]
         return model.model_validate(self.model_dump(by_alias=True))
 
-    def get_title(self) -> Optional[str]:
+    def get_title(self) -> str | None:
         """Попытка найти заголовок карточки в свойствах"""
         possible_titles = (self.options.title_key, "cad_num", "cad_number")
         props = self.options.model_dump(by_alias=True)
@@ -63,13 +63,13 @@ class OptionProperties(BaseModel):
         use_attribute_docstrings=True,
     )
 
-    title_key: ClassVar[Optional[str]] = None
+    title_key: ClassVar[str | None] = None
     """Имя поля, которое является заголовком для карточки"""
 
     # TODO: определять объекты без геометрии отдельной схемой
     no_coords: Annotated[bool, Field(alias="geocoderObject")] = False
-    objdoc_id: Annotated[Optional[int], Field(alias="objdocId")] = None
-    registers_id: Annotated[Optional[int], Field(alias="registersId")] = None
+    objdoc_id: Annotated[int | None, Field(alias="objdocId")] = None
+    registers_id: Annotated[int | None, Field(alias="registersId")] = None
 
     @model_validator(mode="before")
     @classmethod
@@ -81,11 +81,11 @@ class OptionProperties(BaseModel):
                 if v == "" or v is None:
                     values[k] = None
                 elif isinstance(v, str) and re.match(r"\d+\.\d+\.\d+", v):
-                    values[k] = datetime.strptime(v, "%d.%m.%Y")
+                    values[k] = datetime.strptime(v, "%d.%m.%Y")  # noqa: DTZ007
         return values
 
     @classmethod
-    def by_category_id(cls, category_id: int) -> Type["OptionProperties"]:
+    def by_category_id(cls, category_id: int) -> type["OptionProperties"]:
         """Получение модели по категории"""
         for sub_class in cls.__subclasses__():
             if sub_class.__name__ == f"Options{category_id}":
@@ -103,7 +103,7 @@ class OptionProperties(BaseModel):
 
 
 class SystemInfoProperties(CamelModel):
-    inserted: Optional[datetime]
-    inserted_by: Optional[str]
-    updated: Optional[datetime]
-    updated_by: Optional[str]
+    inserted: datetime | None
+    inserted_by: str | None
+    updated: datetime | None
+    updated_by: str | None

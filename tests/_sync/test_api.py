@@ -58,9 +58,9 @@ def test_search_landplots_in_contour(api: Nspd):
     )
     features = api.search_landplots_in_contour(contour)
     assert features is not None
-    assert all([isinstance(i, Layer36048Feature) for i in features])
+    assert all(isinstance(i, Layer36048Feature) for i in features)
     cns = [i.properties.options.cad_num for i in features]
-    assert set(["77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"]) == set(cns)
+    assert {"77:01:0001011:8", "77:01:0001011:14", "77:01:0001011:16"} == set(cns)
 
 
 def test_search_buildings_in_contour(api: Nspd):
@@ -69,9 +69,9 @@ def test_search_buildings_in_contour(api: Nspd):
     )
     features = api.search_buildings_in_contour(contour)
     assert features is not None
-    assert all([isinstance(i, Layer36049Feature) for i in features])
+    assert all(isinstance(i, Layer36049Feature) for i in features)
     cns = [i.properties.options.cad_num for i in features]
-    assert set(["77:01:0001011:1164", "77:01:0001011:1002"]) == set(cns)
+    assert {"77:01:0001011:1164", "77:01:0001011:1002"} == set(cns)
 
 
 def test_search_in_contour_empty(api: Nspd):

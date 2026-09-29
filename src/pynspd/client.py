@@ -3,7 +3,8 @@ import re
 import socket
 import ssl
 import warnings
-from typing import Any, Generator, Optional, Type, TypeVar
+from collections.abc import Generator
+from typing import Any, TypeVar
 from urllib.parse import urlencode
 
 import httpx2 as httpx
@@ -24,7 +25,7 @@ SSL_CONTEXT = ssl._create_unverified_context()
 SSL_CONTEXT.set_ciphers("ALL:@SECLEVEL=1")
 
 
-def _cache_key_generator(request: Request, body: Optional[bytes]) -> str:
+def _cache_key_generator(request: Request, body: bytes | None) -> str:
     body = body or b""
     key = generate_key(request, body)
     return f"pynspd-{key}"
@@ -46,13 +47,12 @@ class BaseNspdClient:
     @staticmethod
     def iter_cn(input_str: str) -> Generator[str, None, None]:
         """Извлечение кадастровых номеров из строки"""
-        for cn in re.findall(r"\d+:\d+:\d+:\d+", input_str):
-            yield cn
+        yield from re.findall(r"\d+:\d+:\d+:\d+", input_str)
 
     @staticmethod
     def _cast_features_to_layer_defs(
-        raw_features: Optional[list[NspdFeature]], layer_def: Type[Feat]
-    ) -> Optional[list[Feat]]:
+        raw_features: list[NspdFeature] | None, layer_def: type[Feat]
+    ) -> list[Feat] | None:
         """Приводит массив фичей к определенному типу"""
         if raw_features is None:
             return None
@@ -62,7 +62,7 @@ class BaseNspdClient:
     @staticmethod
     def _validate_feature_collection_response(
         response: httpx.Response,
-    ) -> Optional[list[NspdFeature]]:
+    ) -> list[NspdFeature] | None:
         features = response.json()["features"]
         if len(features) == 0:
             return None
@@ -70,8 +70,8 @@ class BaseNspdClient:
 
     @classmethod
     def _filter_search_by_query(
-        cls, features: Optional[list[Feat]], query: str
-    ) -> Optional[Feat]:
+        cls, features: list[Feat] | None, query: str
+    ) -> Feat | None:
         if features is None:
             return None
         features = list(
@@ -91,17 +91,11 @@ class BaseNspdClient:
 
         def in_upper_props(query: str, props: dict[str, Any]) -> bool:
             # если есть в верхнеуровневых свойствах - это точное совпадение
-            for v in props.values():
-                if v == query:
-                    return True
-            return False
+            return any(v == query for v in props.values())
 
         def in_option_props(query: str, opts: dict[str, Any]) -> bool:
             # в опциональных свойствах проверяем ключ свойства
-            for k, v in opts.items():
-                if v == query and "parent" not in k:
-                    return True
-            return False
+            return any(v == query and "parent" not in k for k, v in opts.items())
 
         def is_known_category(feat: Feat) -> bool:
             # убеждаемся, что это отображаемая категория
@@ -151,9 +145,7 @@ class BaseNspdClient:
         d = cls._str_var(var_name, var, trust_env)
         if isinstance(d, bool):
             return d
-        if isinstance(d, str) and d.lower() in ("true", "1"):
-            return True
-        return False
+        return bool(isinstance(d, str) and d.lower() in ("true", "1"))
 
     @classmethod
     def _get_headers(cls) -> dict[str, str]:

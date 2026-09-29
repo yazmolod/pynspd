@@ -14,12 +14,12 @@ nspd = Nspd()
 
 # По теме
 feat_plain = nspd.find(
-    "77:09:0004002:1", 
+    "77:09:0004002:1",
 )
 
 # По модели слоя
 feats_typed = nspd.find_in_layer(
-    "77:09:0004002:1", 
+    "77:09:0004002:1",
     NspdFeature.by_title("Земельные участки из ЕГРН"),
 )
 ```
@@ -34,9 +34,9 @@ feats_typed = nspd.find_in_layer(
 
 ```python
 print(type(feat_plain))
-#> <class 'pynspd.schemas.feature.NspdFeature'>
+# > <class 'pynspd.schemas.feature.NspdFeature'>
 print(type(feats_typed))
-#> <class 'pynspd.schemas._autogen_features.Layer36048Feature'>
+# > <class 'pynspd.schemas._autogen_features.Layer36048Feature'>
 ```
 
 `NspdFeature` - это базовая модель слоя НСПД. Она ничего не знает о его свойствах - только обрабатывает сырые данные в Pydantic-модель.
@@ -72,7 +72,7 @@ raw_feat: NspdFeature = nspd.find("77:09:0004002:1")
 # Статическое приведение
 props_typed_cast = raw_feat.cast(
     NspdFeature.by_title("Земельные участки из ЕГРН")
-    ).properties
+).properties
 
 # Динамическое приведение
 props_plain_cast = raw_feat.cast().properties
@@ -120,7 +120,7 @@ props_plain_cast = raw_feat.cast().properties
 ```python
 assert type(props_plain_cast) == type(props_typed_cast)
 print(props_plain_cast)
-#> <class 'pynspd.schemas.properties.NspdProperties[Options36368]'>
+# > <class 'pynspd.schemas.properties.NspdProperties[Options36368]'>
 ```
 
 Таким образом главное отличие *динамического* и *статического* приведение - **отсутствие подсказки статического анализа**.

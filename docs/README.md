@@ -45,31 +45,31 @@ with Nspd() as nspd:
 
 Доступен полный список аттрибутов (в том числе скрытых):
 ```python
-    print(feat.properties.options.model_dump())
-    #> {'readable_address': 'г Москва, ул Серпуховская Б., вл 58',
-    #>  'land_record_subtype': 'Землепользование', ...}
+print(feat.properties.options.model_dump())
+# > {'readable_address': 'г Москва, ул Серпуховская Б., вл 58',
+# >  'land_record_subtype': 'Землепользование', ...}
 ```
 
 Который можно конвертировать в человекочитаемый формат:
 
 ```python
-    print(feat.properties.cast().options.model_dump_human_readable())
-    #> {'Адрес': 'г Москва, ул Серпуховская Б., вл 58',
-    #>  'Вид земельного участка': 'Землепользование', ...}
+print(feat.properties.cast().options.model_dump_human_readable())
+# > {'Адрес': 'г Москва, ул Серпуховская Б., вл 58',
+# >  'Вид земельного участка': 'Землепользование', ...}
 ```
 
 Для доступа к дополнительным аттрибутам делаем запрос по вкладке:
 
 ```python
-    print(nspd.tab_objects_list(feat))
-    #> {'Объект недвижимости': ['77:05:0001005:1012']}
+print(nspd.tab_objects_list(feat))
+# > {'Объект недвижимости': ['77:05:0001005:1012']}
 ```
 
 Геометрию можно сразу конвертировать в `shapely`-формат (например, для работы с `geopandas`):
 
 ```python
-    print(feat.geometry.to_shape().bounds)
-    #> (37.62575417009177, 55.719792499833524, 37.626451149629915, 55.72046606889391)
+print(feat.geometry.to_shape().bounds)
+# > (37.62575417009177, 55.719792499833524, 37.626451149629915, 55.72046606889391)
 ```
 
 ---
